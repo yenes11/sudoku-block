@@ -1,43 +1,68 @@
 <ion-content>
-  <div class="container">
+<div class="buttons">
+  <app-icon type="add"></app-icon>
+  <app-icon type="settings"></app-icon>
 
-    <div draggable="true" (dragstart)="drag($event)" id="drag2">
-      <div class="row" *ngFor="let sArray of jokerOneBlock; index as i">
-        <div (mousedown)="getId($event)" *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'jokerOne'"></div>
-      </div>
-    </div>
-
-    <div draggable="true" (dragstart)="drag($event)" id="drag2">
-      <div class="row" *ngFor="let sArray of firstBlock; index as i">
-        <div (mousedown)="getId($event)" *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'first'"></div>
-      </div>
-    </div>
-
-    <div draggable="true" (dragstart)="drag($event)" id="drag1" >
-        <div class="row" *ngFor="let sArray of secondBlock; index as i">
-          <div (mousedown)="getId($event)" *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'second'"></div>
-        </div>
-    </div>
-
-    <div draggable="true" (dragstart)="drag($event)" id="drag1" >
-      <div class="row" *ngFor="let sArray of thirdBlock; index as i">
-        <div (mousedown)="getId($event)" *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'third'"></div>
-      </div>
-    </div>
-
-
-   </div>
-
-   SCORE : {{ score }}
+</div>
+<!-- SCORE : {{ score }}
    <div (click)="rotateOne()">ROTATE 1</div>
    <div (click)="rotateTwo()">ROTATE 2</div>
    <div (click)="rotateThree()">ROTATE 3</div>
 
    <div (click)="undo()">UNDO</div>
    <div id="del" (click)="toggleDelete()">DELETE MOD INACTIVE</div>
+   <div id="insert" (click)="toggleInsert()">INSERT MOD INACTIVE</div> -->
 
 
-    <div class="row" *ngFor="let sArray of playGround; index as i">
-      <div (click)="deleteBox($event)" (drop)="drop($event)" (dragover)="allowDrop($event)" *ngFor="let x of sArray; index as j" [attr.id]="i+'x'+j" [ngClass]="x ? 'square-full' : 'square-empty-play'"></div>
+   <div class="scoreboard">
+     <div class="current-score">{{ score }}</div>
+     <div class="small-scoreboard">
+       <div class="today-score">
+        TODAY <br> 100
+        </div>
+       <div class="overall-score">
+         OVERALL
+         <div class="flex-left">
+          <app-icon class="row" type="trophy"></app-icon> &nbsp; 300 </div>
+        </div>
+     </div>
+   </div>
+
+
+
+   <div class="play-row" *ngFor="let sArray of playGround; index as i">
+      <div *ngFor="let x of sArray; index as j" class="blck">
+        <div *ngIf="j % 6 < 3">
+          <div *ngIf="i % 6 < 3" (click)="deleteOrInsert($event)" (drop)="drop($event)" (dragover)="allowDrop($event)"  [attr.id]="i+'x'+j" [ngClass]="x ? 'blue-play bg-full' : 'blue-play'"></div>
+          <div *ngIf="i % 6 >= 3" (click)="deleteOrInsert($event)" (drop)="drop($event)" (dragover)="allowDrop($event)"  [attr.id]="i+'x'+j" [ngClass]="x ? 'square-empty-play bg-full' : 'square-empty-play'"></div>
+        </div>
+        <div *ngIf="j % 6 >= 3">
+          <div *ngIf="i % 6 >= 3" (click)="deleteOrInsert($event)" (drop)="drop($event)" (dragover)="allowDrop($event)"  [attr.id]="i+'x'+j" [ngClass]="x ? 'blue-play bg-full' : 'blue-play'"></div>
+          <div *ngIf="i % 6 < 3" (click)="deleteOrInsert($event)" (drop)="drop($event)" (dragover)="allowDrop($event)"  [attr.id]="i+'x'+j" [ngClass]="x ? 'square-empty-play bg-full' : 'square-empty-play'"></div>
+        </div>
+      </div>
     </div>
+
+    <div class="container">
+
+      <div draggable="true" (dragstart)="drag($event)" id="drag2">
+        <div class="sand-row" *ngFor="let sArray of firstBlock; index as i">
+          <div (mousedown)="getId($event)" *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'first'"></div>
+        </div>
+      </div>
+
+      <div draggable="true" (dragstart)="drag($event)" id="drag3" >
+          <div class="sand-row" *ngFor="let sArray of secondBlock; index as i">
+            <div (mousedown)="getId($event)" *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'second'"></div>
+          </div>
+      </div>
+
+      <div draggable="true" (dragstart)="drag($event)" id="drag4" >
+        <div class="sand-row" *ngFor="let sArray of thirdBlock; index as i">
+          <div (mousedown)="getId($event)" *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'third'"></div>
+        </div>
+      </div>
+
+
+     </div>
 </ion-content>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { blocks } from '../blocks';
+import { patterns } from '../patterns';
 
 @Component({
   selector: 'app-game',
@@ -9,6 +10,8 @@ import { blocks } from '../blocks';
 export class GamePage implements OnInit {
   blocks = blocks;
   isDelete = false;
+  isInsert = false;
+  pattern = patterns;
 
   firstRandom = Math.floor(Math.random() * 54) + 1;
   secondRandom = Math.floor(Math.random() * 54) + 1;
@@ -22,9 +25,17 @@ export class GamePage implements OnInit {
   secondBlock = this.secondObject.block;
   thirdBlock = this.thirdObject.block;
 
-  jokerOneBlock = blocks[0].block;
-
-  lastSnapShot = [];
+  lastSnapShot = [
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0]
+  ];
 
   playGround =
     [
@@ -46,10 +57,32 @@ export class GamePage implements OnInit {
   sandName: string;
 
 
-
   constructor() { }
 
   ngOnInit() {
+    const first = document.querySelector('#drag2');
+    const second = document.querySelector('#drag3');
+    const third = document.querySelector('#drag4');
+    first.addEventListener('dragstart', this.dragStart)
+    second.addEventListener('dragstart', this.dragStart)
+    third.addEventListener('dragstart', this.dragStart)
+    first.addEventListener('dragend', this.dragEnd)
+    second.addEventListener('dragend', this.dragEnd)
+    third.addEventListener('dragend', this.dragEnd)
+  }
+
+  dragStart(ev){
+    const el = document.getElementById(ev.target.id);
+    setTimeout(() => {
+      el.classList.add('invisble');
+    }, 0);
+  }
+
+  dragEnd(ev) {
+    const el = document.getElementById(ev.target.id);
+    setTimeout(() => {
+      el.classList.remove('invisble');
+    }, 0);
   }
 
   undo() {
@@ -83,7 +116,6 @@ export class GamePage implements OnInit {
   }
 
   getId(ev) {
-
     let id = ev.target.id.split('x');
     this.sandName = ev.target.getAttribute('name');
     this.pieceRow = parseInt(id[0]);
@@ -97,12 +129,25 @@ export class GamePage implements OnInit {
     div.innerHTML = this.isDelete ? 'DELETE MOD ACTİVE' : 'DELETE MOD INACTIVE';
   }
 
-  deleteBox(ev) {
+  toggleInsert() {
+    this.isInsert = !this.isInsert;
+    var div = document.querySelector('#insert');
+
+    div.innerHTML = this.isInsert ? 'INSERT MOD ACTİVE' : 'INSERT MOD INACTIVE';
+  }
+
+  deleteOrInsert(ev) {
     if(this.isDelete){
       const id = ev.target.id.split('x');
       let row = id[0];
       let column = id[1];
       this.playGround[row][column] = 0;
+    }
+    if(this.isInsert){
+      const id = ev.target.id.split('x');
+      let row = id[0];
+      let column = id[1];
+      this.playGround[row][column] = 1;
     }
   }
 
@@ -118,7 +163,7 @@ export class GamePage implements OnInit {
     });
 
     console.debug();
-    let referenceBox = this.sandName == 'second' ? this.secondBlock : (this.sandName == 'third' ? this.thirdBlock : (this.sandName == 'jokerOne' ? this.jokerOneBlock : this.firstBlock));
+    let referenceBox = this.sandName == 'second' ? this.secondBlock : (this.sandName == 'third' ? this.thirdBlock : this.firstBlock);
     let plusRow = referenceBox.length;
     let plusColumn = referenceBox[0].length;
     let rowColumn = ev.target.id.split('x');
@@ -159,28 +204,23 @@ export class GamePage implements OnInit {
       }
       rw++;
     }
-    console.log(this.lastSnapShot);
-    console.log(this.playGround);
+    // console.log(this.lastSnapShot);
+    // console.log(this.playGround);
 
+    this.score = this.pattern(this.playGround, this.score);
 
-    const allOne = arr => arr.every(v => v === 1)
-
-    for (let i = 0; i < 9; i++) {
-      if (allOne(this.playGround[i])) {
-        this.playGround[i] = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-        this.score++;
-      }
-    }
-    //firstBlock = this.blocks[this.firstRandom].block;
     let newBlock = Math.floor(Math.random() * 54) + 1;
     if (this.sandName == 'second') {
-      this.secondBlock = this.blocks[newBlock].block;
+      this.secondObject = this.blocks[newBlock];
+      this.secondBlock = this.secondObject.block;
     }
     else if (this.sandName == 'third') {
-      this.thirdBlock = this.blocks[newBlock].block;
+      this.thirdObject = this.blocks[newBlock];
+      this.thirdBlock = this.blocks[0].block;
     }
     else if (this.sandName == 'first') {
-      this.firstBlock = this.blocks[newBlock].block;
+      this.firstObject = this.blocks[newBlock];
+      this.firstBlock = this.firstObject.block;
     }
 
 

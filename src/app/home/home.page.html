@@ -1,20 +1,27 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <app-icon id="trigger-settings" class="settings-button" type="settings"></app-icon>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+  <div class="header">
+    <app-icon type="logo" style="margin-left: 5vw;"></app-icon>
   </div>
+
+
+  <div class="body">
+    <div class="box">
+      <app-icon type="gold-trophy"></app-icon>
+      <div style="margin-top: -7px">YOUR BEST</div>
+      <div>580</div>
+    </div>
+  </div>
+<div class="footer">
+  <app-button id="trigger-new-game" size="large" text="CONTINUE GAME" color="blue"></app-button>
+  <app-button text="NEW GAME" size="large" color="white"></app-button>
+  <app-icon class="tanos" type="tanos-logo"></app-icon>
+</div>
+
+
 </ion-content>
+
+
+<!-- <ion-button name="settings" mode="ios" id="trigger-button">Click to open modal</ion-button> -->
+<app-modal></app-modal>

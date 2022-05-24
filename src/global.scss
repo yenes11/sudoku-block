@@ -16,7 +16,7 @@
 @import "~@ionic/angular/css/normalize.css";
 @import "~@ionic/angular/css/structure.css";
 @import "~@ionic/angular/css/typography.css";
-@import '~@ionic/angular/css/display.css';
+@import "~@ionic/angular/css/display.css";
 
 /* Optional CSS utils that can be commented out */
 @import "~@ionic/angular/css/padding.css";
@@ -24,3 +24,29 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+// .modal-wrapper, .modal-shadow {
+//   border-radius: var(--border-radius);
+//   width: var(--width);
+//   min-width: var(--min-width);
+//   max-width: var(--max-width);
+//   height: 100px;
+//   min-height: var(--min-height);
+//   max-height: var(--max-height);
+//   border-width: var(--border-width);
+//   border-style: var(--border-style);
+//   border-color: var(--border-color);
+//   background: var(--background);
+//   box-shadow: var(--box-shadow);
+//   overflow: var(--overflow);
+//   z-index: 10;
+// }
+
+// ion-page:host {
+//   height: 100px!important;
+// }
+
+
+  .modal-wrapper {
+    height: 20%;
+  }

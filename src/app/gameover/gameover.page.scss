@@ -4,6 +4,7 @@ ion-content {
   --overflow: hidden;
   --background: url("/assets/images/home-square.png") 0 0/100% 100% no-repeat;
   --ion-font-family: "Abel", sans-serif;
+  --color: #818181;
 }
 
 .back {
@@ -13,9 +14,9 @@ ion-content {
 }
 
 .scores {
-  border: 1px solid black;
+  // border: 1px solid black;
   margin-top: 20vh;
-  height: 30vh;
+
   font-size: 1.8vh;
   flex-direction: column;
 }
@@ -35,4 +36,38 @@ ion-content {
   padding: 15px;
   justify-content: space-between;
   margin-top: 2vh;
+}
+
+
+.box {
+  display: flex;
+  border: 5px solid transparent;
+  background-clip: padding-box;
+  border-radius: 14px;
+  position: relative;
+  width: 90px;
+  height: 90px;
+  background: #ffffff;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 40px;
+  font-size: 28px;
+}
+
+.box::after {
+  background: linear-gradient(#ededed, #ededed50);
+  top: -12px;
+  bottom: -12px;
+  left: -12px;
+  right: -12px;
+  position: absolute;
+  content: "";
+  z-index: -1;
+  border-radius: 18px;
+  box-shadow: -4px -4px 20px rgba(0, 0, 0, 0.25), 4px 4px 20px rgba(0, 0, 0, 0.25), inset 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+app-button {
+  margin-top: 15px;
 }

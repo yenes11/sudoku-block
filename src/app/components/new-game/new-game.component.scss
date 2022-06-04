@@ -1,0 +1,20 @@
+@import url("https://fonts.googleapis.com/css2?family=Abel&family=Plus+Jakarta+Sans&display=swap");
+
+.new-game {
+  margin-top: 20px;
+  flex-direction: column;
+  text-align: center;
+  font-family: "Abel", sans-serif;
+  font-size: 2.5vh;
+}
+
+.space {
+  height: 1vh;
+}
+
+.close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+}

@@ -1,10 +1,10 @@
 <ion-content [fullscreen]="true">
-  <app-icon id="trigger-settings" class="settings-button" type="settings"></app-icon>
+
+  <app-icon (click)="settingsModal()" class="settings-button" type="settings"></app-icon>
 
   <div class="header">
     <app-icon type="logo" style="margin-left: 5vw;"></app-icon>
   </div>
-
 
   <div class="body">
     <div class="box">
@@ -14,14 +14,8 @@
     </div>
   </div>
 <div class="footer">
-  <app-button id="trigger-new-game" size="large" text="CONTINUE GAME" color="blue"></app-button>
-  <app-button text="NEW GAME" size="large" color="white"></app-button>
+  <app-button size="large" text="CONTINUE GAME" color="blue"></app-button>
+  <app-button (click)="newGameModal()" text="NEW GAME" size="large" color="white"></app-button>
   <app-icon class="tanos" type="tanos-logo"></app-icon>
 </div>
-
-
 </ion-content>
-
-
-<!-- <ion-button name="settings" mode="ios" id="trigger-button">Click to open modal</ion-button> -->
-<app-modal></app-modal>

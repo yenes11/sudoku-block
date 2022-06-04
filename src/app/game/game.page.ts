@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { blocks } from '../blocks';
 import { patterns } from '../patterns';
+import { SettingsModule } from '../components/settings/settings.module';
+import { ProfileNameModule } from '../components/profile-name/profile-name.module';
+import { ModalController } from '@ionic/angular';
+import { ProfileNameComponent } from '../components/profile-name/profile-name.component';
 
 @Component({
   selector: 'app-game',
@@ -57,7 +61,7 @@ export class GamePage implements OnInit {
   sandName: string;
 
 
-  constructor() { }
+  constructor(private modalCtrl: ModalController) { }
 
   ngOnInit() {
     const first = document.querySelector('#drag2');
@@ -226,4 +230,20 @@ export class GamePage implements OnInit {
 
   }
 
+  async settingsModal(){
+    const modal = await this.modalCtrl.create({
+      component: SettingsModule.component,
+      cssClass: 'settings-modal-css',
+    })
+    await modal.present();
+  }
+
+  async profileNameModal(){
+    const modal = await this.modalCtrl.create({
+      component: ProfileNameComponent,
+      cssClass: 'profile-modal-css',
+      mode: 'ios'
+    })
+    await modal.present();
+  }
 }

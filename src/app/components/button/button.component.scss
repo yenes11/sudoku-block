@@ -48,3 +48,17 @@
   top: -2px; bottom: -2px;
   left: -2px; right: -2px;
 }
+
+.xsmall {
+  border-radius: 25px;
+  border: 2px solid transparent;
+  width: 100px;
+  height: 30px;
+  font-size: 15px;
+}
+
+.xsmall::after {
+  border-radius: 25px;
+  top: -2px; bottom: -2px;
+  left: -2px; right: -2px;
+}

@@ -47,6 +47,29 @@
 // }
 
 
-  .modal-wrapper {
-    height: 20%;
-  }
+.new-game-modal-css {
+  --height: 25vh;
+  --width: 45vh;
+  --border-radius: 25px;
+}
+
+.profile-modal-css {
+  --height: 200px;
+  --width: 350px;
+  --border-radius: 25px;
+}
+
+.settings-modal-css {
+  --height: 100vh;
+  --width: 100vw;
+}
+
+.theme-modal-css {
+  --height: 200px;
+  --width: 350px;
+  --border-radius: 25px;
+}
+
+// ion-modal {
+//   --height: 100px;
+// }

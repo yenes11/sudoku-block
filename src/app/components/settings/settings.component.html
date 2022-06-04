@@ -1,0 +1,92 @@
+<div class="container">
+  <app-icon type="back" class="back" (click)="close()"></app-icon>
+  <div class="header">
+    <br />
+    SETTINGS
+    <div class="profile flex-center">
+      <app-icon style="margin-bottom: -0.7vh" type="profile"></app-icon>
+    </div>
+    <div class="profile-name">
+      <app-icon type="edit-profile"></app-icon>
+      Profile Name
+    </div>
+  </div>
+  <div class="body">
+    <div class="badge-row">
+      <div class="icon flex-center">
+        <app-icon class="mt" type="sound"></app-icon>
+      </div>
+      <div class="badge">
+        SOUNDS
+        <ion-toggle mode="ios"></ion-toggle>
+      </div>
+    </div>
+
+    <div class="badge-row">
+      <div class="icon flex-center">
+        <app-icon class="mt" type="vibration"></app-icon>
+      </div>
+      <div class="badge">
+        VIBRATIONS
+        <ion-toggle mode="ios"></ion-toggle>
+      </div>
+    </div>
+
+    <div class="badge-row" (click)="themeModal()">
+      <div class="icon flex-center">
+        <app-icon class="mt" type="dark-mode"></app-icon>
+      </div>
+      <div class="badge">
+        DARK MODE
+        <ion-toggle mode="ios"></ion-toggle>
+      </div>
+    </div>
+
+    <div class="badge-row">
+      <div class="icon flex-center">
+        <app-icon class="mt" type="ranking"></app-icon>
+      </div>
+      <div class="badge">RANKINGS</div>
+    </div>
+
+    <div class="badge-row">
+      <div class="icon flex-center">
+        <app-icon class="mt" type="logic"></app-icon>
+      </div>
+      <div class="badge">APP LOGIC</div>
+    </div>
+
+    <div class="badge-row">
+      <div class="icon flex-center">
+        <app-icon class="mt" type="privacy"></app-icon>
+      </div>
+      <div class="badge">PRIVACY POLICY</div>
+    </div>
+
+    <div class="badge-row">
+      <div class="icon flex-center">
+        <app-icon class="mt" type="terms"></app-icon>
+      </div>
+      <div class="badge">TERMS OF USE</div>
+    </div>
+
+    <app-icon style="margin-top: 3vh" type="premium"></app-icon>
+
+    <div class="badge-row">
+      <div class="icon flex-center">
+        <app-icon class="mt" type="ads"></app-icon>
+      </div>
+      <div class="badge">REMOVE ADS</div>
+    </div>
+
+    <div class="badge-row">
+      <div class="icon flex-center">
+        <app-icon class="mt" type="restore"></app-icon>
+      </div>
+      <div class="badge">RESTORE PURSCHASES</div>
+    </div>
+
+    <app-icon style="margin-top: 4vh" type="tanos-logo"></app-icon>
+  </div>
+
+</div>

@@ -8,15 +8,19 @@ import { GamePageRoutingModule } from './game-routing.module';
 
 import { GamePage } from './game.page';
 
-import { IconComponent } from '../components/icon/icon.component';
+import { ButtonModule } from '../components/button/button.module';
+
+import { IconModule } from '../components/icon/icon.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    GamePageRoutingModule
+    GamePageRoutingModule,
+    IconModule,
+    ButtonModule
   ],
-  declarations: [GamePage, IconComponent]
+  declarations: [GamePage]
 })
 export class GamePageModule {}

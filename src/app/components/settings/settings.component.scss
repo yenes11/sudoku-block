@@ -1,0 +1,131 @@
+@import url("https://fonts.googleapis.com/css2?family=Abel&family=Plus+Jakarta+Sans&display=swap");
+
+
+.container {
+  background: url("/assets/images/home-square.png") center/cover;
+  font-family: "Abel", sans-serif;
+  width: 100%;
+  height: 100%;
+}
+
+.back {
+  position: absolute;
+  top: 6vw;
+  left: 6vw;
+  z-index: 3;
+}
+
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 23vh;
+  font-size: 3vh;
+  color: #454750;
+}
+
+.profile {
+  background: #e9ecf0;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 7px;
+  width: 12vw;
+  height: 12vw;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+}
+
+.profile-name {
+  font-size: 2.5vh;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.badge-row {
+  display: flex;
+  // border: 1px solid black;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1vh;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.badge {
+  background: #e9ecf0;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+  height: 4.5vh;
+  width: 80vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3vw;
+  letter-spacing: 0.125em;
+  color: #454750;
+  font-size: 2.3vh;
+}
+
+.icon {
+  background: #e9ecf0;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+  height: 4.5vh;
+  width: 4.5vh;
+  margin-right: 2vw;
+}
+
+.mt {
+  margin-top: 0.7vh;
+}
+
+ion-toggle {
+  height: 3.3vh;
+  width: 5.5vh;
+  --background: rgba(249, 96, 95, 0.44);
+  --background-checked: #95b9e4;
+  --handle-background: black;
+  --handle-background-checked: black;
+  --handle-height: 2.2vh;
+  --handle-width: 2.2vh;
+  --handle-spacing: 0.5vh;
+
+}
+
+.new-game {
+  flex-direction: column;
+  text-align: center;
+  border: 1px solid black;
+}
+
+.new-game > * {
+  margin-top: 1.2vh;
+}
+
+.new-game-content {
+  width: 300px;
+  height: 300px;
+}
+
+
+.ion-page {
+  height: 5%;
+  background-color: #454750;
+}
+
+.new-game-modal .modal-wrapper {
+  height: 20%;
+  top: 80%;
+  position: absolute;
+  display: block;
+}

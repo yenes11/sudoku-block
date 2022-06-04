@@ -3,7 +3,17 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  firebase: {
+    apiKey: "AIzaSyDdYiR9UhxKLe0ct0R_GsvRa2Lv_GtIiMY",
+    authDomain: "tanosudokugame.firebaseapp.com",
+    databaseURL: "https://tanosudokugame-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "tanosudokugame",
+    storageBucket: "tanosudokugame.appspot.com",
+    messagingSenderId: "746896043068",
+    appId: "1:746896043068:web:f084b53a0743e168d62739",
+    measurementId: "G-77TNQCQQ2T"
+  }
 };
 
 /*

@@ -1,0 +1,37 @@
+<ion-content>
+  <app-icon type="back" class="back" (click)="routeHome()"></app-icon>
+
+  <div class="container">
+    <app-icon type="bestof" style="margin-top: 30px"></app-icon>
+
+    <div class="buttons">
+      <app-button color="blue" size="medium" text="WEEKLY"></app-button>
+      <app-button color="white" size="medium" text="LAST 24h"></app-button>
+    </div>
+
+    <div class="ranks">
+      <div *ngFor="let item of weekly; index as i;" class="row">
+        <div class="number center">
+          {{ i + 1 }}.
+        </div>
+        <div class="name">
+          <div>{{ item.name }}</div>
+          <div>{{ item.score}}</div>
+        </div>
+      </div>
+    </div>
+
+    <app-icon type="dots" style="margin-top: 15px;"></app-icon>
+
+    <div class="row">
+      <div class="number center red">
+        {{ myPlace }}
+      </div>
+      <div class="name red">
+        <div>{{ myScore.name }}</div>
+        <div>{{ myScore.score }}</div>
+      </div>
+    </div>
+
+  </div>
+</ion-content>

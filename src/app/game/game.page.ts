@@ -4,7 +4,7 @@ import { patterns } from '../patterns';
 import { SettingsModule } from '../components/settings/settings.module';
 import { ProfileNameModule } from '../components/profile-name/profile-name.module';
 import { ModalController } from '@ionic/angular';
-import { ProfileNameComponent } from '../components/profile-name/profile-name.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-game',
@@ -15,15 +15,18 @@ export class GamePage implements OnInit {
   blocks = blocks;
   isDelete = false;
   isInsert = false;
+  isNext = false;
   pattern = patterns;
+  moves = 3;
+  emptyBlock = [[0]];
 
-  firstRandom = Math.floor(Math.random() * 54) + 1;
-  secondRandom = Math.floor(Math.random() * 54) + 1;
-  thirdRandom = Math.floor(Math.random() * 54) + 1;
+  firstObject = this.blocks[this.getRandom()];
+  secondObject = this.blocks[this.getRandom()];
+  thirdObject = this.blocks[this.getRandom()];
 
-  firstObject = this.blocks[this.firstRandom];
-  secondObject = this.blocks[this.secondRandom];
-  thirdObject = this.blocks[this.thirdRandom];
+  nextFirst = this.blocks[this.getRandom()];
+  nextSecond = this.blocks[this.getRandom()];
+  nextThird = this.blocks[this.getRandom()];
 
   firstBlock = this.firstObject.block;
   secondBlock = this.secondObject.block;
@@ -60,13 +63,13 @@ export class GamePage implements OnInit {
   score = 0;
   sandName: string;
 
-
-  constructor(private modalCtrl: ModalController) { }
+  constructor(private modalCtrl: ModalController, private router: Router) { }
 
   ngOnInit() {
-    const first = document.querySelector('#drag2');
-    const second = document.querySelector('#drag3');
-    const third = document.querySelector('#drag4');
+    const first = document.querySelector('#drag-1');
+    const second = document.querySelector('#drag-2');
+    const third = document.querySelector('#drag-3');
+
     first.addEventListener('dragstart', this.dragStart)
     second.addEventListener('dragstart', this.dragStart)
     third.addEventListener('dragstart', this.dragStart)
@@ -75,7 +78,7 @@ export class GamePage implements OnInit {
     third.addEventListener('dragend', this.dragEnd)
   }
 
-  dragStart(ev){
+  dragStart(ev) {
     const el = document.getElementById(ev.target.id);
     setTimeout(() => {
       el.classList.add('invisble');
@@ -141,13 +144,13 @@ export class GamePage implements OnInit {
   }
 
   deleteOrInsert(ev) {
-    if(this.isDelete){
+    if (this.isDelete) {
       const id = ev.target.id.split('x');
       let row = id[0];
       let column = id[1];
       this.playGround[row][column] = 0;
     }
-    if(this.isInsert){
+    if (this.isInsert) {
       const id = ev.target.id.split('x');
       let row = id[0];
       let column = id[1];
@@ -166,7 +169,6 @@ export class GamePage implements OnInit {
       this.lastSnapShot.push(x);
     });
 
-    console.debug();
     let referenceBox = this.sandName == 'second' ? this.secondBlock : (this.sandName == 'third' ? this.thirdBlock : this.firstBlock);
     let plusRow = referenceBox.length;
     let plusColumn = referenceBox[0].length;
@@ -192,9 +194,7 @@ export class GamePage implements OnInit {
       rw++;
     }
 
-
     //execute
-
     rw = 0;
     for (let i = row - this.pieceRow; i < row - this.pieceRow + plusRow; i++) {
       let cl = 0;
@@ -208,42 +208,63 @@ export class GamePage implements OnInit {
       }
       rw++;
     }
-    // console.log(this.lastSnapShot);
-    // console.log(this.playGround);
 
+    this.moves--;
     this.score = this.pattern(this.playGround, this.score);
+    let newBlock = this.getRandom();
+    if (this.moves > 0) {
+      if (this.sandName == 'second') {
+        this.secondBlock = this.emptyBlock;
+      }
 
-    let newBlock = Math.floor(Math.random() * 54) + 1;
-    if (this.sandName == 'second') {
-      this.secondObject = this.blocks[newBlock];
-      this.secondBlock = this.secondObject.block;
-    }
-    else if (this.sandName == 'third') {
-      this.thirdObject = this.blocks[newBlock];
-      this.thirdBlock = this.blocks[0].block;
-    }
-    else if (this.sandName == 'first') {
-      this.firstObject = this.blocks[newBlock];
-      this.firstBlock = this.firstObject.block;
-    }
+      else if (this.sandName == 'third') {
+        this.thirdBlock = this.emptyBlock;
+      }
 
+      else if (this.sandName == 'first') {
+        this.firstBlock = this.emptyBlock;
+      }
+    }
+    else {
+      this.moves = 3;
+      this.firstBlock = this.nextFirst.block;
+      this.secondBlock = this.nextSecond.block;
+      this.thirdBlock = this.nextThird.block;
 
+      this.nextFirst = this.blocks[this.getRandom()];
+      this.nextSecond = this.blocks[this.getRandom()];
+      this.nextThird = this.blocks[this.getRandom()];
+    }
   }
 
-  async settingsModal(){
+  showNext() {
+    console.log(document.querySelector('#next').classList);
+    if(!this.isNext){
+      document.getElementById('present').style.display = "none";
+      document.getElementById('next').style.display = "flex";
+      this.isNext = true;
+    }
+    else{
+      document.getElementById('present').style.display = "flex";
+      document.getElementById('next').style.display = "none";
+      this.isNext = false;
+    }
+  }
+
+  async settingsModal() {
     const modal = await this.modalCtrl.create({
       component: SettingsModule.component,
       cssClass: 'settings-modal-css',
+      mode : 'ios'
     })
     await modal.present();
   }
 
-  async profileNameModal(){
-    const modal = await this.modalCtrl.create({
-      component: ProfileNameComponent,
-      cssClass: 'profile-modal-css',
-      mode: 'ios'
-    })
-    await modal.present();
+  routeGameOver() {
+    this.router.navigate(['gameover']);
+  }
+
+  getRandom(): number {
+    return Math.floor(Math.random() * 54) + 1;
   }
 }

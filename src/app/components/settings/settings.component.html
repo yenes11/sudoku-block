@@ -6,7 +6,7 @@
     <div class="profile flex-center">
       <app-icon style="margin-bottom: -0.7vh" type="profile"></app-icon>
     </div>
-    <div class="profile-name">
+    <div class="profile-name" (click)="profileNameModal()">
       <app-icon type="edit-profile"></app-icon>
       Profile Name
     </div>
@@ -34,11 +34,10 @@
 
     <div class="badge-row" (click)="themeModal()">
       <div class="icon flex-center">
-        <app-icon class="mt" type="dark-mode"></app-icon>
+        <app-icon class="mt" type="themes"></app-icon>
       </div>
       <div class="badge">
-        DARK MODE
-        <ion-toggle mode="ios"></ion-toggle>
+        THEMES
       </div>
     </div>
 

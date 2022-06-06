@@ -5,14 +5,14 @@
 export const environment = {
   production: false,
   firebase: {
-    apiKey: "AIzaSyDdYiR9UhxKLe0ct0R_GsvRa2Lv_GtIiMY",
-    authDomain: "tanosudokugame.firebaseapp.com",
-    databaseURL: "https://tanosudokugame-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "tanosudokugame",
-    storageBucket: "tanosudokugame.appspot.com",
-    messagingSenderId: "746896043068",
-    appId: "1:746896043068:web:f084b53a0743e168d62739",
-    measurementId: "G-77TNQCQQ2T"
+    projectId: 'tanosudokugame',
+    appId: '1:746896043068:web:f084b53a0743e168d62739',
+    databaseURL: 'https://tanosudokugame-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'tanosudokugame.appspot.com',
+    apiKey: 'AIzaSyDdYiR9UhxKLe0ct0R_GsvRa2Lv_GtIiMY',
+    authDomain: 'tanosudokugame.firebaseapp.com',
+    messagingSenderId: '746896043068',
+    measurementId: 'G-77TNQCQQ2T',
   }
 };
 

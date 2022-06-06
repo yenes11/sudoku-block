@@ -1,6 +1,6 @@
 <ion-content>
 <div class="buttons">
-  <app-icon type="add" (click)="profileNameModal()"></app-icon>
+  <app-icon type="add" (click)="routeGameOver()"></app-icon>
   <app-icon type="settings" (click)="settingsModal()"></app-icon>
 
 </div>
@@ -44,26 +44,53 @@
       </div>
     </div>
 
-    <div class="container">
+    <div class="container" id="present">
 
-      <div draggable="true" (dragstart)="drag($event)" id="drag2">
+      <div draggable="true" (dragstart)="drag($event)" id="drag-1">
         <div class="sand-row" *ngFor="let sArray of firstBlock; index as i">
           <div (mousedown)="getId($event)" *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'first'"></div>
         </div>
       </div>
 
-      <div draggable="true" (dragstart)="drag($event)" id="drag3" >
+      <div draggable="true" (dragstart)="drag($event)" id="drag-2" >
           <div class="sand-row" *ngFor="let sArray of secondBlock; index as i">
             <div (mousedown)="getId($event)" *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'second'"></div>
           </div>
       </div>
 
-      <div draggable="true" (dragstart)="drag($event)" id="drag4" >
+      <div draggable="true" (dragstart)="drag($event)" id="drag-3" >
         <div class="sand-row" *ngFor="let sArray of thirdBlock; index as i">
           <div (mousedown)="getId($event)" *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'third'"></div>
         </div>
       </div>
 
+      <app-icon type="arrow-right" (click)="showNext()"></app-icon>
+
 
      </div>
+
+     <div class="container no-display" id="next">
+
+      <div id="drag-1">
+        <div class="sand-row" *ngFor="let sArray of nextFirst.block; index as i">
+          <div (mousedown)="getId($event)" *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full gray' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'first'"></div>
+        </div>
+      </div>
+
+      <div id="drag-2" >
+          <div class="sand-row" *ngFor="let sArray of nextSecond.block index as i">
+            <div (mousedown)="getId($event)" *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full gray' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'second'"></div>
+          </div>
+      </div>
+
+      <div id="drag-3" >
+        <div class="sand-row" *ngFor="let sArray of nextThird.block; index as i">
+          <div (mousedown)="getId($event)" *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full gray' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'third'"></div>
+        </div>
+      </div>
+
+      <app-icon type="arrow-right" (click)="showNext()"></app-icon>
+
+     </div>
+
 </ion-content>

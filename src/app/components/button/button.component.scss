@@ -1,36 +1,38 @@
 .blue {
   width: 270px;
   height: 50px;
-  background: #A6C4E8;
-  box-shadow: 0px -4px 50px #EDEDED, 0px 4px 25px rgba(96, 135, 185, 0.7);
+  background: #a6c4e8;
+  box-shadow: 0px -4px 50px #ededed, 0px 4px 25px rgba(96, 135, 185, 0.7);
   font-size: 30px;
   border: 4px solid transparent;
   background-clip: padding-box;
-  color:white;
+  color: white;
   border-radius: 18px;
   position: relative;
 }
 
-.blue::after, .white::after {
-  background: linear-gradient(#EAEEF3, #9BACC2);
-  top: -4px; bottom: -4px;
-  left: -4px; right: -4px;
+.blue::after,
+.white::after {
+  background: linear-gradient(#eaeef3, #9bacc2);
+  top: -4px;
+  bottom: -4px;
+  left: -4px;
+  right: -4px;
   position: absolute;
-  content: '';
+  content: "";
   z-index: -1;
   border-radius: 16px;
 }
-
 
 .white {
   width: 270px;
   height: 50px;
   background: #ffffff;
-  box-shadow: 0px -4px 50px #EDEDED, 0px 4px 25px rgba(96, 135, 185, 0.7);
+  box-shadow: 0px -4px 50px #ededed, 0px 4px 25px rgba(96, 135, 185, 0.7);
   font-size: 30px;
   border: 4px solid transparent;
   background-clip: padding-box;
-  color:#4E6E97;
+  color: #4e6e97;
   border-radius: 18px;
   position: relative;
 }
@@ -45,8 +47,10 @@
 
 .small::after {
   border-radius: 25px;
-  top: -2px; bottom: -2px;
-  left: -2px; right: -2px;
+  top: -2px;
+  bottom: -2px;
+  left: -2px;
+  right: -2px;
 }
 
 .xsmall {
@@ -59,6 +63,20 @@
 
 .xsmall::after {
   border-radius: 25px;
-  top: -2px; bottom: -2px;
-  left: -2px; right: -2px;
+  top: -2px;
+  bottom: -2px;
+  left: -2px;
+  right: -2px;
+}
+
+.normal {
+  background-color: #a6c4e8;
+  width: 159px;
+  height: 41px;
+  border-width: 0px 1px 1px 0px;
+  border-style: solid;
+  border-color: rgba(69, 71, 80, 0.65);
+  border-radius: 12px;
+  font-size: 25px;
+  color: #454750;
 }

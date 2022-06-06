@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "tanosudokugame": {
+      "hosting": {
+        "app": [
+          "tanosudokugame"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "tanosudokugame"
+  }
+}

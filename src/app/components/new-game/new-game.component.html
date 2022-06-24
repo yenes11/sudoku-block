@@ -1,16 +1,19 @@
-<div class="new-game flex-center">
-  If you start a new game,
-  <br />
-  the current game will be lost
-  <div class="space"></div>
-  <app-button
-  size="small"
-  text="START NEW GAME"
-  color="blue"
-  ></app-button>
-  <div class="space"></div>
-  <app-button  size="small" color="white" text="Cancel"></app-button>
+<div class="container">
+  <div class="new-game flex-center">
+    If you start a new game,
+    <br />
+    the current game will be lost
+    <div class="space"></div>
+    <app-button
+    size="small"
+    text="START NEW GAME"
+    color="blue"
+    ></app-button>
+    <div class="space"></div>
+    <app-button  size="small" color="white" text="Cancel"></app-button>
+  </div>
+
+  <app-icon type="close" (click)="close()" class="close"></app-icon>
 </div>
 
-<app-icon type="close" (click)="close()" class="close"></app-icon>
 

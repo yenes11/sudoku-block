@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "Tanosudoku",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}

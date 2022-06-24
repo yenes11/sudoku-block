@@ -1,9 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Abel&family=Plus+Jakarta+Sans&display=swap");
 
 ion-content {
   --overflow: hidden;
   --ion-background-color: white;
-  --ion-font-family: "Plus Jakarta Sans", sans-serif;
+  --ion-font-family: "Abel", sans-serif;
 }
 
 .row {
@@ -24,11 +24,37 @@ ion-content {
   align-items: center;
 }
 
+.handbox {
+  display: flex;
+  justify-content: space-around;
+  height: 75px;
+  align-items: center;
+}
+
+.popup {
+  width: 200px;
+  height: 100px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-radius: 25px;
+  font-family: "Abel", sans-serif;
+  font-size: 18px;
+  background-color: white;
+  color: black;
+}
+
+.popup .column {
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .container {
   display: flex;
   justify-content: space-around;
-  margin-top: 5vh;
-  height: 200px;
+  height: 125px;
   align-items: center;
 }
 
@@ -79,7 +105,7 @@ ion-content {
 
 .flex-left {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
 }
 
 .today-score {
@@ -171,7 +197,7 @@ ion-content {
   border: 1px solid black;
 } */
 
-// #drag2{
+// #drag-1, #drag-2, #drag-3{
 //   border: 1px solid black;
 // }
 
@@ -200,4 +226,9 @@ ion-content {
 
 .gray {
   background-color: #C6C6C6;
+}
+
+
+.bg-hover {
+  background-color: #a9c5e9;
 }

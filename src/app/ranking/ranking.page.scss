@@ -2,7 +2,7 @@
 
 ion-content {
   --overflow: hidden;
-  --background: url("/assets/images/home-square.png") 0 0/100% 100% no-repeat;
+  --background: url("/assets/images/home-square.png") 0 0/100% 100% no-repeat, white;
   --ion-font-family: "Abel", sans-serif;
 }
 
@@ -59,6 +59,7 @@ ion-content {
   display: flex;
   flex-direction: row;
   margin-top: 7px;
+  color: #454750;
 }
 
 .red {

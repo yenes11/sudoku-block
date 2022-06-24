@@ -4,15 +4,6 @@
   <app-icon type="settings" (click)="settingsModal()"></app-icon>
 
 </div>
-<!-- SCORE : {{ score }}
-   <div (click)="rotateOne()">ROTATE 1</div>
-   <div (click)="rotateTwo()">ROTATE 2</div>
-   <div (click)="rotateThree()">ROTATE 3</div>
-
-   <div (click)="undo()">UNDO</div>
-   <div id="del" (click)="toggleDelete()">DELETE MOD INACTIVE</div>
-   <div id="insert" (click)="toggleInsert()">INSERT MOD INACTIVE</div> -->
-
 
    <div class="scoreboard">
      <div class="current-score">{{ score }}</div>
@@ -28,39 +19,66 @@
      </div>
    </div>
 
-
-
-
    <div class="play-row" *ngFor="let sArray of playGround; index as i">
       <div *ngFor="let x of sArray; index as j" class="blck">
         <div *ngIf="j % 6 < 3">
-          <div *ngIf="i % 6 < 3" (click)="deleteOrInsert($event)" (drop)="drop($event)" (dragover)="allowDrop($event)"  [attr.id]="i+'x'+j" [ngClass]="x ? 'blue-play bg-full' : 'blue-play'"></div>
-          <div *ngIf="i % 6 >= 3" (click)="deleteOrInsert($event)" (drop)="drop($event)" (dragover)="allowDrop($event)"  [attr.id]="i+'x'+j" [ngClass]="x ? 'square-empty-play bg-full' : 'square-empty-play'"></div>
+          <div *ngIf="i % 6 < 3" #dropzone (click)="deleteOrInsert($event)" [attr.id]="i+'x'+j" [ngClass]="x == 1 ? 'blue-play bg-full' : x == 2 ? 'blue-play bg-hover' : 'blue-play'"></div>
+          <div *ngIf="i % 6 >= 3" #dropzone (click)="deleteOrInsert($event)" [attr.id]="i+'x'+j" [ngClass]="x == 1 ? 'square-empty-play bg-full' : x == 2 ? 'square-empty-play bg-hover' : 'square-empty-play'"></div>
         </div>
         <div *ngIf="j % 6 >= 3">
-          <div *ngIf="i % 6 >= 3" (click)="deleteOrInsert($event)" (drop)="drop($event)" (dragover)="allowDrop($event)"  [attr.id]="i+'x'+j" [ngClass]="x ? 'blue-play bg-full' : 'blue-play'"></div>
-          <div *ngIf="i % 6 < 3" (click)="deleteOrInsert($event)" (drop)="drop($event)" (dragover)="allowDrop($event)"  [attr.id]="i+'x'+j" [ngClass]="x ? 'square-empty-play bg-full' : 'square-empty-play'"></div>
+          <div *ngIf="i % 6 >= 3" #dropzone (click)="deleteOrInsert($event)" [attr.id]="i+'x'+j" [ngClass]="x == 1 ? 'blue-play bg-full' : x == 2 ? 'blue-play bg-hover' : 'blue-play'"></div>
+          <div *ngIf="i % 6 < 3" #dropzone (click)="deleteOrInsert($event)" [attr.id]="i+'x'+j" [ngClass]="x == 1 ? 'square-empty-play bg-full' : x == 2 ? 'square-empty-play bg-hover' : 'square-empty-play'"></div>
         </div>
       </div>
     </div>
 
+    <div class="handbox">
+      <app-icon [ngClass]="firstBlock == emptyBlock ? 'no-display' : ''" (click)="rotateOne()" type="rotate-left"></app-icon>
+      <app-icon [ngClass]="secondBlock == emptyBlock ? 'no-display' : ''" (click)="rotateTwo()" type="rotate-left"></app-icon>
+      <app-icon [ngClass]="thirdBlock == emptyBlock ? 'no-display' : ''" (click)="rotateThree()" type="rotate-left"></app-icon>
+      <app-icon id="trigger-button" type="joker"></app-icon>
+      <ion-popover mode="ios" trigger="trigger-button" size="auto">
+        <ng-template>
+          <ion-content>
+            <div class="popup">
+              <div class="column">
+                <span>{{ undoCount }}</span>
+                <app-icon (click)="undo()" type="undo"></app-icon>
+                <span>UNDO</span>
+              </div>
+              <div class="column">
+                <span>{{ addCount }}</span>
+                <app-icon (click)="toggleInsert()" type="add"></app-icon>
+                <span>ADD</span>
+              </div>
+              <div class="column">
+                <span>{{ deleteCount }}</span>
+                <app-icon (click)="toggleDelete()" type="delete"></app-icon>
+                <span>DELETE</span>
+              </div>
+            </div>
+          </ion-content>
+        </ng-template>
+      </ion-popover>
+    </div>
+
     <div class="container" id="present">
 
-      <div draggable="true" (dragstart)="drag($event)" id="drag-1">
+      <div #item id="drag-1">
         <div class="sand-row" *ngFor="let sArray of firstBlock; index as i">
-          <div (mousedown)="getId($event)" *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'first'"></div>
+          <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j"></div>
         </div>
       </div>
 
-      <div draggable="true" (dragstart)="drag($event)" id="drag-2" >
+      <div #item id="drag-2" >
           <div class="sand-row" *ngFor="let sArray of secondBlock; index as i">
-            <div (mousedown)="getId($event)" *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'second'"></div>
+            <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j"></div>
           </div>
       </div>
 
-      <div draggable="true" (dragstart)="drag($event)" id="drag-3" >
+      <div #item id="drag-3" >
         <div class="sand-row" *ngFor="let sArray of thirdBlock; index as i">
-          <div (mousedown)="getId($event)" *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'third'"></div>
+          <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j"></div>
         </div>
       </div>
 
@@ -73,19 +91,19 @@
 
       <div id="drag-1">
         <div class="sand-row" *ngFor="let sArray of nextFirst.block; index as i">
-          <div (mousedown)="getId($event)" *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full gray' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'first'"></div>
+          <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full gray' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'first'"></div>
         </div>
       </div>
 
       <div id="drag-2" >
           <div class="sand-row" *ngFor="let sArray of nextSecond.block index as i">
-            <div (mousedown)="getId($event)" *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full gray' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'second'"></div>
+            <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full gray' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'second'"></div>
           </div>
       </div>
 
       <div id="drag-3" >
         <div class="sand-row" *ngFor="let sArray of nextThird.block; index as i">
-          <div (mousedown)="getId($event)" *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full gray' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'third'"></div>
+          <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full gray' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'third'"></div>
         </div>
       </div>
 

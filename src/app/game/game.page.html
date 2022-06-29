@@ -33,10 +33,7 @@
     </div>
 
     <div class="handbox">
-      <app-icon [ngClass]="firstBlock == emptyBlock ? 'no-display' : ''" (click)="rotateOne()" type="rotate-left"></app-icon>
-      <app-icon [ngClass]="secondBlock == emptyBlock ? 'no-display' : ''" (click)="rotateTwo()" type="rotate-left"></app-icon>
-      <app-icon [ngClass]="thirdBlock == emptyBlock ? 'no-display' : ''" (click)="rotateThree()" type="rotate-left"></app-icon>
-      <app-icon id="trigger-button" type="joker"></app-icon>
+
       <ion-popover mode="ios" trigger="trigger-button" size="auto">
         <ng-template>
           <ion-content>
@@ -62,52 +59,67 @@
       </ion-popover>
     </div>
 
-    <div class="container" id="present">
+    <div class="block-container" id="present">
+      <div class="block-wrap">
+        <app-icon [ngClass]="firstBlock == emptyBlock ? 'no-display' : ''" (click)="rotateOne()" type="rotate-left"></app-icon>
 
-      <div #item id="drag-1">
-        <div class="sand-row" *ngFor="let sArray of firstBlock; index as i">
-          <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j"></div>
-        </div>
-      </div>
-
-      <div #item id="drag-2" >
-          <div class="sand-row" *ngFor="let sArray of secondBlock; index as i">
+        <div #item id="drag-1">
+          <div class="sand-row" *ngFor="let sArray of firstBlock; index as i">
             <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j"></div>
           </div>
+        </div>
       </div>
+      <div class="block-wrap">
+        <app-icon [ngClass]="secondBlock == emptyBlock ? 'no-display' : ''" (click)="rotateTwo()" type="rotate-left"></app-icon>
 
-      <div #item id="drag-3" >
-        <div class="sand-row" *ngFor="let sArray of thirdBlock; index as i">
-          <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j"></div>
+        <div #item id="drag-2" >
+            <div class="sand-row" *ngFor="let sArray of secondBlock; index as i">
+              <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j"></div>
+            </div>
         </div>
       </div>
 
-      <app-icon type="arrow-right" (click)="showNext()"></app-icon>
+      <div class="block-wrap">
+        <app-icon [ngClass]="thirdBlock == emptyBlock ? 'no-display' : ''" (click)="rotateThree()" type="rotate-left"></app-icon>
+
+        <div #item id="drag-3" >
+          <div class="sand-row" *ngFor="let sArray of thirdBlock; index as i">
+            <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block-wrap">
+        <app-icon id="trigger-button" type="joker"></app-icon>
+        <app-icon type="arrow-right" (click)="showNext()"></app-icon>
+      </div>
 
 
-     </div>
+    </div>
 
      <div class="container no-display" id="next">
 
       <div id="drag-1">
-        <div class="sand-row" *ngFor="let sArray of nextFirst.block; index as i">
+        <div class="sand-row" *ngFor="let sArray of nextFirstBlock; index as i">
           <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full gray' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'first'"></div>
         </div>
       </div>
 
       <div id="drag-2" >
-          <div class="sand-row" *ngFor="let sArray of nextSecond.block index as i">
+          <div class="sand-row" *ngFor="let sArray of nextSecondBlock index as i">
             <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full gray' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'second'"></div>
           </div>
       </div>
 
       <div id="drag-3" >
-        <div class="sand-row" *ngFor="let sArray of nextThird.block; index as i">
+        <div class="sand-row" *ngFor="let sArray of nextThirdBlock; index as i">
           <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full gray' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'third'"></div>
         </div>
       </div>
 
-      <app-icon type="arrow-right" (click)="showNext()"></app-icon>
+
+        <app-icon type="arrow-right" (click)="showNext()"></app-icon>
+
 
      </div>
 

@@ -6,6 +6,7 @@ import { ProfileNameModule } from '../components/profile-name/profile-name.modul
 import { Gesture, IonItem, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { GestureController } from '@ionic/angular';
+import { Block } from '../block';
 
 @Component({
   selector: 'app-game',
@@ -24,17 +25,26 @@ export class GamePage implements AfterViewInit {
   deleteCount = 3;
   emptyBlock = [[0]];
 
-  firstObject;
-  secondObject;
-  thirdObject;
-
-  nextFirst;
-  nextSecond;
-  nextThird;
+  firstObject: Block;
+  secondObject: Block;
+  thirdObject: Block;
 
   firstBlock;
   secondBlock;
   thirdBlock;
+
+  nextFirst: Block;
+  nextSecond: Block;
+  nextThird: Block;
+
+  nextFirstBlock;
+  nextSecondBlock;
+  nextThirdBlock;
+
+  currentRandoms = [];
+  nextRandoms = [];
+
+
 
   lastSnapShot = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -94,9 +104,6 @@ export class GamePage implements AfterViewInit {
           gestureName: 'drag',
           onStart: ev => {
             this.getSnapshot();
-            // let id = ev.event.target["id"].split('x');
-            // this.pieceRow = parseInt(id[0]);
-            // this.pieceColumn = parseInt(id[1]);
             this.sandId = div.nativeElement.id;
 
             div.nativeElement.style.transition = '.07s ease-out';
@@ -319,7 +326,6 @@ export class GamePage implements AfterViewInit {
     var referenceBox = referenceId == 'drag-1' ? this.firstBlock : referenceId == 'drag-2' ? this.secondBlock : this.thirdBlock;
     var plusRow = referenceBox.length;
     var plusColumn = referenceBox[0].length;
-    // console.log(referenceBox);
     var rowColumn = this.zoneId.split('x');
     var row = parseInt(rowColumn[0]);
     var column = parseInt(rowColumn[1]);
@@ -383,25 +389,46 @@ export class GamePage implements AfterViewInit {
     }
     else {
       this.moves = 3;
-
-      this.firstObject = this.nextFirst;
-      this.secondObject = this.nextSecond;
-      this.thirdObject = this.nextThird;
-
-      this.firstBlock = JSON.parse(JSON.stringify(this.firstObject.block));
-      this.secondBlock = JSON.parse(JSON.stringify(this.secondObject.block));
-      this.thirdBlock = JSON.parse(JSON.stringify(this.thirdObject.block));
-
-      var random1 = this.getRandom();
-      var random2 = this.getRandom();
-      var random3 = this.getRandom();
-
-      setTimeout(() => {
-        this.nextFirst = this.blocks[random1];
-        this.nextSecond = this.blocks[random2];
-        this.nextThird = this.blocks[random3];
-      }, 100);
+      this.setNext();
     }
+  }
+
+  async setNext() {
+    this.firstObject = this.nextFirst;
+    this.secondObject = this.nextSecond;
+    this.thirdObject = this.nextThird;
+
+    this.firstBlock = JSON.parse(JSON.stringify(this.firstObject.block));
+    this.secondBlock = JSON.parse(JSON.stringify(this.secondObject.block));
+    this.thirdBlock = JSON.parse(JSON.stringify(this.thirdObject.block));
+
+    try {
+      this.getRandom().then(ran => this.nextFirst = this.blocks[ran]).then(() => {
+        this.nextFirstBlock = this.nextFirst.block;
+      })
+
+      this.getRandom().then(ran => this.nextSecond = this.blocks[ran]).then(() => {
+        this.nextSecondBlock = this.nextSecond.block;
+      })
+
+      this.getRandom().then(ran => this.nextThird = this.blocks[ran]).then(() => {
+        this.nextThirdBlock = this.nextThird.block;
+      })
+    }
+    catch {
+      this.getRandom().then(ran => this.nextFirst = this.blocks[ran]).then(() => {
+        this.nextFirstBlock = this.nextFirst.block;
+      })
+
+      this.getRandom().then(ran => this.nextSecond = this.blocks[ran]).then(() => {
+        this.nextSecondBlock = this.nextSecond.block;
+      })
+
+      this.getRandom().then(ran => this.nextThird = this.blocks[ran]).then(() => {
+        this.nextThirdBlock = this.nextThird.block;
+      })
+    }
+    this.detector.detectChanges();
   }
 
 
@@ -410,20 +437,29 @@ export class GamePage implements AfterViewInit {
     setTimeout(() => this.updateGestures(), 1);
   }
 
+  async setEnv() {
+    this.getRandom().then(ran => this.firstObject = this.blocks[ran]).then(() =>
+      this.firstBlock = this.firstObject.block)
+
+    this.getRandom().then(ran => this.secondObject = this.blocks[ran]).then(() =>
+      this.secondBlock = this.secondObject.block)
+
+    this.getRandom().then(ran => this.thirdObject = this.blocks[ran]).then(() =>
+      this.thirdBlock = this.thirdObject.block)
+
+
+    this.getRandom().then(ran => this.nextFirst = this.blocks[ran]).then(() =>
+      this.nextFirstBlock = this.nextFirst.block)
+
+    this.getRandom().then(ran => this.nextSecond = this.blocks[ran]).then(() =>
+      this.nextSecondBlock = this.nextSecond.block)
+
+    this.getRandom().then(ran => this.nextThird = this.blocks[ran]).then(() =>
+      this.nextThirdBlock = this.nextThird.block)
+  }
+
   ngOnInit() {
-    this.firstObject = this.blocks[this.getRandom()];
-    this.secondObject = this.blocks[this.getRandom()];
-    this.thirdObject = this.blocks[this.getRandom()];
-
-    this.nextFirst = this.blocks[this.getRandom()];
-    this.nextSecond = this.blocks[this.getRandom()];
-    this.nextThird = this.blocks[this.getRandom()];
-
-    setTimeout(() => {
-      this.firstBlock = this.firstObject.block;
-      this.secondBlock = this.secondObject.block;
-      this.thirdBlock = this.thirdObject.block;
-    }, 10);
+    this.setEnv();
   }
 
 
@@ -509,7 +545,8 @@ export class GamePage implements AfterViewInit {
     this.router.navigate(['gameover']);
   }
 
-  getRandom(): number {
-    return Math.floor(Math.random() * 54) + 1;
+  async getRandom() {
+    return Math.floor(Math.random() * 55);
   }
+
 }

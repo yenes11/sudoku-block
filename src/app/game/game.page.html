@@ -1,126 +1,111 @@
 <ion-content>
-<div class="buttons">
-  <app-icon type="add" (click)="routeGameOver()"></app-icon>
-  <app-icon type="settings" (click)="settingsModal()"></app-icon>
 
-</div>
+<div class="grid">
 
-   <div class="scoreboard">
-     <div class="current-score">{{ score }}</div>
-     <div class="small-scoreboard">
-       <div class="today-score">
-        TODAY <br> 100
-        </div>
-       <div class="overall-score">
-         OVERALL
-         <div class="flex-left">
-          <app-icon class="row" type="trophy"></app-icon> &nbsp; 300 </div>
-        </div>
-     </div>
-   </div>
+  <div class="buttons">
+    <img src="/assets/images/plus.png" alt="plus" (click)="settingsModal()">
+    <img src="/assets/images/settings.png" alt="settings" (click)="settingsModal()"/>
+  </div>
 
-   <div class="play-row" *ngFor="let sArray of playGround; index as i">
-      <div *ngFor="let x of sArray; index as j" class="blck">
-        <div *ngIf="j % 6 < 3">
-          <div *ngIf="i % 6 < 3" #dropzone (click)="deleteOrInsert($event)" [attr.id]="i+'x'+j" [ngClass]="x == 1 ? 'blue-play bg-full' : x == 2 ? 'blue-play bg-hover' : 'blue-play'"></div>
-          <div *ngIf="i % 6 >= 3" #dropzone (click)="deleteOrInsert($event)" [attr.id]="i+'x'+j" [ngClass]="x == 1 ? 'square-empty-play bg-full' : x == 2 ? 'square-empty-play bg-hover' : 'square-empty-play'"></div>
-        </div>
-        <div *ngIf="j % 6 >= 3">
-          <div *ngIf="i % 6 >= 3" #dropzone (click)="deleteOrInsert($event)" [attr.id]="i+'x'+j" [ngClass]="x == 1 ? 'blue-play bg-full' : x == 2 ? 'blue-play bg-hover' : 'blue-play'"></div>
-          <div *ngIf="i % 6 < 3" #dropzone (click)="deleteOrInsert($event)" [attr.id]="i+'x'+j" [ngClass]="x == 1 ? 'square-empty-play bg-full' : x == 2 ? 'square-empty-play bg-hover' : 'square-empty-play'"></div>
-        </div>
+  <div class="scoreboard">
+    <div class="current-score">{{ score }}</div>
+
+      <div class="today-score">
+      TODAY <br> 100
       </div>
-    </div>
+      <div class="overall-score">
+        OVERALL
+        <div class="flex-left">
+        <app-icon class="row" type="trophy"></app-icon> &nbsp; 300 </div>
+      </div>
 
-    <div class="handbox">
+  </div>
 
-      <ion-popover mode="ios" trigger="trigger-button" size="auto">
-        <ng-template>
-          <ion-content>
-            <div class="popup">
-              <div class="column">
-                <span>{{ undoCount }}</span>
-                <app-icon (click)="undo()" type="undo"></app-icon>
-                <span>UNDO</span>
-              </div>
-              <div class="column">
-                <span>{{ addCount }}</span>
-                <app-icon (click)="toggleInsert()" type="add"></app-icon>
-                <span>ADD</span>
-              </div>
-              <div class="column">
-                <span>{{ deleteCount }}</span>
-                <app-icon (click)="toggleDelete()" type="delete"></app-icon>
-                <span>DELETE</span>
-              </div>
-            </div>
-          </ion-content>
-        </ng-template>
-      </ion-popover>
-    </div>
+  <div class="game">
+    <div class="play-row" *ngFor="let sArray of playGround; index as i">
+       <div *ngFor="let x of sArray; index as j" class="blck">
+           <div *ngIf="i % 6 < 3 && j % 6 < 3" #dropzone (click)="deleteOrInsert($event)" [attr.id]="i+'x'+j" [ngClass]="x == 1 ? 'blue-play bg-full' : x == 2 ? 'blue-play bg-hover' : 'blue-play'"></div>
+           <div *ngIf="i % 6 >= 3 && j % 6 < 3" #dropzone (click)="deleteOrInsert($event)" [attr.id]="i+'x'+j" [ngClass]="x == 1 ? 'square-empty-play bg-full' : x == 2 ? 'square-empty-play bg-hover' : 'square-empty-play'"></div>
+
+           <div *ngIf="i % 6 >= 3 && j % 6 >= 3" #dropzone (click)="deleteOrInsert($event)" [attr.id]="i+'x'+j" [ngClass]="x == 1 ? 'blue-play bg-full' : x == 2 ? 'blue-play bg-hover' : 'blue-play'"></div>
+           <div *ngIf="i % 6 < 3 && j % 6 >= 3" #dropzone (click)="deleteOrInsert($event)" [attr.id]="i+'x'+j" [ngClass]="x == 1 ? 'square-empty-play bg-full' : x == 2 ? 'square-empty-play bg-hover' : 'square-empty-play'"></div>
+       </div>
+     </div>
+  </div>
+
+  <ion-popover mode="ios" trigger="trigger-button" size="auto">
+    <ng-template>
+      <ion-content>
+        <div class="popup">
+          <div class="column">
+            <span>{{ undoCount }}</span>
+            <app-icon (click)="undo()" type="undo"></app-icon>
+            <span>UNDO</span>
+          </div>
+          <div class="column">
+            <span>{{ addCount }}</span>
+            <app-icon (click)="toggleInsert()" type="add"></app-icon>
+            <span>ADD</span>
+          </div>
+          <div class="column">
+            <span>{{ deleteCount }}</span>
+            <app-icon (click)="toggleDelete()" type="delete"></app-icon>
+            <span>DELETE</span>
+          </div>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-popover>
+
 
     <div class="block-container" id="present">
-      <div class="block-wrap">
-        <app-icon [ngClass]="firstBlock == emptyBlock ? 'no-display' : ''" (click)="rotateOne()" type="rotate-left"></app-icon>
+          <img id="one" [ngClass]="firstBlock == emptyBlock ? 'no-display' : ''" (click)="rotateOne()" src="/assets/images/left-rotate.png" alt="left-rotate">
+          <img id="two" [ngClass]="secondBlock == emptyBlock ? 'no-display' : ''" (click)="rotateTwo()" src="/assets/images/left-rotate.png" alt="left-rotate">
+          <img id="three" [ngClass]="thirdBlock == emptyBlock ? 'no-display' : ''" (click)="rotateThree()" src="/assets/images/left-rotate.png" alt="left-rotate">
+          <img id="trigger-button" src="/assets/images/joker.png" alt="joker">
 
-        <div #item id="drag-1">
-          <div class="sand-row" *ngFor="let sArray of firstBlock; index as i">
-            <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j"></div>
-          </div>
-        </div>
-      </div>
-      <div class="block-wrap">
-        <app-icon [ngClass]="secondBlock == emptyBlock ? 'no-display' : ''" (click)="rotateTwo()" type="rotate-left"></app-icon>
-
-        <div #item id="drag-2" >
-            <div class="sand-row" *ngFor="let sArray of secondBlock; index as i">
+          <div #item id="drag-1">
+            <div class="sand-row" *ngFor="let sArray of firstBlock; index as i">
               <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j"></div>
             </div>
-        </div>
-      </div>
-
-      <div class="block-wrap">
-        <app-icon [ngClass]="thirdBlock == emptyBlock ? 'no-display' : ''" (click)="rotateThree()" type="rotate-left"></app-icon>
-
-        <div #item id="drag-3" >
-          <div class="sand-row" *ngFor="let sArray of thirdBlock; index as i">
-            <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j"></div>
           </div>
-        </div>
-      </div>
 
-      <div class="block-wrap">
-        <app-icon id="trigger-button" type="joker"></app-icon>
-        <app-icon type="arrow-right" (click)="showNext()"></app-icon>
-      </div>
+          <div #item id="drag-2" >
+              <div class="sand-row" *ngFor="let sArray of secondBlock; index as i">
+                <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j"></div>
+              </div>
+          </div>
 
+          <div #item id="drag-3" >
+            <div class="sand-row" *ngFor="let sArray of thirdBlock; index as i">
+              <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j"></div>
+            </div>
+          </div>
 
+          <img src="/assets/images/right-arrows.png" alt="right arrows" (click)="showNext()" id="eight">
     </div>
 
-     <div class="container no-display" id="next">
-
-      <div id="drag-1">
-        <div class="sand-row" *ngFor="let sArray of nextFirstBlock; index as i">
-          <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full gray' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'first'"></div>
-        </div>
-      </div>
-
-      <div id="drag-2" >
-          <div class="sand-row" *ngFor="let sArray of nextSecondBlock index as i">
-            <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full gray' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'second'"></div>
+    <div class="block-container no-display" id="next">
+          <div id="drag-1">
+            <div class="sand-row" *ngFor="let sArray of nextFirstBlock; index as i">
+              <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full gray' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'first'"></div>
+            </div>
           </div>
-      </div>
 
-      <div id="drag-3" >
-        <div class="sand-row" *ngFor="let sArray of nextThirdBlock; index as i">
-          <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full gray' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'third'"></div>
-        </div>
-      </div>
+          <div id="drag-2" >
+              <div class="sand-row" *ngFor="let sArray of nextSecondBlock index as i">
+                <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full gray' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'second'"></div>
+              </div>
+          </div>
 
+          <div id="drag-3" >
+            <div class="sand-row" *ngFor="let sArray of nextThirdBlock; index as i">
+              <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full gray' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="'third'"></div>
+            </div>
+          </div>
 
-        <app-icon type="arrow-right" (click)="showNext()"></app-icon>
+          <img id="arrow-left" src="/assets/images/left-arrows.png" alt="show current" (click)="showNext()"/>
 
-
-     </div>
-
+    </div>
+  </div>
 </ion-content>

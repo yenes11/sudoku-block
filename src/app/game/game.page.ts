@@ -79,6 +79,7 @@ export class GamePage implements AfterViewInit {
   zoneId: string;
   zoneIdCtrl = false;
   zoneIdCheck;
+  params;
 
   constructor(private modalCtrl: ModalController, private router: Router, private gestureCtrl: GestureController, private detector: ChangeDetectorRef) { }
 
@@ -134,28 +135,31 @@ export class GamePage implements AfterViewInit {
               }
             }, 100);
           },
-          onMove: ev => {
+          onMove: (ev) => {
             div.nativeElement.style.transform = `translate(${ev.deltaX}px, ${ev.deltaY - 70}px)`;
             div.nativeElement.style.zIndex = 10;
 
             this.logId(ev.currentX, ev.currentY - 70);
 
             var allGood = this.checkDropZoneHover(ev.currentX, ev.currentY - 70);
-
             if (allGood) {
-
               if (this.zoneId != this.zoneIdCheck) {
                 this.zoneIdCtrl = !this.zoneIdCtrl;
-                this.playGround = JSON.parse(JSON.stringify(this.lastSnapShot));
+                if (this.params !== undefined) {
+                  this.placeBlocks(this.params[0], this.params[1], this.params[2], this.params[3], this.params[4])
+                }
+                // this.playGround = JSON.parse(JSON.stringify(this.lastSnapShot));
                 this.detector.detectChanges();
               }
 
               setTimeout(() => {
-                this.handleHover(div);
+                this.params = this.handleHover(div);
                 this.detector.detectChanges();
               }, 1)
             }
-
+            else {
+              //fix it
+            }
           },
           onEnd: ev => {
             this.playGround = JSON.parse(JSON.stringify(this.lastSnapShot));
@@ -250,71 +254,67 @@ export class GamePage implements AfterViewInit {
     });
   }
 
-  handleHover(div): void {
+  handleHover(div) {
     var referenceId = div.nativeElement.id;
     var referenceBox = referenceId == 'drag-1' ? this.firstBlock : referenceId == 'drag-2' ? this.secondBlock : this.thirdBlock;
     var plusRow = referenceBox.length;
     var plusColumn = referenceBox[0].length;
-    // console.log(referenceBox);
     var rowColumn = this.zoneId.split('x');
     var row = parseInt(rowColumn[0]);
     var column = parseInt(rowColumn[1]);
-    var isFit = true;
 
     if (column + plusColumn - this.pieceColumn - 1 >= 9 ||
       row + plusRow - this.pieceRow - 1 >= 9 ||
       column - this.pieceColumn < 0 ||
       row - this.pieceRow < 0) {
-      isFit = false;
-      // return;
+      return;
     }
 
     //check if available
     let rw = 0;
-
-    if (isFit) {
-      try {
-        for (let i = row - this.pieceRow; i < row - this.pieceRow + plusRow; i++) {
-          if (!isFit) break;
-          let cl = 0;
-          for (let j = column - this.pieceColumn; j < column - this.pieceColumn + plusColumn; j++) {
-            if (this.playGround[i][j] == 1 && referenceBox[rw][cl] == 1) {
-              // div.nativeElement.style.transition = '.2s ease-out';
-              // div.nativeElement.style.transform = 'translate(0px, 0px)';
-
-              // setTimeout(() => {
-              //   div.nativeElement.style.transition = '0s';
-              // }, 100);
-              // debugger;
-              isFit = false;
-              break;
-              // return;
-            }
-            cl++;
-          }
-          rw++;
+    for (let i = row - this.pieceRow; i < row - this.pieceRow + plusRow; i++) {
+      let cl = 0;
+      for (let j = column - this.pieceColumn; j < column - this.pieceColumn + plusColumn; j++) {
+        if (this.playGround[i][j] == 1 && referenceBox[rw][cl] == 1) {
+          return;
         }
+        cl++;
       }
-      catch (err) {
-        debugger;
-      }
-
+      rw++;
     }
 
-    if (isFit) {
-      rw = 0;
-      for (let i = row - this.pieceRow; i < row - this.pieceRow + plusRow; i++) {
-        let cl = 0;
-        for (let j = column - this.pieceColumn; j < column - this.pieceColumn + plusColumn; j++) {
-          if (referenceBox[rw][cl] == 0) {
-            cl++;
-            continue;
-          }
-          this.playGround[i][j] = 2;
+    rw = 0;
+    for (let i = row - this.pieceRow; i < row - this.pieceRow + plusRow; i++) {
+      let cl = 0;
+      for (let j = column - this.pieceColumn; j < column - this.pieceColumn + plusColumn; j++) {
+        if (referenceBox[rw][cl] == 0) {
+          cl++;
+          continue;
+        }
+        this.playGround[i][j] = 2;
+        cl++;
+      }
+      rw++;
+    }
+
+    return [row, plusRow, column, plusColumn, referenceBox];
+  }
+
+  async placeBlocks(row, plusRow, column, plusColumn, referenceBox) {
+    var rw = 0;
+    for (let i = row - this.pieceRow; i < row - this.pieceRow + plusRow; i++) {
+      let cl = 0;
+      for (let j = column - this.pieceColumn; j < column - this.pieceColumn + plusColumn; j++) {
+        if (referenceBox[rw][cl] == 0) {
+          cl++;
+          continue;
+        }
+        if (this.playGround[i][j] == 2) {
+          this.playGround[i][j] = 0;
           cl++;
         }
-        rw++;
       }
+      rw++;
     }
   }
 
@@ -398,36 +398,31 @@ export class GamePage implements AfterViewInit {
     this.secondObject = this.nextSecond;
     this.thirdObject = this.nextThird;
 
-    this.firstBlock = JSON.parse(JSON.stringify(this.firstObject.block));
-    this.secondBlock = JSON.parse(JSON.stringify(this.secondObject.block));
-    this.thirdBlock = JSON.parse(JSON.stringify(this.thirdObject.block));
+    if (this.firstObject !== undefined) this.firstBlock = await JSON.parse(JSON.stringify(this.firstObject.block));
+    else this.setNext();
 
-    try {
-      this.getRandom().then(ran => this.nextFirst = this.blocks[ran]).then(() => {
-        this.nextFirstBlock = this.nextFirst.block;
-      })
+    if (this.secondObject !== undefined) this.secondBlock = await JSON.parse(JSON.stringify(this.secondObject.block));
+    else this.setNext();
 
-      this.getRandom().then(ran => this.nextSecond = this.blocks[ran]).then(() => {
-        this.nextSecondBlock = this.nextSecond.block;
-      })
+    if (this.thirdObject !== undefined) this.thirdBlock = await JSON.parse(JSON.stringify(this.thirdObject.block));
+    else this.setNext();
 
-      this.getRandom().then(ran => this.nextThird = this.blocks[ran]).then(() => {
-        this.nextThirdBlock = this.nextThird.block;
-      })
-    }
-    catch {
-      this.getRandom().then(ran => this.nextFirst = this.blocks[ran]).then(() => {
-        this.nextFirstBlock = this.nextFirst.block;
-      })
 
-      this.getRandom().then(ran => this.nextSecond = this.blocks[ran]).then(() => {
-        this.nextSecondBlock = this.nextSecond.block;
-      })
+    await this.getRandom().then(obj => this.nextFirst = obj).then(() => {
+      if (this.nextFirst !== undefined) this.nextFirstBlock = this.nextFirst.block;
+      else this.setNext();
+    })
 
-      this.getRandom().then(ran => this.nextThird = this.blocks[ran]).then(() => {
-        this.nextThirdBlock = this.nextThird.block;
-      })
-    }
+    await this.getRandom().then(obj => this.nextSecond = obj).then(() => {
+      if (this.nextSecond !== undefined) this.nextSecondBlock = this.nextSecond.block;
+      else this.setNext();
+    })
+
+    await this.getRandom().then(obj => this.nextThird = obj).then(() => {
+      if (this.nextThird !== undefined) this.nextThirdBlock = this.nextThird.block;
+      else this.setNext();
+    })
+
     this.detector.detectChanges();
   }
 
@@ -438,27 +433,28 @@ export class GamePage implements AfterViewInit {
   }
 
   async setEnv() {
-    this.getRandom().then(ran => this.firstObject = this.blocks[ran]).then(() =>
-      this.firstBlock = this.firstObject.block)
+    await this.getRandom().then(obj => this.firstObject = obj).then(res =>
+      this.firstBlock = res.block)
 
-    this.getRandom().then(ran => this.secondObject = this.blocks[ran]).then(() =>
-      this.secondBlock = this.secondObject.block)
+    await this.getRandom().then(obj => this.secondObject = obj).then(res =>
+      this.secondBlock = res.block)
 
-    this.getRandom().then(ran => this.thirdObject = this.blocks[ran]).then(() =>
-      this.thirdBlock = this.thirdObject.block)
+    await this.getRandom().then(obj => this.thirdObject = obj).then(res =>
+      this.thirdBlock = res.block)
 
 
-    this.getRandom().then(ran => this.nextFirst = this.blocks[ran]).then(() =>
-      this.nextFirstBlock = this.nextFirst.block)
+    await this.getRandom().then(obj => this.nextFirst = obj).then(res =>
+      this.nextFirstBlock = res.block)
 
-    this.getRandom().then(ran => this.nextSecond = this.blocks[ran]).then(() =>
-      this.nextSecondBlock = this.nextSecond.block)
+    await this.getRandom().then(obj => this.nextSecond = obj).then(res =>
+      this.nextSecondBlock = res.block)
 
-    this.getRandom().then(ran => this.nextThird = this.blocks[ran]).then(() =>
-      this.nextThirdBlock = this.nextThird.block)
+    await this.getRandom().then(obj => this.nextThird = obj).then(res =>
+      this.nextThirdBlock = res.block)
   }
 
   ngOnInit() {
+    console.log(this.blocks.length)
     this.setEnv();
   }
 
@@ -522,11 +518,11 @@ export class GamePage implements AfterViewInit {
   showNext() {
     if (!this.isNext) {
       document.getElementById('present').style.display = "none";
-      document.getElementById('next').style.display = "flex";
+      document.getElementById('next').style.display = "grid";
       this.isNext = true;
     }
     else {
-      document.getElementById('present').style.display = "flex";
+      document.getElementById('present').style.display = "grid";
       document.getElementById('next').style.display = "none";
       this.isNext = false;
     }
@@ -546,7 +542,8 @@ export class GamePage implements AfterViewInit {
   }
 
   async getRandom() {
-    return Math.floor(Math.random() * 55);
+    var random = Math.floor(Math.random() * 54);
+    return this.blocks[random];
   }
 
 }

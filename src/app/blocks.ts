@@ -157,7 +157,7 @@ export const blocks = [
   {
     id: 32,
     block: [[1, 1], [0, 1], [0, 1]],
-    rotate: 33
+    rotate: 29
   },
   {
     id: 33,
@@ -227,17 +227,17 @@ export const blocks = [
   {
     id: 46,
     block: [[0, 1, 0], [0, 1, 0], [1, 1, 1]],
-    rotate: 47
+    rotate: 48
   },
   {
     id: 47,
     block: [[1, 1, 1], [0, 1, 0], [0, 1, 0]],
-    rotate: 48
+    rotate: 45
   },
   {
     id: 48,
     block: [[0, 0, 1], [1, 1, 1], [0, 0, 1]],
-    rotate: 45
+    rotate: 47
   },
   {
     id: 49,

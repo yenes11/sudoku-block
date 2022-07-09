@@ -8,9 +8,10 @@
     size="small"
     text="START NEW GAME"
     color="blue"
+    (click)="routeGame()"
     ></app-button>
     <div class="space"></div>
-    <app-button  size="small" color="white" text="Cancel"></app-button>
+    <app-button  size="small" color="white" (click)="close()" text="Cancel"></app-button>
   </div>
 
   <app-icon type="close" (click)="close()" class="close"></app-icon>

@@ -7,6 +7,11 @@ import { Gesture, IonItem, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { GestureController } from '@ionic/angular';
 import { Block } from '../block';
+import { Device } from '@ionic-native/device/ngx';
+import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import * as cloneDeep from 'lodash/cloneDeep';
+import * as isEqual from 'lodash/isEqual';
+import { Animation, AnimationController } from '@ionic/angular';
 
 @Component({
   selector: 'app-game',
@@ -15,36 +20,40 @@ import { Block } from '../block';
 })
 export class GamePage implements AfterViewInit {
   blocks = blocks;
+  userInfo: Object;
   isDelete = false;
   isInsert = false;
   isNext = false;
+  isSaved = false;
   pattern = patterns;
   moves = 3;
   undoCount = 1;
   addCount = 3;
   deleteCount = 3;
-  emptyBlock = [[0]];
+  emptyBlock = [[]];
+  emptyObject: Block = { id: -1, block: [[]], rotate: -1 };
+  lastReferenceBox: number;
+  lastReferenceBlock: Block;
+
+  firstEmpty: boolean;
+  secondEmpty: boolean;
+  thirdEmpty: boolean;
 
   firstObject: Block;
   secondObject: Block;
   thirdObject: Block;
 
-  firstBlock;
-  secondBlock;
-  thirdBlock;
+  firstBlock: Array<Array<number>>;
+  secondBlock: Array<Array<number>>;
+  thirdBlock: Array<Array<number>>;
 
   nextFirst: Block;
   nextSecond: Block;
   nextThird: Block;
 
-  nextFirstBlock;
-  nextSecondBlock;
-  nextThirdBlock;
-
-  currentRandoms = [];
-  nextRandoms = [];
-
-
+  nextFirstBlock: Array<Array<number>>;
+  nextSecondBlock: Array<Array<number>>;
+  nextThirdBlock: Array<Array<number>>;
 
   lastSnapShot = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -81,10 +90,94 @@ export class GamePage implements AfterViewInit {
   zoneIdCheck;
   params;
 
-  constructor(private modalCtrl: ModalController, private router: Router, private gestureCtrl: GestureController, private detector: ChangeDetectorRef) { }
+  constructor(private modalCtrl: ModalController, private router: Router,
+    private gestureCtrl: GestureController, private detector: ChangeDetectorRef, private device: Device,
+    private animationCtrl: AnimationController) { }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => this.updateGestures(), 1);
+
+  }
+
+  async playAnimation() {
+    const squareA = this.animationCtrl.create()
+    .addElement(document.getElementById('6x6'))
+    .fill('none')
+    .duration(500)
+    .keyframes([
+      { offset: 0, transform: 'scale(1) rotate(0)', opacity: 1 },
+      { offset: 0.5, transform: 'scale(.5) rotate(90deg)', opacity: 0.5},
+      { offset: 1, transform: 'scale(0) rotate(180deg)', opacity: 0 }
+    ]);
+
+    await squareA.play();
+  }
 
 
-  //-----------------------------------------------------------------------------------
+
+  async ngOnInit() {
+    await this.setSavedData();
+    if (!this.isSaved) this.setEnv();
+    this.detector.detectChanges();
+    console.log(this.moves);
+    // console.log(this.firstObject);
+    // console.log(isEqual(this.firstObject,this.emptyObject));
+    this.firstEmpty = isEqual(this.firstObject, this.emptyObject);
+    this.secondEmpty = isEqual(this.secondObject, this.emptyObject);
+    this.thirdEmpty = isEqual(this.thirdObject, this.emptyObject);
+
+
+  }
+
+  setSavedData = async () => {
+    const contents = await Filesystem.readFile({
+      path: 'user/info.txt',
+      directory: Directory.Data,
+      encoding: Encoding.UTF8,
+    });
+    // debugger;
+    var data = JSON.parse(contents.data);
+    this.userInfo = data;
+    var isSaved = data['isSaved'];
+    if (isSaved) {
+      this.playGround = cloneDeep(data.lastSnapshot);
+      this.lastSnapShot = cloneDeep(data.lastSnapShot);
+
+      this.firstObject = data.firstObject;
+      this.secondObject = data.secondObject;
+      this.thirdObject = data.thirdObject;
+
+      this.firstBlock = this.firstObject.block;
+      this.secondBlock = this.secondObject.block;
+      this.thirdBlock = this.thirdObject.block;
+
+      this.nextFirst = data.nextFirst;
+      this.nextSecond = data.nextSecond;
+      this.nextThird = data.nextThird;
+
+      this.nextFirstBlock = this.nextFirst.block;
+      this.nextSecondBlock = this.nextSecond.block;
+      this.nextThirdBlock = this.nextThird.block;
+
+      this.deleteCount = data.delete;
+      this.addCount = data.add;
+      this.undoCount = data.undo;
+
+      this.moves = data.moves;
+
+      this.isSaved = isSaved;
+    }
+  };
+
+  writeSecretFile = async (info) => {
+    await Filesystem.writeFile({
+      path: 'user/info.txt',
+      data: JSON.stringify(info),
+      directory: Directory.Data,
+      encoding: Encoding.UTF8,
+    });
+  };
+
 
   @ViewChildren('item', { read: ElementRef }) items: QueryList<ElementRef>;
   gestureArray: Gesture[] = [];
@@ -139,15 +232,16 @@ export class GamePage implements AfterViewInit {
             div.nativeElement.style.transform = `translate(${ev.deltaX}px, ${ev.deltaY - 70}px)`;
             div.nativeElement.style.zIndex = 10;
 
-            this.logId(ev.currentX, ev.currentY - 70);
+            // this.logId(ev.currentX, ev.currentY - 70);
 
             var allGood = this.checkDropZoneHover(ev.currentX, ev.currentY - 70);
             if (allGood) {
               if (this.zoneId != this.zoneIdCheck) {
                 this.zoneIdCtrl = !this.zoneIdCtrl;
-                if (this.params !== undefined) {
-                  this.placeBlocks(this.params[0], this.params[1], this.params[2], this.params[3], this.params[4])
-                }
+                // if (this.params !== undefined) {
+                //   this.placeBlocks(this.params[0], this.params[1], this.params[2], this.params[3], this.params[4])
+                // }
+                this.playGround = cloneDeep(this.lastSnapShot);
                 // this.playGround = JSON.parse(JSON.stringify(this.lastSnapShot));
                 this.detector.detectChanges();
               }
@@ -162,7 +256,7 @@ export class GamePage implements AfterViewInit {
             }
           },
           onEnd: ev => {
-            this.playGround = JSON.parse(JSON.stringify(this.lastSnapShot));
+            this.playGround = cloneDeep(this.lastSnapShot);
             var allGood = this.checkDropZoneHover(ev.currentX, ev.currentY - 70);
             if (allGood) {
               this.handleDrop(div);
@@ -204,7 +298,6 @@ export class GamePage implements AfterViewInit {
     return [children.length, grandChild.length];
   }
 
-
   checkDropZoneHover(x, y): boolean {
     // debugger;
     var isIt = false;
@@ -221,16 +314,6 @@ export class GamePage implements AfterViewInit {
       }
     })
     return isIt;
-  }
-
-  logId(x, y) {
-    const zones = [...this.dropZones];
-    zones.forEach(z => {
-      const dz = z.nativeElement.getBoundingClientRect();
-      if (this.isInZone(x, y, dz)) {
-        // console.log(z.nativeElement.id);
-      }
-    })
   }
 
   isInZone(x, y, z) {
@@ -376,21 +459,45 @@ export class GamePage implements AfterViewInit {
     let newBlock = this.getRandom();
     if (this.moves > 0) {
       if (this.sandId == 'drag-2') {
-        this.secondBlock = this.emptyBlock;
+        this.secondObject = this.emptyObject;
+        this.secondBlock = this.secondObject.block;
+        // this.secondEmpty = isEqual(this.secondObject, this.emptyObject);
+        this.lastReferenceBlock = this.secondObject;
       }
 
       else if (this.sandId == 'drag-3') {
-        this.thirdBlock = this.emptyBlock;
+        this.thirdObject = this.emptyObject;
+        this.thirdBlock = this.thirdObject.block;
+        // this.thirdEmpty = isEqual(this.thirdObject, this.emptyObject);
+        this.lastReferenceBlock = this.thirdObject;
       }
 
       else if (this.sandId == 'drag-1') {
-        this.firstBlock = this.emptyBlock;
+        this.firstObject = this.emptyObject;
+        this.firstBlock = this.firstObject.block;
+        // this.firstEmpty = isEqual(this.firstObject, this.emptyObject);
+        this.lastReferenceBlock = this.firstObject;
       }
     }
     else {
       this.moves = 3;
       this.setNext();
     }
+
+    this.userInfo = {
+      ...this.userInfo,
+      lastSnapshot: this.playGround,
+      firstObject: this.firstObject,
+      secondObject: this.secondObject,
+      thirdObject: this.thirdObject,
+      nextFirst: this.nextFirst,
+      nextSecond: this.nextSecond,
+      nextThird: this.nextThird,
+      moves: this.moves,
+      isSaved: true
+    }
+    console.log(this.userInfo['moves'])
+    this.writeSecretFile(this.userInfo);
   }
 
   async setNext() {
@@ -427,10 +534,6 @@ export class GamePage implements AfterViewInit {
   }
 
 
-  //---------------------------------------------------------------------------------------------
-  ngAfterViewInit(): void {
-    setTimeout(() => this.updateGestures(), 1);
-  }
 
   async setEnv() {
     await this.getRandom().then(obj => this.firstObject = obj).then(res =>
@@ -442,7 +545,6 @@ export class GamePage implements AfterViewInit {
     await this.getRandom().then(obj => this.thirdObject = obj).then(res =>
       this.thirdBlock = res.block)
 
-
     await this.getRandom().then(obj => this.nextFirst = obj).then(res =>
       this.nextFirstBlock = res.block)
 
@@ -453,16 +555,26 @@ export class GamePage implements AfterViewInit {
       this.nextThirdBlock = res.block)
   }
 
-  ngOnInit() {
-    console.log(this.blocks.length)
-    this.setEnv();
-  }
-
-
   undo() {
     if (this.undoCount > 0) {
-      this.playGround = this.lastSnapShot;
+      this.playGround = cloneDeep(this.lastSnapShot);
       this.undoCount--;
+      if (this.sandId == 'drag-1') {
+        this.firstObject = this.lastReferenceBlock;
+        this.firstBlock = this.firstObject.block;
+      }
+      else if (this.sandId == 'drag-2') {
+        this.secondObject = this.lastReferenceBlock;
+        this.secondBlock = this.secondObject.block;
+      }
+      else if (this.sandId == 'drag-3') {
+        this.thirdObject = this.lastReferenceBlock;
+        this.thirdBlock = this.thirdObject.block;
+      }
+    }
+    this.userInfo = {
+      ...this.userInfo,
+      undo: this.undoCount
     }
   }
 
@@ -480,10 +592,6 @@ export class GamePage implements AfterViewInit {
     let rotate = this.thirdObject.rotate;
     this.thirdObject = this.blocks.filter(obj => obj.id == rotate)[0];
     this.thirdBlock = this.thirdObject.block;
-  }
-
-  allowDrop(ev: any) {
-    ev.preventDefault();
   }
 
   toggleDelete() {
@@ -513,6 +621,15 @@ export class GamePage implements AfterViewInit {
     }
     this.score = this.pattern(this.playGround, this.score);
     this.detector.detectChanges();
+
+    this.userInfo = {
+      ...this.userInfo,
+      add: this.addCount,
+      delete: this.deleteCount,
+      lastSnapshot: this.playGround
+    }
+
+    this.writeSecretFile(this.userInfo);
   }
 
   showNext() {
@@ -544,6 +661,10 @@ export class GamePage implements AfterViewInit {
   async getRandom() {
     var random = Math.floor(Math.random() * 54);
     return this.blocks[random];
+  }
+
+  isEven(one, two) {
+    return isEqual(one, two);
   }
 
 }

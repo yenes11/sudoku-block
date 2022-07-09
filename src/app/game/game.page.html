@@ -3,7 +3,7 @@
 <div class="grid">
 
   <div class="buttons">
-    <img src="/assets/images/plus.png" alt="plus" (click)="settingsModal()">
+    <img src="/assets/images/plus.png" alt="plus" (click)="playAnimation()">
     <img src="/assets/images/settings.png" alt="settings" (click)="settingsModal()"/>
   </div>
 
@@ -59,9 +59,9 @@
 
 
     <div class="block-container" id="present">
-          <img id="one" [ngClass]="firstBlock == emptyBlock ? 'no-display' : ''" (click)="rotateOne()" src="/assets/images/left-rotate.png" alt="left-rotate">
-          <img id="two" [ngClass]="secondBlock == emptyBlock ? 'no-display' : ''" (click)="rotateTwo()" src="/assets/images/left-rotate.png" alt="left-rotate">
-          <img id="three" [ngClass]="thirdBlock == emptyBlock ? 'no-display' : ''" (click)="rotateThree()" src="/assets/images/left-rotate.png" alt="left-rotate">
+          <img id="one" [ngClass]="isEven(firstObject, emptyObject) ? 'no-display' : ''" (click)="rotateOne()" src="/assets/images/left-rotate.png" alt="left-rotate">
+          <img id="two" [ngClass]="isEven(secondObject, emptyObject) ? 'no-display' : ''" (click)="rotateTwo()" src="/assets/images/left-rotate.png" alt="left-rotate">
+          <img id="three" [ngClass]="isEven(thirdObject, emptyObject) ? 'no-display' : ''" (click)="rotateThree()" src="/assets/images/left-rotate.png" alt="left-rotate">
           <img id="trigger-button" src="/assets/images/joker.png" alt="joker">
 
           <div #item id="drag-1">

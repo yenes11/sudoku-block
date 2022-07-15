@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { NewGameComponent } from '../components/new-game/new-game.component';
 import { SettingsModule } from '../components/settings/settings.module';
@@ -20,18 +20,19 @@ export class HomePage {
 
 
   bestScore: number;
-  isExist: boolean;
+  isExist: boolean = false        ;
   isSaved: boolean;
-
+  x;
   userData = {
     id: this.device.uuid,
     name: this.device.model,
     weekly: 0,
     monthly: 0,
     overall: 0,
-    isSaved: true,
-    delete: 1,
-    add: 2,
+    isSaved: false,
+    score: 0,
+    delete: 3,
+    add: 3,
     undo: 1,
     moves: 3,
     firstObject: {
@@ -64,11 +65,22 @@ export class HomePage {
       block: [[0, 1, 0], [1, 1, 1]],
       rotate: 22
     },
+    playground: [
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ],
     lastSnapshot: [
       [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 1, 0, 0, 0, 0],
-      [0, 0, 0, 0, 1, 0, 0, 0, 0],
-      [0, 0, 0, 0, 1, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -90,11 +102,26 @@ export class HomePage {
       }
     });
 
+
+
+  }
+
+  refresh() {
+    document.getElementById('info').innerHTML = this.isSaved.toString()
+    this.detector.detectChanges();
+  }
+
+  ngOnInit() {
     this.isFileExist()
-    if(this.isExist) {
+    if(!this.isExist) {
       this.writeSecretFile();
     }
     this.readSecretFile();
+    setTimeout(() => {
+      this.detector.detectChanges();
+
+    }, 2000)
+    // this.getUri()
   }
 
   async newGameModal() {
@@ -120,28 +147,39 @@ export class HomePage {
 
   isFileExist = async () => {
     const output = await Filesystem.readdir({
-      path: 'user',
-      directory: Directory.Data
+      path: 'info',
+      directory: Directory.Documents
     });
-
-    this.isExist = output.files.length == 0 ? false : true;
+    console.log(output.files);
+    for (var file of output.files) {
+      if (file == 'user.txt') this.isExist = true;
+    }
   }
 
   writeSecretFile = async () => {
     await Filesystem.writeFile({
-      path: 'user/info.txt',
+      path: 'info/user.txt',
       data: JSON.stringify(this.userData),
-      directory: Directory.Data,
+      directory: Directory.Documents,
       encoding: Encoding.UTF8,
     });
+    this.detector.detectChanges();
   };
+
+  getUri = async () => {
+    await Filesystem.deleteFile({
+      path: 'info/user.txt',
+      directory:Directory.Documents
+    })
+  }
 
   readSecretFile = async () => {
     const contents = await Filesystem.readFile({
-      path: 'user/info.txt',
-      directory: Directory.Data,
+      path: 'info/user.txt',
+      directory: Directory.Documents,
       encoding: Encoding.UTF8,
     });
+    this.x = contents.data
     var data = JSON.parse(contents.data)
     console.log(data);
     this.bestScore = data['overall'];

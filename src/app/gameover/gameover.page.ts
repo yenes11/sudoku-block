@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-gameover',
@@ -8,7 +9,11 @@ import { Router } from '@angular/router';
 })
 export class GameoverPage implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private platform: Platform) {
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      this.router.navigate(['home'])
+    });
+  }
 
   ngOnInit() {
   }

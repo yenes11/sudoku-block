@@ -1,4 +1,4 @@
-export const patterns = (arr: Array<Array<number>>, score: number) => {
+export const patterns = (arr: Array<Array<number>>, score) => {
   var squares = [];
   var columns = [];
   var rows = [];
@@ -18,21 +18,12 @@ export const patterns = (arr: Array<Array<number>>, score: number) => {
         }
       }
 
-      //execute
       if (isScore) {
-        // score++;
-        // for (let i = row; i < row + 3; i++) {
-        //   for (let j = col; j < col + 3; j++) {
-        //     arr[i][j] = 0;
-        //   }
-        // }
         squares.push([row, col])
       }
       isScore = true;
     }
   }
-
-
 
   for (let i = 0; i < 9; i++) {
     var isOne = true;
@@ -43,10 +34,6 @@ export const patterns = (arr: Array<Array<number>>, score: number) => {
       }
     }
     if (isOne) {
-      // score++;
-      // for(let j = 0; j < 9; j++){
-      //   arr[j][i] = 0;
-      // }
       columns.push(i);
     }
   }
@@ -55,8 +42,6 @@ export const patterns = (arr: Array<Array<number>>, score: number) => {
 
   for (let i = 0; i < 9; i++) {
     if (allOne(arr[i])) {
-      // score++;
-      // arr[i] = [0, 0, 0, 0, 0, 0, 0, 0, 0];
       rows.push(i);
     }
   }
@@ -64,11 +49,42 @@ export const patterns = (arr: Array<Array<number>>, score: number) => {
 //---------------------------------------- 0 -------------------------------------------//
 
   //execute squares
+  // squares.forEach(l => {
+  //   score++;
+  //   for (let i = l[0]; i < l[0] + 3; i++) {
+  //     for (let j = l[1]; j < l[1] + 3; j++) {
+  //       arr[i][j] = 0;
+  //     }
+  //   }
+  // })
+
+  //execute columns
+  // columns.forEach(i => {
+  //   score++;
+  //   for (let j = 0; j < 9; j++) {
+  //     arr[j][i] = 0;
+  //   }
+  // })
+
+  //execute rows
+  // rows.forEach(i => {
+  //   score++;
+  //   arr[i] = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+  // })
+
+  return [rows, columns, squares];
+}
+
+export const executePatterns = (score, playGround, props) => {
+  var squares = props[2];
+  var columns = props[1];
+  var rows = props[0];
+
   squares.forEach(l => {
     score++;
     for (let i = l[0]; i < l[0] + 3; i++) {
       for (let j = l[1]; j < l[1] + 3; j++) {
-        arr[i][j] = 0;
+        playGround[i][j] = 0;
       }
     }
   })
@@ -77,13 +93,14 @@ export const patterns = (arr: Array<Array<number>>, score: number) => {
   columns.forEach(i => {
     score++;
     for (let j = 0; j < 9; j++) {
-      arr[j][i] = 0;
+      playGround[j][i] = 0;
     }
   })
 
   //execute rows
   rows.forEach(i => {
-    arr[i] = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+    score++;
+    playGround[i] = [0, 0, 0, 0, 0, 0, 0, 0, 0];
   })
 
   return score;

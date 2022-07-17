@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { blocks } from '../blocks';
-import { patterns, executePatterns } from '../patterns';
+import { patterns, executePatterns, willBreakPatterns } from '../patterns';
 import { SettingsModule } from '../components/settings/settings.module';
 import { ProfileNameModule } from '../components/profile-name/profile-name.module';
 import { Gesture, IonItem, ModalController } from '@ionic/angular';
@@ -12,6 +12,7 @@ import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 import * as cloneDeep from 'lodash/cloneDeep';
 import * as isEqual from 'lodash/isEqual';
 import { Animation, AnimationController, ToastController, AlertController } from '@ionic/angular';
+import { StorageService } from '../storage.service';
 
 @Component({
   selector: 'app-game',
@@ -20,13 +21,14 @@ import { Animation, AnimationController, ToastController, AlertController } from
 })
 export class GamePage implements AfterViewInit {
   blocks = blocks;
-  userInfo: Object;
+  userInfo;
   isDelete = false;
   isInsert = false;
   isNext = false;
   isSaved = false;
   pattern = patterns;
   executePatterns = executePatterns;
+  willBreakPatterns = willBreakPatterns;
   moves = 3;
   undoCount = 1;
   addCount = 3;
@@ -68,6 +70,18 @@ export class GamePage implements AfterViewInit {
     [0, 0, 0, 0, 0, 0, 0, 0, 0]
   ];
 
+  hoverSnapShot = [
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0]
+  ];
+
   playGround =
     [
       [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -87,6 +101,7 @@ export class GamePage implements AfterViewInit {
   score: number | any[] = 0;
   lastScore: number | any[] = 0;
   sandId: string;
+  lastSandId: string;
   zoneId: string;
   zoneIdCtrl = false;
   zoneIdCheck;
@@ -94,7 +109,8 @@ export class GamePage implements AfterViewInit {
 
   constructor(private modalCtrl: ModalController, private router: Router,
     private gestureCtrl: GestureController, private detector: ChangeDetectorRef, private device: Device,
-    private animationCtrl: AnimationController, private toastController: ToastController, private alertController: AlertController) { }
+    private animationCtrl: AnimationController, private toastController: ToastController, private alertController: AlertController,
+    private storageService: StorageService) { }
 
   ngAfterViewInit(): void {
     setTimeout(() => this.updateGestures(), 1);
@@ -116,14 +132,14 @@ export class GamePage implements AfterViewInit {
       // message: 'GAME OVER!',
       cssClass: 'game-over-alert',
       backdropDismiss: false,
-      mode:'ios',
+      mode: 'ios',
       keyboardClose: false,
     });
     await alert.present();
     setTimeout(async () => {
       await alert.dismiss();
       this.router.navigate(['gameover']);
-    },2000)
+    }, 2000)
   }
 
   playAnimation() {
@@ -141,63 +157,100 @@ export class GamePage implements AfterViewInit {
   }
 
 
-d
+  cl() {
+    console.log(this.userInfo);
+
+  }
   async ngOnInit() {
-    await this.setSavedData();
-    if (!this.isSaved) this.setEnv();
-    this.d = JSON.stringify(this.userInfo);
+    setTimeout(async () => {
+      await this.getSavedData();
+      this.detector.detectChanges();
+    }, 300)
+
+    if (!this.isSaved) await this.setEnv();
     this.detector.detectChanges();
     this.firstEmpty = isEqual(this.firstObject, this.emptyObject);
     this.secondEmpty = isEqual(this.secondObject, this.emptyObject);
     this.thirdEmpty = isEqual(this.thirdObject, this.emptyObject);
-    console.log(this.userInfo['isSaved'])
+  }
+
+
+
+  async getSavedData() {
+    this.storageService.getData().subscribe(res => {
+
+      this.userInfo = res;
+      console.log(this.userInfo)
+      var isSaved = this.userInfo['isSaved'];
+      this.isSaved = isSaved;
+      if (isSaved) {
+        this.playGround = cloneDeep(this.userInfo.playground);
+        this.lastSnapShot = cloneDeep(this.userInfo.lastSnapshot);
+        this.firstObject = this.userInfo.firstObject;
+        this.secondObject = this.userInfo.secondObject;
+        this.thirdObject = this.userInfo.thirdObject;
+
+        this.firstBlock = this.firstObject.block;
+        this.secondBlock = this.secondObject.block;
+        this.thirdBlock = this.thirdObject.block;
+
+        this.nextFirst = this.userInfo.nextFirst;
+        this.nextSecond = this.userInfo.nextSecond;
+        this.nextThird = this.userInfo.nextThird;
+
+        this.nextFirstBlock = this.nextFirst.block;
+        this.nextSecondBlock = this.nextSecond.block;
+        this.nextThirdBlock = this.nextThird.block;
+
+        this.deleteCount = this.userInfo.delete;
+        this.addCount = this.userInfo.add;
+        this.undoCount = this.userInfo.undo;
+
+        this.moves = this.userInfo.moves;
+        this.score = this.userInfo.score;
+        this.lastSandId = this.userInfo.lastSandId;
+        this.lastReferenceBlock = this.userInfo.lastReferenceBlock;
+      }
+    })
   }
 
   setSavedData = async () => {
-    const contents = await Filesystem.readFile({
-      path: 'info/user.txt',
-      directory: Directory.Documents,
-      encoding: Encoding.UTF8,
-    });
-    // debugger;
-    var data = JSON.parse(contents.data);
-    this.userInfo = data;
-    var isSaved = data['isSaved'];
+    var isSaved = this.userInfo['isSaved'];
+    this.isSaved = isSaved;
     if (isSaved) {
-      this.playGround = cloneDeep(data.playground);
-      this.lastSnapShot = cloneDeep(data.lastSnapShot);
+      this.playGround = cloneDeep(this.userInfo.playground);
+      this.lastSnapShot = cloneDeep(this.userInfo.lastSnapShot);
 
-      this.firstObject = data.firstObject;
-      this.secondObject = data.secondObject;
-      this.thirdObject = data.thirdObject;
+      this.firstObject = this.userInfo.firstObject;
+      this.secondObject = this.userInfo.secondObject;
+      this.thirdObject = this.userInfo.thirdObject;
 
       this.firstBlock = this.firstObject.block;
       this.secondBlock = this.secondObject.block;
       this.thirdBlock = this.thirdObject.block;
 
-      this.nextFirst = data.nextFirst;
-      this.nextSecond = data.nextSecond;
-      this.nextThird = data.nextThird;
+      this.nextFirst = this.userInfo.nextFirst;
+      this.nextSecond = this.userInfo.nextSecond;
+      this.nextThird = this.userInfo.nextThird;
 
       this.nextFirstBlock = this.nextFirst.block;
       this.nextSecondBlock = this.nextSecond.block;
       this.nextThirdBlock = this.nextThird.block;
 
-      this.deleteCount = data.delete;
-      this.addCount = data.add;
-      this.undoCount = data.undo;
+      this.deleteCount = this.userInfo.delete;
+      this.addCount = this.userInfo.add;
+      this.undoCount = this.userInfo.undo;
 
-      this.moves = data.moves;
-      this.score = data.score;
-      this.isSaved = isSaved;
+      this.moves = this.userInfo.moves;
+      this.score = this.userInfo.score;
     }
   };
 
   writeSecretFile = async (info) => {
     await Filesystem.writeFile({
-      path: 'info/user.txt',
+      path: 'secret/user.txt',
       data: JSON.stringify(info),
-      directory: Directory.Documents,
+      directory: Directory.Data,
       encoding: Encoding.UTF8,
     });
   };
@@ -221,14 +274,11 @@ d
           threshold: 0,
           gestureName: 'drag',
           onStart: ev => {
-            this.getSnapshot();
+            this.getHoverSnapshot();
             this.sandId = div.nativeElement.id;
 
             div.nativeElement.style.transition = '.07s ease-out';
             div.nativeElement.style.transform = `translate(0px, -70px)`;
-            // setTimeout(() => {
-            //   div.nativeElement.style.transition = '0s';
-            // }, 70);
             const children = [...div.nativeElement.children];
 
             children.forEach(row => {
@@ -247,16 +297,16 @@ d
                 let id = close.id.split('x');
                 this.pieceRow = parseInt(id[0]);
                 this.pieceColumn = parseInt(id[1]);
+                if(typeof this.pieceColumn === 'undefined' || typeof this.pieceRow === 'undefined'){
+                  return;
+                }
               }
             }, 100);
           },
           onMove: (ev) => {
             div.nativeElement.style.transform = `translate(${ev.deltaX}px, ${ev.deltaY - 70}px)`;
             div.nativeElement.style.zIndex = 10;
-            var dragEl = div.nativeElement.getBoundingClientRect();
 
-            var x = dragEl.left + window.scrollX;
-            var y = dragEl.top + window.scrollY;
             var allGood = this.checkDropZoneHover(ev.currentX, ev.currentY - 70);
 
             if (allGood) {
@@ -265,22 +315,27 @@ d
                 // if (this.params !== undefined) {
                 //   this.placeBlocks(this.params[0], this.params[1], this.params[2], this.params[3], this.params[4])
                 // }
-                this.playGround = cloneDeep(this.lastSnapShot);
+                this.playGround = cloneDeep(this.hoverSnapShot);
                 // this.playGround = JSON.parse(JSON.stringify(this.lastSnapShot));
                 this.detector.detectChanges();
+                setTimeout(() => {
+                  this.params = this.handleHover(div);
+                  const breakable = this.willBreakPatterns(this.playGround);
+                  setTimeout(() => {
+                    this.handleBreakable(breakable[0], breakable[1], breakable[2]);
+                  }, 1)
+                  this.detector.detectChanges();
+                }, 1)
               }
 
-              setTimeout(() => {
-                this.params = this.handleHover(div);
-                this.detector.detectChanges();
-              }, 1)
             }
             else {
               //fix it
             }
           },
           onEnd: ev => {
-            this.playGround = cloneDeep(this.lastSnapShot);
+            const breakable = this.willBreakPatterns(this.playGround);
+            this.playGround = cloneDeep(this.hoverSnapShot);
             var allGood = this.checkDropZoneHover(ev.currentX, ev.currentY - 70);
             if (allGood) {
               this.handleDrop(div);
@@ -323,7 +378,6 @@ d
   }
 
   checkDropZoneHover(x, y): boolean {
-    // debugger;
     var isIt = false;
     const zones = [...this.dropZones];
     zones.forEach(z => {
@@ -351,15 +405,11 @@ d
   }
 
   getSnapshot(): void {
-    // this.lastSnapShot = [];
-    // this.playGround.forEach((arr) => {
-    //   var x = [];
-    //   arr.forEach((obj) => {
-    //     x.push(obj);
-    //   });
-    //   this.lastSnapShot.push(x);
-    // });
     this.lastSnapShot = cloneDeep(this.playGround);
+  }
+
+  getHoverSnapshot(): void {
+    this.hoverSnapShot = cloneDeep(this.playGround);
   }
 
   handleHover(div) {
@@ -427,10 +477,6 @@ d
   }
 
   handleDrop(div) {
-    //get a snapshot for undo
-    this.getSnapshot();
-    this.lastScore = this.score;
-
     var referenceId = div.nativeElement.id;
     var referenceBox = referenceId == 'drag-1' ? this.firstBlock : referenceId == 'drag-2' ? this.secondBlock : this.thirdBlock;
     var plusRow = referenceBox.length;
@@ -465,6 +511,10 @@ d
       }
       rw++;
     }
+    //get a snapshot for undo
+    this.getSnapshot();
+    this.lastScore = this.score;
+    this.lastSandId = this.sandId;
 
     rw = 0;
     for (let i = row - this.pieceRow; i < row - this.pieceRow + plusRow; i++) {
@@ -530,24 +580,66 @@ d
         nextThird: this.nextThird,
         moves: this.moves,
         isSaved: true,
-        score: this.score
+        score: this.score,
+        lastSandId: this.lastSandId,
+        lastReferenceBlock: this.lastReferenceBlock
       }
-      this.writeSecretFile(this.userInfo);
+      this.storageService.setData(this.userInfo);
     }, 501)
-    setTimeout(() => {
-      var gameOver = this.isGameOver();
-      if(gameOver) {
-        setTimeout(() => {
-          this.userInfo = {
-            ...this.userInfo,
-            isSaved: false
-          }
-          debugger
-          this.writeSecretFile(this.userInfo);
-        }, 500)
-        this.presentAlert();
+  }
+
+  handleBreakable(row, column, square) {
+    row.forEach((r) => {
+      for (var i = 0; i < 9; i++) {
+        var id = r + 'x' + i;
+        const square = this.animationCtrl.create()
+          .addElement(document.getElementById(id))
+          .fill('none')
+          .duration(1000)
+          .iterations(Infinity)
+          .keyframes([
+            { offset: 0, opacity: 1 },
+            { offset: 0.5, opacity: 0.8 },
+            { offset: 1, opacity: 1 }
+          ]);
+        square.play();
       }
-    }, 502)
+    });
+
+    column.forEach((c) => {
+      for (var i = 0; i < 9; i++) {
+        var id = i + 'x' + c;
+        const square = this.animationCtrl.create()
+          .addElement(document.getElementById(id))
+          .fill('none')
+          .duration(1000)
+          .iterations(Infinity)
+          .keyframes([
+            { offset: 0, opacity: 1 },
+            { offset: 0.5, opacity: 0.8 },
+            { offset: 1, opacity: 1 }
+          ]);
+        square.play();
+      }
+    });
+
+    square.forEach(s => {
+      for (let i = s[0]; i < s[0] + 3; i++) {
+        for (let j = s[1]; j < s[1] + 3; j++) {
+          const square = this.animationCtrl.create()
+            .addElement(document.getElementById(`${i}x${j}`))
+            .fill('none')
+            .duration(1000)
+            .iterations(Infinity)
+            .keyframes([
+              { offset: 0, opacity: 1 },
+              { offset: 0.5, opacity: 0.8 },
+              { offset: 1, opacity: 1 }
+            ]);
+          square.play();
+        }
+      }
+    })
   }
 
   playAnimations(row, column, square) {
@@ -668,20 +760,19 @@ d
 
         if (con) this.presentToast('Tüm bloklar boşken geri alamazsınız!');
         else {
-          debugger
           this.playGround = cloneDeep(this.lastSnapShot);
           this.score = this.lastScore;
           this.undoCount--;
           this.moves++;
-          if (this.sandId == 'drag-1') {
+          if (this.lastSandId == 'drag-1') {
             this.firstObject = this.lastReferenceBlock;
             this.firstBlock = this.firstObject.block;
           }
-          else if (this.sandId == 'drag-2') {
+          else if (this.lastSandId == 'drag-2') {
             this.secondObject = this.lastReferenceBlock;
             this.secondBlock = this.secondObject.block;
           }
-          else if (this.sandId == 'drag-3') {
+          else if (this.lastSandId == 'drag-3') {
             this.thirdObject = this.lastReferenceBlock;
             this.thirdBlock = this.thirdObject.block;
           }
@@ -694,7 +785,7 @@ d
             secondObject: this.secondObject,
             thirdObject: this.thirdObject
           }
-          this.writeSecretFile(this.userInfo);
+          this.storageService.setData(this.userInfo);
         }
       }
       else {
@@ -703,6 +794,7 @@ d
 
     }
     else this.presentToast("Geri alma hakkınız kalmadı.")
+    this.detector.detectChanges();
   }
 
   rotateOne() {
@@ -774,8 +866,7 @@ d
       playground: this.playGround,
       lastSnapshot: this.lastSnapShot
     }
-
-    this.writeSecretFile(this.userInfo);
+    this.storageService.setData(this.userInfo);
   }
 
   showNext() {

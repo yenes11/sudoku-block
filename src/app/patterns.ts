@@ -105,3 +105,54 @@ export const executePatterns = (score, playGround, props) => {
 
   return score;
 }
+
+export const willBreakPatterns = (arr: Array<Array<number>>) => {
+  var squares = [];
+  var columns = [];
+  var rows = [];
+  //check
+  var isScore = true;
+  for (let row = 0; row < 9; row += 3) {
+    for (let col = 0; col < 9; col += 3) {
+      for (let i = row; i < row + 3; i++) {
+        for (let j = col; j < col + 3; j++) {
+          if (arr[i][j] != 1 && arr[i][j] != 2) {
+            isScore = false;
+            break;
+          }
+        }
+        if (!isScore) {
+          break;
+        }
+      }
+
+      if (isScore) {
+        squares.push([row, col])
+      }
+      isScore = true;
+    }
+  }
+
+  for (let i = 0; i < 9; i++) {
+    var isOne = true;
+    for (let j = 0; j < 9; j++) {
+      if (arr[j][i] != 1 && arr[j][i] != 2) {
+        isOne = false;
+        break;
+      }
+    }
+    if (isOne) {
+      columns.push(i);
+    }
+  }
+
+  const allOne = arr => arr.every(v => v === 1 || v === 2);
+
+  for (let i = 0; i < 9; i++) {
+    if (allOne(arr[i])) {
+      rows.push(i);
+    }
+  }
+
+  return [rows, columns, squares];
+}

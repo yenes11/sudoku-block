@@ -10,7 +10,7 @@
     <div class="box">
       <app-icon type="gold-trophy"></app-icon>
       <div style="margin-top: -7px">YOUR BEST</div>
-      <div></div>
+      <div>{{ bestScore }}</div>
     </div>
   </div>
   <div class="footer">
@@ -21,7 +21,7 @@
     <app-button *ngIf="isSaved == true" (click)="newGameModal()" text="NEW GAME" size="large" color="white"></app-button>
     <app-icon class="tanos" type="tanos-logo"></app-icon>
     <!-- <button style="height: 50px;" (click)="writeSecretFile()">asdas</button> -->
-    <button style="height: 50px;" id="info" (click)="refresh()">sssss</button>
+    <!-- <button style="height: 50px;" id="info" (click)="cl()">sssss</button> -->
 
 </div>
 </ion-content>

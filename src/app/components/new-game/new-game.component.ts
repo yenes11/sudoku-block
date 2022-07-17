@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 import { Device } from '@ionic-native/device/ngx';
+import { StorageService } from 'src/app/storage.service';
+import { UserInfo } from 'src/app/userinfo';
 
 @Component({
   selector: 'app-new-game',
@@ -10,69 +12,26 @@ import { Device } from '@ionic-native/device/ngx';
   styleUrls: ['./new-game.component.scss'],
 })
 export class NewGameComponent implements OnInit {
-  userData = {
-    id: this.device.uuid,
-    name: this.device.model,
-    weekly: 0,
-    monthly: 0,
-    overall: 0,
-    isSaved: false,
-    delete: 3,
-    add: 3,
-    undo: 1,
-    moves: 3,
-    firstObject: {
-      id: 30,
-      block: [[1, 0], [1, 0], [1, 1]],
-      rotate: 31
-    },
-    secondObject: {
-      id: 34,
-      block: [[1, 1], [1, 0], [1, 0]],
-      rotate: 35
-    },
-    thirdObject: {
-      id: 42,
-      block: [[1, 1], [1, 0], [1, 1]],
-      rotate: 43
-    },
-    nextFirst: {
-      id: 20,
-      block: [[1, 0], [1, 1], [1, 0]],
-      rotate: 21
-    },
-    nextSecond: {
-      id: 16,
-      block: [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
-      rotate: 17
-    },
-    nextThird: {
-      id: 21,
-      block: [[0, 1, 0], [1, 1, 1]],
-      rotate: 22
-    },
-    lastSnapshot: [
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0]
-    ]
-  }
+  userData = UserInfo;
 
 
-  constructor(private modalCtrl: ModalController, private router: Router, private device: Device) { }
+  constructor(private modalCtrl: ModalController, private router: Router, private device: Device,
+    private storageService: StorageService) { }
 
   async close() {
     await this.modalCtrl.dismiss();
   }
 
   async routeGame() {
-    await this.writeSecretFile();
+    this.storageService.getData().subscribe(res => {
+      var data = res;
+      data = {
+        ...data,
+        ...this.userData
+      }
+      this.storageService.setData(data);
+    })
+    // await this.writeSecretFile();
     this.modalCtrl.dismiss();
     this.router.navigate(['game']);
   }

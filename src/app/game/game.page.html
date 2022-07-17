@@ -3,7 +3,7 @@
 <div class="grid">
 
   <div class="buttons">
-    <img src="/assets/images/plus.png" alt="plus" (click)="presentAlert()">
+    <img src="/assets/images/plus.png" alt="plus" (click)="cl()" />
     <img src="/assets/images/settings.png" alt="settings" (click)="settingsModal()"/>
   </div>
 
@@ -37,21 +37,24 @@
     <ng-template>
       <ion-content>
         <div class="popup">
-          <div class="column">
-            <span>{{ undoCount }}</span>
-            <app-icon (click)="undo()" type="undo"></app-icon>
+
+          <!-- <div class="column"> -->
+            <span style="font-family: 'Rubik', sans-serif;">{{ undoCount }}</span>
+            <span style="font-family: 'Rubik', sans-serif;">{{ addCount }}</span>
+            <span style="font-family: 'Rubik', sans-serif;">{{ deleteCount }}</span>
+            <img src="/assets/images/undo.png" (click)="undo()"  alt="undo">
+            <img src="/assets/images/plus.png" (click)="toggleInsert()" alt="add">
+            <img src="/assets/images/delete.png" (click)="toggleDelete()"  alt="delete">
             <span>UNDO</span>
-          </div>
-          <div class="column">
-            <span>{{ addCount }}</span>
-            <app-icon (click)="toggleInsert()" type="add"></app-icon>
+          <!-- </div> -->
+
+          <!-- <div class="column"> -->
             <span>ADD</span>
-          </div>
-          <div class="column">
-            <span>{{ deleteCount }}</span>
-            <app-icon (click)="toggleDelete()" type="delete"></app-icon>
+          <!-- </div> -->
+
+          <!-- <div class="column"> -->
             <span>DELETE</span>
-          </div>
+          <!-- </div> -->
         </div>
       </ion-content>
     </ng-template>

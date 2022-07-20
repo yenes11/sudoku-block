@@ -65,10 +65,23 @@
 }
 
 .theme-modal-css {
-  --height: 200px;
-  --width: 350px;
+  --height: 150px;
+  --width: 300px;
   --border-radius: 25px;
+  --box-shadow: 0 5px 10px 0 rgba(46, 46, 46, 0.6);
 }
+
+@media screen and (min-width: 500px) {
+  .profile-modal-css {
+    --height: 300px;
+    --width: 650px;
+  }
+  .theme-modal-css {
+    --height: 200px;
+    --width: 450px;
+  }
+}
+
 
 
 ion-popover {
@@ -79,3 +92,4 @@ ion-popover {
   // --width: 220px;
   // --height: 120px;
 }
+

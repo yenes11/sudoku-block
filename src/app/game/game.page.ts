@@ -106,6 +106,13 @@ export class GamePage implements AfterViewInit {
   zoneIdCtrl = false;
   zoneIdCheck;
   params;
+  todayScore: number | any[];
+  overallScore: number | any[];
+  weeklyScore: number | any[];
+  monthlyScore: number | any[];
+
+  playSize;
+  sandSize;
 
   constructor(private modalCtrl: ModalController, private router: Router,
     private gestureCtrl: GestureController, private detector: ChangeDetectorRef, private device: Device,
@@ -113,7 +120,11 @@ export class GamePage implements AfterViewInit {
     private storageService: StorageService) { }
 
   ngAfterViewInit(): void {
-    setTimeout(() => this.updateGestures(), 1);
+    setTimeout(() => {
+      this.updateGestures()
+      this.playSize = document.querySelector('.blue-play').clientWidth;
+      this.sandSize = document.querySelector('.square-full').clientWidth;
+    }, 1);
   }
 
   async presentToast(message) {
@@ -180,7 +191,21 @@ export class GamePage implements AfterViewInit {
     this.storageService.getData().subscribe(res => {
 
       this.userInfo = res;
-      console.log(this.userInfo)
+
+      var today = this.userInfo.today;
+      if (today.date != (new Date()).toLocaleDateString('en-GB')) this.todayScore = 0;
+      else this.todayScore = today.score;
+
+      var weekly = this.userInfo.weekly;
+      if(this.getCurrentWeek() != weekly.week) this.weeklyScore = 0;
+      else this.weeklyScore = weekly.score;
+
+      var monthly = this.userInfo.monthly;
+      if (this.getCurrentMonth != monthly.month) this.monthlyScore = 0;
+      else this.monthlyScore = monthly.score;
+
+      this.overallScore = this.userInfo.overall;
+
       var isSaved = this.userInfo['isSaved'];
       this.isSaved = isSaved;
       if (isSaved) {
@@ -268,6 +293,8 @@ export class GamePage implements AfterViewInit {
 
     const arr = this.items.toArray();
     setTimeout(() => {
+
+
       arr.forEach((div) => {
         const drag = this.gestureCtrl.create({
           el: div.nativeElement,
@@ -286,8 +313,8 @@ export class GamePage implements AfterViewInit {
 
               grandChildren.forEach(box => {
                 box.style.transition = '.07s ease-out';
-                box.style.width = '10vw';
-                box.style.height = '10vw';
+                box.style.width = `${this.playSize}px`;
+                box.style.height = `${this.playSize}px`;
               });
             });
 
@@ -297,13 +324,27 @@ export class GamePage implements AfterViewInit {
                 let id = close.id.split('x');
                 this.pieceRow = parseInt(id[0]);
                 this.pieceColumn = parseInt(id[1]);
-                if(typeof this.pieceColumn === 'undefined' || typeof this.pieceRow === 'undefined'){
+                if (typeof this.pieceColumn === 'undefined' || typeof this.pieceRow === 'undefined') {
                   return;
                 }
               }
-            }, 100);
+            }, 70);
           },
           onMove: (ev) => {
+            setTimeout(() => {
+              const close = document.elementFromPoint(ev.currentX, ev.currentY - 70);
+              if (close && ['square-full', 'square-empty-sand'].indexOf(close.className) > -1) {
+                let id = close.id.split('x');
+                this.pieceRow = parseInt(id[0]);
+                this.pieceColumn = parseInt(id[1]);
+                if (typeof this.pieceColumn === 'undefined' || typeof this.pieceRow === 'undefined') {
+                  return;
+                }
+              }
+            }, 70);
+
+
+
             div.nativeElement.style.transform = `translate(${ev.deltaX}px, ${ev.deltaY - 70}px)`;
             div.nativeElement.style.zIndex = 10;
 
@@ -334,6 +375,16 @@ export class GamePage implements AfterViewInit {
             }
           },
           onEnd: ev => {
+            const close = document.elementFromPoint(ev.currentX, ev.currentY - 70);
+            if (close && ['square-full', 'square-empty-sand'].indexOf(close.className) > -1) {
+              let id = close.id.split('x');
+              this.pieceRow = parseInt(id[0]);
+              this.pieceColumn = parseInt(id[1]);
+              if (typeof this.pieceColumn === 'undefined' || typeof this.pieceRow === 'undefined') {
+                return;
+              }
+            }
+
             const breakable = this.willBreakPatterns(this.playGround);
             this.playGround = cloneDeep(this.hoverSnapShot);
             var allGood = this.checkDropZoneHover(ev.currentX, ev.currentY - 70);
@@ -352,8 +403,8 @@ export class GamePage implements AfterViewInit {
               const grandChildren = [...row.children];
 
               grandChildren.forEach(box => {
-                box.style.width = '25px';
-                box.style.height = '25px';
+                box.style.width = `${this.sandSize}px`;
+                box.style.height = `${this.sandSize}px`;
               });
             });
 
@@ -538,6 +589,11 @@ export class GamePage implements AfterViewInit {
 
     setTimeout(() => {
       this.score = executePatterns(this.score, this.playGround, patternOutput);
+      if (this.score > this.overallScore) this.overallScore = this.score;
+      if (this.score > this.todayScore) this.todayScore = this.score;
+      if (this.score > this.weeklyScore) this.weeklyScore = this.score;
+      if (this.score > this.monthlyScore) this.monthlyScore = this.score;
+
       this.detector.detectChanges();
     }, 501)
     let newBlock = this.getRandom();
@@ -567,25 +623,53 @@ export class GamePage implements AfterViewInit {
       this.moves = 3;
       this.setNext();
     }
-    setTimeout(() => {
+    var gameOver = this.isGameOver();
+
+    if(gameOver) {
+      debugger
       this.userInfo = {
         ...this.userInfo,
-        playground: this.playGround,
-        lastSnapshot: this.lastSnapShot,
-        firstObject: this.firstObject,
-        secondObject: this.secondObject,
-        thirdObject: this.thirdObject,
-        nextFirst: this.nextFirst,
-        nextSecond: this.nextSecond,
-        nextThird: this.nextThird,
-        moves: this.moves,
-        isSaved: true,
-        score: this.score,
-        lastSandId: this.lastSandId,
-        lastReferenceBlock: this.lastReferenceBlock
+        isSaved: false
       }
       this.storageService.setData(this.userInfo);
-    }, 501)
+      setTimeout(() => {
+        this.presentAlert();
+      }, 1)
+    }
+    else {
+      setTimeout(() => {
+        this.userInfo = {
+          ...this.userInfo,
+          playground: this.playGround,
+          lastSnapshot: this.lastSnapShot,
+          firstObject: this.firstObject,
+          secondObject: this.secondObject,
+          thirdObject: this.thirdObject,
+          nextFirst: this.nextFirst,
+          nextSecond: this.nextSecond,
+          nextThird: this.nextThird,
+          moves: this.moves,
+          isSaved: true,
+          score: this.score,
+          lastSandId: this.lastSandId,
+          lastReferenceBlock: this.lastReferenceBlock,
+          today: {
+            date: (new Date()).toLocaleDateString('en-GB'),
+            score: this.todayScore
+          },
+          weekly: {
+            week: this.getCurrentWeek(),
+            score: this.weeklyScore
+          },
+          monthly: {
+            month: this.getCurrentMonth(),
+            score: this.monthlyScore
+          },
+          overall: this.overallScore
+        }
+        this.storageService.setData(this.userInfo);
+      }, 501)
+    }
   }
 
   handleBreakable(row, column, square) {
@@ -905,6 +989,7 @@ export class GamePage implements AfterViewInit {
   }
 
   isGameOver() {
+
     var gameOver = false;
     var isSet = true;
 
@@ -1017,6 +1102,19 @@ export class GamePage implements AfterViewInit {
     // }
 
     return true;
+  }
+
+  getCurrentWeek() {
+    var currentdate: any = new Date();
+    var oneJan: any = new Date(currentdate.getFullYear(),0,1);
+    var numberOfDays = Math.floor((currentdate - oneJan) / (24 * 60 * 60 * 1000));
+    var result = Math.ceil(( currentdate.getDay() + 1 + numberOfDays) / 7);
+    return result;
+  }
+
+  getCurrentMonth() {
+    var date = new Date();
+    return date.getMonth();
   }
 
 }

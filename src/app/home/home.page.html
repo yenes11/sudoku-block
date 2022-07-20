@@ -1,27 +1,54 @@
 <ion-content [fullscreen]="true">
+  <div class="container">
+    <!-- <app-icon
+      (click)="settingsModal()"
+      class="settings-button"
+      type="settings"
+    ></app-icon> -->
 
-  <app-icon (click)="settingsModal()" class="settings-button" type="settings"></app-icon>
+    <img src="/assets/images/settings.png" alt="settings button" (click)="settingsModal()" class="settings-button">
 
-  <div class="header">
-    <app-icon type="logo" style="margin-left: 5vw;"></app-icon>
-  </div>
+    <div class="header">
+      <!-- <app-icon type="logo" style="margin-left: 5vw"></app-icon> -->
+      <img class="logo-text" src="/assets/images/tanosudoku.png" alt="logo-text">
+    </div>
 
-  <div class="body">
-    <div class="box">
-      <app-icon type="gold-trophy"></app-icon>
-      <div style="margin-top: -7px">YOUR BEST</div>
-      <div>{{ bestScore }}</div>
+    <div class="body">
+      <div class="box-under">
+        <div class="box">
+          <img class="trophy" src="/assets/images/trophy.png" alt="gold trophy">
+          <span>YOUR BEST</span>
+          <span>{{ bestScore }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <app-button
+        *ngIf="isSaved == false"
+        (click)="routeGame()"
+        size="large"
+        text="NEW GAME"
+        color="blue"
+      ></app-button>
+      <p></p>
+      <app-button
+        *ngIf="isSaved == true"
+        (click)="routeGame()"
+        size="large"
+        text="CONTINUE GAME"
+        color="blue"
+      ></app-button>
+      <app-button
+        *ngIf="isSaved == true"
+        (click)="newGameModal()"
+        text="NEW GAME"
+        size="large"
+        color="white"
+      ></app-button>
+      <!-- <app-icon class="tanos" type="tanos-logo"></app-icon> -->
+      <img class="tanos" src="/assets/images/logo.png" alt="tanos logo">
+      <!-- <button style="height: 50px;" (click)="writeSecretFile()">asdas</button> -->
+      <!-- <button style="height: 50px;" id="info" (click)="cl()">sssss</button> -->
     </div>
   </div>
-  <div class="footer">
-    <!-- <app-button (click)="routeGame()" size="large" text="NEW GAME" color="blue"></app-button> -->
-    <app-button *ngIf="isSaved == false" (click)="routeGame()" size="large" text="NEW GAME" color="blue"></app-button>
-    <p></p>
-    <app-button *ngIf="isSaved == true" (click)="routeGame()" size="large" text="CONTINUE GAME" color="blue"></app-button>
-    <app-button *ngIf="isSaved == true" (click)="newGameModal()" text="NEW GAME" size="large" color="white"></app-button>
-    <app-icon class="tanos" type="tanos-logo"></app-icon>
-    <!-- <button style="height: 50px;" (click)="writeSecretFile()">asdas</button> -->
-    <!-- <button style="height: 50px;" id="info" (click)="cl()">sssss</button> -->
-
-</div>
 </ion-content>

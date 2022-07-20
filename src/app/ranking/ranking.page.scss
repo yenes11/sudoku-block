@@ -2,7 +2,7 @@
 
 ion-content {
   --overflow: hidden;
-  --background: url("/assets/images/home-square.png") 0 0/100% 100% no-repeat, white;
+  // --background: url("/assets/images/home-square.png") 0 0/100% 100% no-repeat, white;
   --ion-font-family: "Abel", sans-serif;
 }
 
@@ -12,35 +12,49 @@ ion-content {
   left: 20px;
 }
 
+.logo{
+  height: 120px;
+  margin-top: 5vh;
+}
+
+
 .container {
   display: flex;
   align-items: center;
+  // justify-content: center;
   flex-direction: column;
+  background: url("/assets/images/block-layer.png"), white;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 80%;
+  height: 100%;
 }
 
 .buttons {
+  margin-top: 4vh;
   display: flex;
-  justify-content: space-around;
+  padding: 0 11vw 0 11vw;
+  justify-content: space-between;
   width: 100%;
-  margin-top: 20px;
+  // margin-top: 20px;
+  // border: 1px solid;
 }
 
 .ranks {
-  margin-top: 8px;
   font-size: 20px;
 }
 
 .number {
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   background-color: #e9ecf0;
   border-radius: 12px;
 }
 
 .name {
   display: flex;
-  width: 305px;
-  height: 40px;
+  width: 70vw;
+  height: 60px;
   background-color: #e9ecf0;
   border-radius: 12px;
   margin-left: 10px;
@@ -60,6 +74,12 @@ ion-content {
   flex-direction: row;
   margin-top: 7px;
   color: #454750;
+
+}
+
+.dots {
+  height: 40px;
+  margin-top: 10px;
 }
 
 .red {
@@ -67,4 +87,34 @@ ion-content {
   border-width: 0px 1px 1px 0px;
   border-style: solid;
   border-color: #000000;
+}
+
+@media screen and (max-height: 1055px) {
+  .number { width: 50px; height: 50px;}
+  .name { height: 50px;}
+}
+
+@media screen and (max-height: 930px) {
+  .buttons {padding: 0 8vw 0 8vw;}
+  .logo { height: 90px;}
+  .number { width: 40px; height: 40px; border-radius: 8px;}
+  .name { height: 40px; border-radius: 8px;}
+  .container {
+    background-size: 125%;
+  }
+}
+
+@media screen and (max-height: 800px) {
+  .buttons {padding: 0 8vw 0 8vw;}
+  .number { width: 35px; height: 35px; }
+  .name { height: 35px; }
+  .container {
+    background-size: 125%;
+  }
+}
+
+@media screen and (max-height: 700px) {
+  .buttons {margin-top: 5px;}
+  .logo { height: 60px;}
+  .dots { height: 20px;}
 }

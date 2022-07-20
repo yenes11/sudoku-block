@@ -3,8 +3,17 @@
 ion-content {
   --overflow: hidden;
   // --ion-background-color: black;
-  --background: url("/assets/images/home-square.png") 0 0/100% 100% no-repeat, white;
+  // --background: url("/assets/images/home-square.png") 0/100% 100% no-repeat, white;
+  // -backgroundimage: url("/assets/images/home-square.png");
+  background-size: contain;
   --ion-font-family: "Abel", sans-serif;
+}
+
+.container {
+  background: url("/assets/images/block-layer.png"), white;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 125%;
 }
 
 .settings-button {
@@ -12,6 +21,7 @@ ion-content {
   top: 8vw;
   right: 8vw;
   z-index: 3;
+  width: 37px;
 }
 
 .header {
@@ -44,15 +54,13 @@ ion-content {
   color: black;
 }
 
-.box::after {
+.box-under {
   background: linear-gradient(#ededed, #ededed50);
-  top: -10px;
-  bottom: -10px;
-  left: -10px;
-  right: -10px;
-  position: absolute;
-  content: "";
-  z-index: -1;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: 18px;
 }
 
@@ -69,14 +77,47 @@ app-button {
 
 .tanos {
   position: absolute;
-  bottom: 8vh;
+  bottom: 6vh;
+  height: 30px;
 }
 
 .backdrop {
-
   background-color: black;
   opacity: 0.7;
 }
 
+.logo-text {
+  height: 50px;
+}
 
+.trophy {
+  width: 33px;
+}
+
+@media screen and (min-width: 500px) {
+  .container { background-size: 80%; }
+  .box {
+    width: 130px;
+    height: 130px;
+    font-size: 22px;
+  }
+  .box-under {
+    width: 145px;
+    height: 145px;
+  }
+  .logo-text {
+    height: 80px;
+  }
+  .trophy {
+    width: 50px;
+  }
+  .settings-button {
+    width: 50px;
+  }
+
+  .tanos {
+    height: 40px;
+  }
+
+}
 

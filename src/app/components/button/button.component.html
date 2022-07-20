@@ -1,29 +1,47 @@
-<button class="blue"  *ngIf="color == 'blue' && size == 'large'">
- {{ text }}
-</button>
+<div class="flex">
+
+<div class="gradient" *ngIf="color == 'blue' && size == 'large'">
+  <button class="blue">
+    {{ text }}
+  </button>
+</div>
+
+<div class="gradient" *ngIf="color == 'white' && size == 'large'">
+  <button class="white">
+    {{ text }}
+  </button>
+</div>
+
+<div class="gradient-small" *ngIf="color == 'blue' && size == 'small'">
+  <button class="blue small">
+    {{ text }}
+  </button>
+</div>
+
+<div class="gradient-small" *ngIf="color == 'white' && size == 'small'">
+  <button class="white small">
+    {{ text }}
+  </button>
+</div>
+
+<div class="gradient" *ngIf="color == 'blue' && size == 'xsmall'">
+  <button class="blue xsmall">
+    {{ text }}
+  </button>
+</div>
 
 
-<button class="white"  *ngIf="color == 'white' && size == 'large'">
-  {{ text }}
- </button>
-
-<button class="blue small" *ngIf="color == 'blue' && size == 'small'">
-  {{ text }}
-</button>
-
-<button class="white small" *ngIf="color == 'white' && size == 'small'">
-  {{ text }}
-</button>
-
-<button class="blue xsmall" *ngIf="color == 'blue' && size == 'xsmall'">
-  {{ text }}
-</button>
-
-<button class="normal" *ngIf="color == 'blue' && size == 'medium'">
-  {{ text }}
-</button>
+  <button class="normal" *ngIf="color == 'blue' && size == 'medium'">
+    {{ text }}
+  </button>
 
 
-<button class="normal" style="background-color: #E9ECF0;" *ngIf="color == 'white' && size == 'medium'">
-  {{ text }}
-</button>
+
+  <button
+    class="normal"
+    style="background-color: #e9ecf0"
+    *ngIf="color == 'white' && size == 'medium'"
+  >
+    {{ text }}
+  </button>
+</div>

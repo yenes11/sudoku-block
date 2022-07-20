@@ -1,10 +1,13 @@
-<div class="container">
-  <app-icon type="back" class="back" (click)="close()"></app-icon>
+<ion-content [scrollEvents]="true">
+
+  <div class="container">
+    <app-icon type="back" class="back" (click)="close()"></app-icon>
   <div class="header">
     <br />
     SETTINGS
     <div class="profile flex-center">
-      <app-icon style="margin-bottom: -0.7vh" type="profile"></app-icon>
+      <!-- <app-icon style="margin-bottom: -0.7vh" type="profile"></app-icon> -->
+      <img class="profile-icon" src="/assets/images/profile.png" alt="profile">
     </div>
     <div class="profile-name" (click)="profileNameModal()">
       <app-icon type="edit-profile"></app-icon>
@@ -14,7 +17,8 @@
   <div class="body">
     <div class="badge-row">
       <div class="icon flex-center">
-        <app-icon class="mt" type="sound"></app-icon>
+        <!-- <app-icon class="mt" type="sound"></app-icon> -->
+        <img class="badge-icon" src="/assets/images/sound.png" alt="sound">
       </div>
       <div class="badge">
         SOUNDS
@@ -24,7 +28,8 @@
 
     <div class="badge-row">
       <div class="icon flex-center">
-        <app-icon class="mt" type="vibration"></app-icon>
+        <!-- <app-icon class="mt" type="vibration"></app-icon> -->
+        <img class="badge-icon" src="/assets/images/vibration.png" alt="vibration">
       </div>
       <div class="badge">
         VIBRATIONS
@@ -34,7 +39,8 @@
 
     <div class="badge-row" (click)="themeModal()">
       <div class="icon flex-center">
-        <app-icon class="mt" type="themes"></app-icon>
+        <!-- <app-icon class="mt" type="themes"></app-icon> -->
+        <img class="badge-icon" src="/assets/images/themes.png" alt="themes">
       </div>
       <div class="badge">
         THEMES
@@ -43,44 +49,58 @@
 
     <div class="badge-row">
       <div class="icon flex-center">
-        <app-icon class="mt" type="ranking"></app-icon>
+        <!-- <app-icon class="mt" type="ranking"></app-icon> -->
+        <img class="badge-icon" src="/assets/images/rankings.png" alt="rankings">
       </div>
       <div class="badge">RANKINGS</div>
     </div>
 
     <div class="badge-row">
       <div class="icon flex-center">
-        <app-icon class="mt" type="logic"></app-icon>
+        <!-- <app-icon class="mt" type="logic"></app-icon> -->
+        <img class="badge-icon" src="/assets/images/app-logic.png" alt="app logic">
       </div>
       <div class="badge">APP LOGIC</div>
     </div>
 
     <div class="badge-row">
       <div class="icon flex-center">
-        <app-icon class="mt" type="privacy"></app-icon>
+        <!-- <app-icon class="mt" type="privacy"></app-icon> -->
+        <img class="badge-icon" src="/assets/images/privacy.png" alt="privacy">
       </div>
       <div class="badge">PRIVACY POLICY</div>
     </div>
 
     <div class="badge-row">
       <div class="icon flex-center">
-        <app-icon class="mt" type="terms"></app-icon>
+        <!-- <app-icon class="mt" type="terms"></app-icon> -->
+        <img class="badge-icon" src="/assets/images/terms.png" alt="termms of use">
       </div>
       <div class="badge">TERMS OF USE</div>
+    </div>
+
+    <div class="badge-row">
+      <div class="icon flex-center">
+        <!-- <app-icon class="mt" type="terms"></app-icon> -->
+        <img class="badge-icon" src="/assets/images/language.png" alt="language">
+      </div>
+      <div class="badge">LANGUAGE</div>
     </div>
 
     <app-icon style="margin-top: 3vh" type="premium"></app-icon>
 
     <div class="badge-row">
       <div class="icon flex-center">
-        <app-icon class="mt" type="ads"></app-icon>
+        <!-- <app-icon class="mt" type="ads"></app-icon> -->
+        <img class="badge-icon" src="/assets/images/removeads.png" alt="remove ads">
       </div>
       <div class="badge">REMOVE ADS</div>
     </div>
 
     <div class="badge-row">
       <div class="icon flex-center">
-        <app-icon class="mt" type="restore"></app-icon>
+        <!-- <app-icon class="mt" type="restore"></app-icon> -->
+        <img class="badge-icon" src="/assets/images/restore.png" alt="restore purschases">
       </div>
       <div class="badge">RESTORE PURSCHASES</div>
     </div>
@@ -89,3 +109,5 @@
   </div>
 
 </div>
+
+</ion-content>

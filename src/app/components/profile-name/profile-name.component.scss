@@ -36,3 +36,15 @@ app-icon{
 app-button {
   margin-top: 10px;
 }
+
+
+@media screen and (min-width: 500px) {
+  .container {
+    font-size: 30px;
+  }
+  input {
+    height: 50px;
+    width: 350px;
+    font-size: 20px;
+  }
+}

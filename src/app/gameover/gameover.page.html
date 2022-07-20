@@ -1,33 +1,39 @@
 <ion-content>
-  <app-icon class="back" type="back"></app-icon>
+  <div class="container">
+    <app-icon class="back" type="back"></app-icon>
 
-  <div class="scores flex-center">
-    SCORES
-    <div class="badge flex-center">
-      <div>DAILY</div>
-      <div>203921</div>
+    <div class="scores flex-center">
+      SCORES
+      <div class="badge flex-center">
+        <div>DAILY</div>
+        <div>203921</div>
+      </div>
+
+      <div class="badge flex-center">
+        <div>WEEKLY</div>
+        <div>203921</div>
+      </div>
+
+      <div class="badge flex-center">
+        <div>OVERALL</div>
+        <div>203921</div>
+      </div>
+      <div class="box">
+        <div>SCORE</div>
+        <div style="color: #4f6f98">22222</div>
+      </div>
+
+      <app-icon style="margin-top: 20px" type="victory"></app-icon>
+
+      <app-button
+        color="white"
+        size="large"
+        text="WORLD RANKINGS"
+        (click)="routeRanking()"
+      ></app-button>
+      <app-button color="blue" size="large" text="NEW GAME"></app-button>
+
+      <app-icon type="tanos-logo" style="margin-top: 2vh"></app-icon>
     </div>
-
-    <div class="badge flex-center">
-      <div>WEEKLY</div>
-      <div>203921</div>
-    </div>
-
-    <div class="badge flex-center">
-      <div>OVERALL</div>
-      <div>203921</div>
-    </div>
-    <div class="box">
-      <div>SCORE</div>
-      <div style="color: #4F6F98;">22222</div>
-    </div>
-
-    <app-icon style="margin-top: 20px;" type="victory"></app-icon>
-
-    <app-button color="white" size="large" text="WORLD RANKINGS" (click)="routeRanking()"></app-button>
-    <app-button color="blue" size="large" text="NEW GAME"></app-button>
-
-    <app-icon type="tanos-logo" style="margin-top: 75px;"></app-icon>
   </div>
-
 </ion-content>

@@ -1,15 +1,16 @@
-<ion-content>
+<ion-content [scrollEvents]="true">
   <app-icon type="back" class="back" (click)="routeHome()"></app-icon>
 
   <div class="container">
-    <app-icon type="bestof" style="margin-top: 30px"></app-icon>
+    <!-- <app-icon type="bestof"></app-icon> -->
+    <img src="/assets/images/bestof.png" alt="best of logo" class="logo">
 
     <div class="buttons">
-      <app-button color="blue" size="medium" text="WEEKLY"></app-button>
-      <app-button color="white" size="medium" text="LAST 24h"></app-button>
+      <app-button (click)="listWeekly()" color="blue" size="medium" text="WEEKLY"></app-button>
+      <app-button (click)="listDaily()"  color="white" size="medium" text="LAST 24h"></app-button>
     </div>
 
-    <div class="ranks">
+    <div *ngIf="rankings == 'weekly'" class="ranks">
       <div *ngFor="let item of weekly; index as i;" class="row">
         <div class="number center">
           {{ i + 1 }}.
@@ -21,15 +22,38 @@
       </div>
     </div>
 
-    <app-icon type="dots" style="margin-top: 15px;"></app-icon>
+    <div *ngIf="rankings == 'daily'" class="ranks">
+      <div *ngFor="let item of daily; index as i;" class="row">
+        <div class="number center">
+          {{ i + 1 }}.
+        </div>
+        <div class="name">
+          <div>{{ item.name }}</div>
+          <div>{{ item.score}}</div>
+        </div>
+      </div>
+    </div>
 
-    <div class="row">
+    <!-- <app-icon type="dots" style="margin-top: 15px;"></app-icon> -->
+    <img src="/assets/images/dots.png" alt="dots" class="dots">
+
+    <div *ngIf="rankings == 'weekly'" class="row">
       <div class="number center red">
-        {{ myPlace }}
+        {{ myWeeklyPlace }}
       </div>
       <div class="name red">
-        <div>{{ myScore.name }}</div>
-        <div>{{ myScore.score }}</div>
+        <div>{{ myName }}</div>
+        <div>{{ myWeeklyScore }}</div>
+      </div>
+    </div>
+
+    <div *ngIf="rankings == 'daily'" class="row">
+      <div class="number center red">
+        {{ myDailyPlace }}
+      </div>
+      <div class="name red">
+        <div>{{ myName }}</div>
+        <div>{{ myDailyScore }}</div>
       </div>
     </div>
 

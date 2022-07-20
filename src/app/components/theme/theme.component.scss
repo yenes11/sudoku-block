@@ -16,12 +16,25 @@
 
 .close {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 15px;
+  right: 15px;
 }
 
 .column {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+img {
+  width: 30px;
+}
+
+.selected {
+  border: 2px solid black;
+  border-radius: 6px;
+}
+
+@media screen and (min-width: 500px) {
+  img{ width: 55px;}
 }

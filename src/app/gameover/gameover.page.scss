@@ -2,7 +2,7 @@
 
 ion-content {
   --overflow: hidden;
-  --background: url("/assets/images/home-square.png") 0 0/100% 100% no-repeat, white;
+  // --background: url("/assets/images/home-square.png") 0 0/100% 100% no-repeat, white;
   --ion-font-family: "Abel", sans-serif;
   --color: #818181;
 }
@@ -13,26 +13,34 @@ ion-content {
   left: 5vw;
 }
 
-.scores {
-  // border: 1px solid black;
-  margin-top: 20vh;
 
+.container {
+  background: url("/assets/images/block-layer.png"), white;
+  background-repeat: no-repeat;
+  background-position: center;
+  // background-size: contain;
+  background-size: 95%;
+  border: 1px solid;
+  height: 100vh;
+}
+
+.scores {
+  margin-top: 10vh;
   font-size: 1.8vh;
   flex-direction: column;
 }
 
 .flex-center {
   display: flex;
-
   align-items: center;
 }
 
 .badge {
   background: #e9ecf0;
   box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 18px;
-  width: 65vw;
-  height: 3vh;
+  border-radius: 50vh;
+  width: 70%;
+  height: 50px;
   padding: 15px;
   justify-content: space-between;
   margin-top: 2vh;
@@ -71,3 +79,22 @@ ion-content {
 app-button {
   margin-top: 15px;
 }
+
+
+@media screen and (max-height: 900px) {
+  .container { background-size: 125%;}
+  .badge { height: 35px;}
+}
+
+@media screen and (min-height: 1000px) {
+  .scores { margin-top: 20vh;}
+}
+
+
+@media screen and (max-height: 680px) {
+  .badge { height: 25px;}
+}
+
+// @media screen and (max-height: 850px) {
+//   .scores { margin-top: 150px;}
+// }

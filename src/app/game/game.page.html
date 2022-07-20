@@ -11,12 +11,12 @@
     <div class="current-score">{{ score }}</div>
 
       <div class="today-score">
-      TODAY <br> 100
+      TODAY <br> {{ todayScore }}
       </div>
       <div class="overall-score">
         OVERALL
         <div class="flex-left">
-        <app-icon class="row" type="trophy"></app-icon> &nbsp; 300 </div>
+        <app-icon class="row" type="trophy"></app-icon> &nbsp; {{ overallScore }} </div>
       </div>
 
   </div>
@@ -37,8 +37,6 @@
     <ng-template>
       <ion-content>
         <div class="popup">
-
-          <!-- <div class="column"> -->
             <span style="font-family: 'Rubik', sans-serif;">{{ undoCount }}</span>
             <span style="font-family: 'Rubik', sans-serif;">{{ addCount }}</span>
             <span style="font-family: 'Rubik', sans-serif;">{{ deleteCount }}</span>
@@ -46,15 +44,8 @@
             <img src="/assets/images/plus.png" (click)="toggleInsert()" alt="add">
             <img src="/assets/images/delete.png" (click)="toggleDelete()"  alt="delete">
             <span>UNDO</span>
-          <!-- </div> -->
-
-          <!-- <div class="column"> -->
             <span>ADD</span>
-          <!-- </div> -->
-
-          <!-- <div class="column"> -->
             <span>DELETE</span>
-          <!-- </div> -->
         </div>
       </ion-content>
     </ng-template>

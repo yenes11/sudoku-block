@@ -28,24 +28,25 @@ export class HomePage {
     name: randomName
   }
   userInfo = {};
+  overall: number;
+  weekly;
+  monthly;
+  daily;
 
   constructor(private modalCtrl: ModalController, private dataService: DataService,
     private router: Router, private device: Device, private detector: ChangeDetectorRef,
     private storageService: StorageService
   ) {
 
-    this.dataService.getWeeklyById(this.device.uuid).subscribe(res => {
-      if (res === undefined) {
-        this.dataService.createWeekly({ id: "this.device.uuid", name: "this.device.model" });
-      }
-    });
 
     this.loadData();
+
   }
+
 
   loadData() {
     this.storageService.getData().subscribe(res => {
-      if(res == null) {
+      if (res == null) {
         this.storageService.setData(this.userData);
         this.loadData();
       }
@@ -54,11 +55,28 @@ export class HomePage {
         console.log(this.userInfo);
         this.bestScore = this.userInfo['overall'];
         this.isSaved = this.userInfo['isSaved'];
+        this.weekly = this.userInfo['weekly'];
+        // this.monthly = this.userInfo['monthly'];
+        this.daily = this.userInfo['today'];
         this.detector.detectChanges();
+        if(this.daily.date != (new Date()).toLocaleDateString('en-GB')) this.daily = { date: (new Date()).toLocaleDateString('en-GB'), score: 0 };
+        if(this.weekly.week != this.getCurrentWeek()) this.weekly = { week: this.getCurrentWeek(), score: 0 };
+        if(this.monthly.month != this.getCurrentMonth()) this.monthly = { month: this.getCurrentMonth(), score: 0 };
+
+        this.dataService.getWeeklyById(this.device.uuid).subscribe(res => {
+          if (res === undefined) {
+            this.dataService.createWeekly({ id: "this.device.uuid", name: "this.device.model", score: this.weekly.score });
+          }
+        });
+
+        this.dataService.getDailyById(this.device.uuid).subscribe(res => {
+          if (res === undefined) {
+            this.dataService.createMonthly({ id: "this.device.uuid", name: "this.device.model", score: this.daily.score })
+          }
+        })
       }
     })
   }
-
 
   ngOnInit() {
 
@@ -83,5 +101,18 @@ export class HomePage {
 
   routeGame() {
     this.router.navigate(['game']);
+  }
+
+  getCurrentWeek() {
+    var currentdate: any = new Date();
+    var oneJan: any = new Date(currentdate.getFullYear(), 0, 1);
+    var numberOfDays = Math.floor((currentdate - oneJan) / (24 * 60 * 60 * 1000));
+    var result = Math.ceil((currentdate.getDay() + 1 + numberOfDays) / 7);
+    return result;
+  }
+
+  getCurrentMonth() {
+    var date = new Date();
+    return date.getMonth();
   }
 }

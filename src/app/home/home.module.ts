@@ -13,6 +13,7 @@ import { NewGameModule } from '../components/new-game/new-game.module';
 import { SettingsModule } from '../components/settings/settings.module';
 import { HomePageRoutingModule } from './home-routing.module';
 import { ProfileNameComponent } from '../components/profile-name/profile-name.component';
+import { ProfileNameModule } from '../components/profile-name/profile-name.module';
 import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
 import { environment } from '../../environments/environment';
 import { provideDatabase,getDatabase } from '@angular/fire/database';
@@ -31,9 +32,10 @@ import { getFirestore } from 'firebase/firestore';
     ButtonModule,
     NewGameModule,
     SettingsModule,
+    ProfileNameModule,
     provideFirebaseApp(() => initializeApp(environment.firebase))
    //
   ],
-  declarations: [HomePage, ModalComponent, PopupComponent, ProfileNameComponent, ThemeComponent]
+  declarations: [HomePage, ModalComponent, PopupComponent, ThemeComponent]
 })
 export class HomePageModule { }

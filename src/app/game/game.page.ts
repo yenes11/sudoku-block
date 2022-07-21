@@ -306,12 +306,20 @@ export class GamePage implements AfterViewInit {
 
             div.nativeElement.style.transition = '.07s ease-out';
             div.nativeElement.style.transform = `translate(0px, -70px)`;
-            const children = [...div.nativeElement.children];
+            const children = [...div.nativeElement.children];            
 
             children.forEach(row => {
               const grandChildren = [...row.children];
 
-              grandChildren.forEach(box => {
+              var el = grandChildren[0].getBoundingClientRect();
+
+              var y = el.top + (el.height / 2);
+              var y = el.left;
+              console.log(y);
+              
+
+              grandChildren.forEach(box => {     
+
                 box.style.transition = '.07s ease-out';
                 box.style.width = `${this.playSize}px`;
                 box.style.height = `${this.playSize}px`;
@@ -330,7 +338,9 @@ export class GamePage implements AfterViewInit {
               }
             }, 70);
           },
-          onMove: (ev) => {
+          onMove: (ev) => {            
+            var pieceColumn;
+            var pieceRow;
             setTimeout(() => {
               const close = document.elementFromPoint(ev.currentX, ev.currentY - 70);
               if (close && ['square-full', 'square-empty-sand'].indexOf(close.className) > -1) {
@@ -338,11 +348,13 @@ export class GamePage implements AfterViewInit {
                 this.pieceRow = parseInt(id[0]);
                 this.pieceColumn = parseInt(id[1]);
                 if (typeof this.pieceColumn === 'undefined' || typeof this.pieceRow === 'undefined') {
+                  debugger;
                   return;
                 }
+                // console.log(id);
+                
               }
             }, 70);
-
 
 
             div.nativeElement.style.transform = `translate(${ev.deltaX}px, ${ev.deltaY - 70}px)`;
@@ -353,26 +365,31 @@ export class GamePage implements AfterViewInit {
             if (allGood) {
               if (this.zoneId != this.zoneIdCheck) {
                 this.zoneIdCtrl = !this.zoneIdCtrl;
-                // if (this.params !== undefined) {
-                //   this.placeBlocks(this.params[0], this.params[1], this.params[2], this.params[3], this.params[4])
-                // }
+                this.pieceColumn = pieceColumn;
+                this.pieceRow = pieceRow;
+                // console.log("zone" + this.zoneId);
+                
                 this.playGround = cloneDeep(this.hoverSnapShot);
-                // this.playGround = JSON.parse(JSON.stringify(this.lastSnapShot));
                 this.detector.detectChanges();
                 setTimeout(() => {
                   this.params = this.handleHover(div);
+                  // console.log(div);
+                  
+                  // console.log(this.params);
+                  
                   const breakable = this.willBreakPatterns(this.playGround);
                   setTimeout(() => {
                     this.handleBreakable(breakable[0], breakable[1], breakable[2]);
                   }, 1)
                   this.detector.detectChanges();
-                }, 1)
+                }, 71)
               }
 
             }
             else {
               //fix it
             }
+            this.detector.detectChanges();
           },
           onEnd: ev => {
             const close = document.elementFromPoint(ev.currentX, ev.currentY - 70);
@@ -446,10 +463,10 @@ export class GamePage implements AfterViewInit {
   }
 
   isInZone(x, y, z) {
-    if (x < z.left || x >= z.right) {
+    if (x < z.left || x > z.right) {
       return false;
     }
-    if (y < z.top || y >= z.bottom) {
+    if (y < z.top || y > z.bottom) {
       return false;
     }
     return true;
@@ -562,6 +579,7 @@ export class GamePage implements AfterViewInit {
       }
       rw++;
     }
+
     //get a snapshot for undo
     this.getSnapshot();
     this.lastScore = this.score;
@@ -623,53 +641,55 @@ export class GamePage implements AfterViewInit {
       this.moves = 3;
       this.setNext();
     }
-    var gameOver = this.isGameOver();
+    setTimeout(() => {
+      var gameOver = this.isGameOver();
 
-    if(gameOver) {
-      debugger
-      this.userInfo = {
-        ...this.userInfo,
-        isSaved: false
-      }
-      this.storageService.setData(this.userInfo);
-      setTimeout(() => {
-        this.presentAlert();
-      }, 1)
-    }
-    else {
-      setTimeout(() => {
+      if(gameOver) {
+        debugger
         this.userInfo = {
           ...this.userInfo,
-          playground: this.playGround,
-          lastSnapshot: this.lastSnapShot,
-          firstObject: this.firstObject,
-          secondObject: this.secondObject,
-          thirdObject: this.thirdObject,
-          nextFirst: this.nextFirst,
-          nextSecond: this.nextSecond,
-          nextThird: this.nextThird,
-          moves: this.moves,
-          isSaved: true,
-          score: this.score,
-          lastSandId: this.lastSandId,
-          lastReferenceBlock: this.lastReferenceBlock,
-          today: {
-            date: (new Date()).toLocaleDateString('en-GB'),
-            score: this.todayScore
-          },
-          weekly: {
-            week: this.getCurrentWeek(),
-            score: this.weeklyScore
-          },
-          monthly: {
-            month: this.getCurrentMonth(),
-            score: this.monthlyScore
-          },
-          overall: this.overallScore
+          isSaved: false
         }
         this.storageService.setData(this.userInfo);
-      }, 501)
-    }
+        setTimeout(() => {
+          this.presentAlert();
+        }, 1)
+      }
+      else {
+        setTimeout(() => {
+          this.userInfo = {
+            ...this.userInfo,
+            playground: this.playGround,
+            lastSnapshot: this.lastSnapShot,
+            firstObject: this.firstObject,
+            secondObject: this.secondObject,
+            thirdObject: this.thirdObject,
+            nextFirst: this.nextFirst,
+            nextSecond: this.nextSecond,
+            nextThird: this.nextThird,
+            moves: this.moves,
+            isSaved: true,
+            score: this.score,
+            lastSandId: this.lastSandId,
+            lastReferenceBlock: this.lastReferenceBlock,
+            today: {
+              date: (new Date()).toLocaleDateString('en-GB'),
+              score: this.todayScore
+            },
+            weekly: {
+              week: this.getCurrentWeek(),
+              score: this.weeklyScore
+            },
+            monthly: {
+              month: this.getCurrentMonth(),
+              score: this.monthlyScore
+            },
+            overall: this.overallScore
+          }
+          this.storageService.setData(this.userInfo);
+        }, 501)
+      }
+    }, 550)
   }
 
   handleBreakable(row, column, square) {

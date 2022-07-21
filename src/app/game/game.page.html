@@ -53,7 +53,6 @@
 
 
     <div class="block-container" id="present">
-      <!-- <p>{{d}}</p> -->
           <img id="one" [ngClass]="isEven(firstObject, emptyObject) ? 'no-display' : ''" (click)="rotateOne()" src="/assets/images/left-rotate.png" alt="left-rotate">
           <img id="two" [ngClass]="isEven(secondObject, emptyObject) ? 'no-display' : ''" (click)="rotateTwo()" src="/assets/images/left-rotate.png" alt="left-rotate">
           <img id="three" [ngClass]="isEven(thirdObject, emptyObject) ? 'no-display' : ''" (click)="rotateThree()" src="/assets/images/left-rotate.png" alt="left-rotate">
@@ -61,7 +60,7 @@
 
           <div #item id="drag-1">
             <div class="sand-row" *ngFor="let sArray of firstBlock; index as i">
-              <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j"></div>
+              <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="(i+'x'+j)"></div>
             </div>
           </div>
 

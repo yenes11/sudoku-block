@@ -10,6 +10,7 @@ import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 import { ComponentRef } from '@angular/core';
 import { StorageService } from '../storage.service';
 import { UserInfo } from '../userinfo';
+import { NewGameModule } from '../components/new-game/new-game.module';
 
 var randomName = 'Name-' + Math.floor(Math.random() * 1000000);
 
@@ -84,7 +85,7 @@ export class HomePage {
 
   async newGameModal() {
     const modal = await this.modalCtrl.create({
-      component: NewGameComponent,
+      component: NewGameModule.component,
       cssClass: 'new-game-modal-css',
       mode: 'ios'
     })

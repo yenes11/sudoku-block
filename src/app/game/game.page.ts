@@ -13,6 +13,7 @@ import * as cloneDeep from 'lodash/cloneDeep';
 import * as isEqual from 'lodash/isEqual';
 import { Animation, AnimationController, ToastController, AlertController } from '@ionic/angular';
 import { StorageService } from '../storage.service';
+import { NewGameModule } from '../components/new-game/new-game.module';
 
 @Component({
   selector: 'app-game',
@@ -301,12 +302,15 @@ export class GamePage implements AfterViewInit {
           threshold: 0,
           gestureName: 'drag',
           onStart: ev => {
+            // const cc = document.getElementsByClassName('play-row')[0].style.borderWidth;
+            // console.log(cc);
+            
             this.getHoverSnapshot();
             this.sandId = div.nativeElement.id;
-
+            
             div.nativeElement.style.transition = '.07s ease-out';
             div.nativeElement.style.transform = `translate(0px, -70px)`;
-            const children = [...div.nativeElement.children];            
+            const children = [...div.nativeElement.children];          
 
             children.forEach(row => {
               const grandChildren = [...row.children];
@@ -356,11 +360,28 @@ export class GamePage implements AfterViewInit {
               }
             }, 70);
 
-
             div.nativeElement.style.transform = `translate(${ev.deltaX}px, ${ev.deltaY - 70}px)`;
             div.nativeElement.style.zIndex = 10;
 
-            var allGood = this.checkDropZoneHover(ev.currentX, ev.currentY - 70);
+            var element;
+            if(this.sandId == "drag-1") element = document.querySelector("div[name='first']")
+            if(this.sandId == "drag-2") element = document.querySelector("div[name='second']")
+            if(this.sandId == "drag-3") element = document.querySelector("div[name='third']")
+
+            const info = element.getBoundingClientRect();
+
+            var positionX = info.left + (info.width / 2);
+            var positionY = info.top + (info.height / 2);
+
+            // console.log(info.width);
+            // console.log(info.height);
+            
+            // console.log(this.checkDropZoneHover(positionX, positionY));
+            
+
+            //var allGood = this.checkDropZoneHover(ev.currentX, ev.currentY - 70);
+            var allGood = this.checkDropZoneHover(positionX, positionY);
+            // console.log(allGood);         
 
             if (allGood) {
               if (this.zoneId != this.zoneIdCheck) {
@@ -388,6 +409,9 @@ export class GamePage implements AfterViewInit {
             }
             else {
               //fix it
+              this.zoneIdCheck = '';
+              this.playGround = cloneDeep(this.hoverSnapShot);
+                this.detector.detectChanges();
             }
             this.detector.detectChanges();
           },
@@ -404,7 +428,21 @@ export class GamePage implements AfterViewInit {
 
             const breakable = this.willBreakPatterns(this.playGround);
             this.playGround = cloneDeep(this.hoverSnapShot);
-            var allGood = this.checkDropZoneHover(ev.currentX, ev.currentY - 70);
+
+
+            var element;
+            if(this.sandId == "drag-1") element = document.querySelector("div[name='first']")
+            if(this.sandId == "drag-2") element = document.querySelector("div[name='second']")
+            if(this.sandId == "drag-3") element = document.querySelector("div[name='third']")
+
+            const info = element.getBoundingClientRect();
+
+            var positionX = info.left + (info.width / 2);
+            var positionY = info.top + (info.height / 2);
+
+
+            var allGood = this.checkDropZoneHover(positionX, positionY);
+
             if (allGood) {
               this.handleDrop(div);
               div.nativeElement.style.transform = `translate(0px, 0px)`;
@@ -463,10 +501,10 @@ export class GamePage implements AfterViewInit {
   }
 
   isInZone(x, y, z) {
-    if (x < z.left || x > z.right) {
+    if (x  < z.left  || x > z.right ) {
       return false;
     }
-    if (y < z.top || y > z.bottom) {
+    if (y  < z.top  || y > z.bottom ) {
       return false;
     }
     return true;
@@ -489,18 +527,20 @@ export class GamePage implements AfterViewInit {
     var row = parseInt(rowColumn[0]);
     var column = parseInt(rowColumn[1]);
 
-    if (column + plusColumn - this.pieceColumn - 1 >= 9 ||
-      row + plusRow - this.pieceRow - 1 >= 9 ||
-      column - this.pieceColumn < 0 ||
-      row - this.pieceRow < 0) {
+    if (column + plusColumn - 1 >= 9 ||
+      row + plusRow - 1 >= 9 ||
+      column < 0 ||
+      row < 0 ||
+      row > 8 ||
+      column > 8) {
       return;
     }
 
     //check if available
     let rw = 0;
-    for (let i = row - this.pieceRow; i < row - this.pieceRow + plusRow; i++) {
+    for (let i = row; i < row + plusRow; i++) {
       let cl = 0;
-      for (let j = column - this.pieceColumn; j < column - this.pieceColumn + plusColumn; j++) {
+      for (let j = column; j < column + plusColumn; j++) {
         if (this.playGround[i][j] == 1 && referenceBox[rw][cl] == 1) {
           return;
         }
@@ -510,9 +550,9 @@ export class GamePage implements AfterViewInit {
     }
 
     rw = 0;
-    for (let i = row - this.pieceRow; i < row - this.pieceRow + plusRow; i++) {
+    for (let i = row; i < row + plusRow; i++) {
       let cl = 0;
-      for (let j = column - this.pieceColumn; j < column - this.pieceColumn + plusColumn; j++) {
+      for (let j = column; j < column + plusColumn; j++) {
         if (referenceBox[rw][cl] == 0) {
           cl++;
           continue;
@@ -554,18 +594,18 @@ export class GamePage implements AfterViewInit {
     var column = parseInt(rowColumn[1]);
 
 
-    if (column + plusColumn - this.pieceColumn - 1 >= 9 ||
-      row + plusRow - this.pieceRow - 1 >= 9 ||
-      column - this.pieceColumn < 0 ||
-      row - this.pieceRow < 0) {
+    if (column + plusColumn - 1 >= 9 ||
+      row + plusRow - 1 >= 9 ||
+      column < 0 ||
+      row < 0) {
       return;
     }
 
     //check if available
     let rw = 0;
-    for (let i = row - this.pieceRow; i < row - this.pieceRow + plusRow; i++) {
+    for (let i = row ; i < row + plusRow; i++) {
       let cl = 0;
-      for (let j = column - this.pieceColumn; j < column - this.pieceColumn + plusColumn; j++) {
+      for (let j = column; j < column + plusColumn; j++) {
         if (this.playGround[i][j] == 1 && referenceBox[rw][cl] == 1) {
           div.nativeElement.style.transition = '.2s ease-out';
           div.nativeElement.style.transform = 'translate(0px, 0px)';
@@ -586,9 +626,9 @@ export class GamePage implements AfterViewInit {
     this.lastSandId = this.sandId;
 
     rw = 0;
-    for (let i = row - this.pieceRow; i < row - this.pieceRow + plusRow; i++) {
+    for (let i = row; i < row + plusRow; i++) {
       let cl = 0;
-      for (let j = column - this.pieceColumn; j < column - this.pieceColumn + plusColumn; j++) {
+      for (let j = column; j < column + plusColumn; j++) {
         if (referenceBox[rw][cl] == 0) { //this.playGround[i][j] == 1 &&  deleted
           cl++;
           continue;
@@ -645,7 +685,6 @@ export class GamePage implements AfterViewInit {
       var gameOver = this.isGameOver();
 
       if(gameOver) {
-        debugger
         this.userInfo = {
           ...this.userInfo,
           isSaved: false
@@ -695,9 +734,9 @@ export class GamePage implements AfterViewInit {
   handleBreakable(row, column, square) {
     row.forEach((r) => {
       for (var i = 0; i < 9; i++) {
-        var id = r + 'x' + i;
+        var name = `${r}x${i}-inside`; //  r + 'x' + i;
         const square = this.animationCtrl.create()
-          .addElement(document.getElementById(id))
+          .addElement(document.querySelector(`[name='${name}']`))
           .fill('none')
           .duration(1000)
           .iterations(Infinity)
@@ -712,9 +751,9 @@ export class GamePage implements AfterViewInit {
 
     column.forEach((c) => {
       for (var i = 0; i < 9; i++) {
-        var id = i + 'x' + c;
+        var name = `${i}x${c}-inside`; // i + 'x' + c;
         const square = this.animationCtrl.create()
-          .addElement(document.getElementById(id))
+          .addElement(document.querySelector(`[name='${name}']`))
           .fill('none')
           .duration(1000)
           .iterations(Infinity)
@@ -730,8 +769,9 @@ export class GamePage implements AfterViewInit {
     square.forEach(s => {
       for (let i = s[0]; i < s[0] + 3; i++) {
         for (let j = s[1]; j < s[1] + 3; j++) {
+          var name = `${i}x${j}-inside`
           const square = this.animationCtrl.create()
-            .addElement(document.getElementById(`${i}x${j}`))
+            .addElement(document.querySelector(`[name='${name}']`))
             .fill('none')
             .duration(1000)
             .iterations(Infinity)
@@ -750,9 +790,9 @@ export class GamePage implements AfterViewInit {
     var rows = [];
     row.forEach((r) => {
       for (var i = 0; i < 9; i++) {
-        var id = r + 'x' + i;
+        var name = `${r}x${i}-inside`; //  r + 'x' + i;
         const square = this.animationCtrl.create()
-          .addElement(document.getElementById(id))
+          .addElement(document.querySelector(`[name='${name}']`))
           .fill('none')
           .duration(500)
           .keyframes([
@@ -766,9 +806,9 @@ export class GamePage implements AfterViewInit {
 
     column.forEach((c) => {
       for (var i = 0; i < 9; i++) {
-        var id = i + 'x' + c;
+        var name = `${i}x${c}-inside`; // i + 'x' + c ;
         const square = this.animationCtrl.create()
-          .addElement(document.getElementById(id))
+          .addElement(document.querySelector(`[name='${name}']`))
           .fill('none')
           .duration(500)
           .keyframes([
@@ -781,10 +821,12 @@ export class GamePage implements AfterViewInit {
     });
 
     square.forEach(s => {
+      console.log(row, column, square)
       for (let i = s[0]; i < s[0] + 3; i++) {
         for (let j = s[1]; j < s[1] + 3; j++) {
+          var name = `${i}x${j}-inside`;
           const square = this.animationCtrl.create()
-            .addElement(document.getElementById(`${i}x${j}`))
+            .addElement(document.querySelector(`[name='${name}']`))
             .fill('none')
             .duration(500)
             .keyframes([
@@ -929,7 +971,7 @@ export class GamePage implements AfterViewInit {
 
   deleteOrInsert(ev) {
     if (this.isDelete && this.deleteCount > 0) {
-      const id = ev.target.id.split('x');
+      const id = ev.target.getAttribute('name').substring(0,3).split('x');
       let row = id[0];
       let column = id[1];
       this.playGround[row][column] = 0;
@@ -937,7 +979,7 @@ export class GamePage implements AfterViewInit {
       this.deleteCount--;
     }
     if (this.isInsert && this.addCount > 0) {
-      const id = ev.target.id.split('x');
+      const id = ev.target.getAttribute('name').substring(0,3).split('x');
       let row = id[0];
       let column = id[1];
       this.playGround[row][column] = 1;
@@ -994,6 +1036,16 @@ export class GamePage implements AfterViewInit {
     })
     await modal.present();
   }
+
+  async newGameModal() {
+    const modal = await this.modalCtrl.create({
+      component: NewGameModule.component,
+      cssClass: 'new-game-modal-css',
+      mode: 'ios'
+    })
+    await modal.present();
+  }
+
 
   routeGameOver() {
     this.router.navigate(['gameover']);

@@ -3,7 +3,7 @@
 <div class="grid">
 
   <div class="buttons">
-    <img src="/assets/images/plus.png" alt="plus" (click)="cl()" />
+    <img src="/assets/images/plus.png" (click)="newGameModal()" alt="plus" />
     <img src="/assets/images/settings.png" alt="settings" (click)="settingsModal()"/>
   </div>
 
@@ -23,12 +23,12 @@
 
   <div class="game">
     <div class="play-row" *ngFor="let sArray of playGround; index as i">
-       <div *ngFor="let x of sArray; index as j" class="blck">
-           <div *ngIf="i % 6 < 3 && j % 6 < 3" #dropzone (click)="deleteOrInsert($event)" [attr.id]="i+'x'+j" [ngClass]="x == 1 ? 'blue-play bg-full' : x == 2 ? 'blue-play bg-hover' : 'blue-play'"></div>
-           <div *ngIf="i % 6 >= 3 && j % 6 < 3" #dropzone (click)="deleteOrInsert($event)" [attr.id]="i+'x'+j" [ngClass]="x == 1 ? 'square-empty-play bg-full' : x == 2 ? 'square-empty-play bg-hover' : 'square-empty-play'"></div>
+       <div #dropzone *ngFor="let x of sArray; index as j" [attr.id]="i+'x'+j" [ngClass]="(i % 6 < 3 && j % 6 < 3) || (i % 6 >= 3 && j % 6 >= 3) ? 'blue-play blck': 'blck'">
+           <div (click)="deleteOrInsert($event)" [attr.name]="i+'x'+j+'-inside'" [ngClass]="x == 1 ? 'square-empty-play bg-full' : x == 2 ? 'square-empty-play bg-hover' : 'square-empty-play'"></div>
+           <!-- <div *ngIf="i % 6 >= 3 && j % 6 < 3"  (click)="deleteOrInsert($event)" [attr.name]="i+'x'+j+'-inside'" [ngClass]="x == 1 ? 'square-empty-play bg-full' : x == 2 ? 'square-empty-play bg-hover' : 'square-empty-play'"></div>
 
-           <div *ngIf="i % 6 >= 3 && j % 6 >= 3" #dropzone (click)="deleteOrInsert($event)" [attr.id]="i+'x'+j" [ngClass]="x == 1 ? 'blue-play bg-full' : x == 2 ? 'blue-play bg-hover' : 'blue-play'"></div>
-           <div *ngIf="i % 6 < 3 && j % 6 >= 3" #dropzone (click)="deleteOrInsert($event)" [attr.id]="i+'x'+j" [ngClass]="x == 1 ? 'square-empty-play bg-full' : x == 2 ? 'square-empty-play bg-hover' : 'square-empty-play'"></div>
+           <div *ngIf="i % 6 >= 3 && j % 6 >= 3" (click)="deleteOrInsert($event)" [attr.name]="i+'x'+j+'-inside'" [ngClass]="x == 1 ? 'square-empty-play bg-full' : x == 2 ? 'square-empty-play bg-hover' : 'square-empty-play'"></div>
+           <div *ngIf="i % 6 < 3 && j % 6 >= 3"  (click)="deleteOrInsert($event)" [attr.name]="i+'x'+j+'-inside'" [ngClass]="x == 1 ? 'square-empty-play bg-full' : x == 2 ? 'square-empty-play bg-hover' : 'square-empty-play'"></div> -->
        </div>
      </div>
   </div>
@@ -60,19 +60,19 @@
 
           <div #item id="drag-1">
             <div class="sand-row" *ngFor="let sArray of firstBlock; index as i">
-              <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="(i+'x'+j)"></div>
+              <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="i == 0 && j == 0 ? 'first': ''"></div>
             </div>
           </div>
 
           <div #item id="drag-2" >
               <div class="sand-row" *ngFor="let sArray of secondBlock; index as i">
-                <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j"></div>
+                <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="i == 0 && j == 0 ? 'second': ''"></div>
               </div>
           </div>
 
           <div #item id="drag-3" >
             <div class="sand-row" *ngFor="let sArray of thirdBlock; index as i">
-              <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j"></div>
+              <div *ngFor="let s of sArray; index as j" [ngClass]="s ? 'square-full' : 'square-empty-sand'" [attr.id]="i+'x'+j" [attr.name]="i == 0 && j == 0 ? 'third': ''"></div>
             </div>
           </div>
 

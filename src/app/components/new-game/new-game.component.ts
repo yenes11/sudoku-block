@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ModalController } from '@ionic/angular';
+import { ModalController, LoadingController } from '@ionic/angular';
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 import { Device } from '@ionic-native/device/ngx';
 import { StorageService } from 'src/app/storage.service';
@@ -16,10 +16,24 @@ export class NewGameComponent implements OnInit {
 
 
   constructor(private modalCtrl: ModalController, private router: Router, private device: Device,
-    private storageService: StorageService) { }
+    private storageService: StorageService, public loadingController: LoadingController) { }
 
   async close() {
     await this.modalCtrl.dismiss();
+  }
+
+  async presentLoading() {
+    const loading = await this.loadingController.create({
+      mode: 'ios',
+      spinner: 'circular',
+      message: 'Hazırlanıyor',
+      duration: 30
+    });
+    await loading.present();
+
+    const { role, data } = await loading.onDidDismiss();
+
+    console.log('Loading dismissed!');
   }
 
   async routeGame() {
@@ -33,7 +47,9 @@ export class NewGameComponent implements OnInit {
     })
     // await this.writeSecretFile();
     this.modalCtrl.dismiss();
-    this.router.navigate(['game']);
+    await this.presentLoading();
+    await this.router.navigate(['game']);
+    window.location.reload();
   }
 
   writeSecretFile = async () => {

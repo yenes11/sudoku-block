@@ -10,7 +10,9 @@ import { CommonModule } from '@angular/common';
   ],
   imports: [CommonModule, ButtonModule, IconModule],
   exports: [
-    NewGameComponent,
+    NewGameModule.component,
   ],
 })
-export class NewGameModule { }
+export class NewGameModule { 
+  static component = NewGameComponent
+}

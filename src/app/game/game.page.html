@@ -3,7 +3,7 @@
 <div class="grid">
 
   <div class="buttons">
-    <img src="/assets/images/plus.png" (click)="newGameModal()" alt="plus" />
+    <img src="/assets/images/plus.png" (click)="isGameOver()" alt="plus" />
     <img src="/assets/images/settings.png" alt="settings" (click)="settingsModal()"/>
   </div>
 
@@ -101,5 +101,10 @@
           <img id="arrow-left" src="/assets/images/left-arrows.png" alt="show current" (click)="showNext()"/>
 
     </div>
+
+    <div class="points">
+      +105
+    </div>
+
   </div>
 </ion-content>

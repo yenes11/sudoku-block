@@ -147,15 +147,9 @@ ion-content {
   justify-content: flex-end;
 }
 
-
-
-
-
 .play-row:nth-child(1) .blck {
   border-top: 2px solid #454750;
 }
-
-
 
 .blck + .blck {
 
@@ -298,6 +292,27 @@ img {
 
 .no-display {
   display: none;
+}
+
+
+.points {
+  border-radius: 50vh;
+  padding: 10px;
+  letter-spacing: 0.1rem;
+  position: absolute;
+  margin: auto;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 12vw;
+  height: 5vh;
+  font-size: x-large;
+  background-color: #FFFFFF;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.6);
 }
 
 

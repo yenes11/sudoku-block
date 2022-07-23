@@ -62,7 +62,7 @@ export class HomePage {
         this.detector.detectChanges();
         if(this.daily.date != (new Date()).toLocaleDateString('en-GB')) this.daily = { date: (new Date()).toLocaleDateString('en-GB'), score: 0 };
         if(this.weekly.week != this.getCurrentWeek()) this.weekly = { week: this.getCurrentWeek(), score: 0 };
-        if(this.monthly.month != this.getCurrentMonth()) this.monthly = { month: this.getCurrentMonth(), score: 0 };
+        // if(this.monthly.month != this.getCurrentMonth()) this.monthly = { month: this.getCurrentMonth(), score: 0 };
 
         this.dataService.getWeeklyById(this.device.uuid).subscribe(res => {
           if (res === undefined) {
@@ -72,7 +72,7 @@ export class HomePage {
 
         this.dataService.getDailyById(this.device.uuid).subscribe(res => {
           if (res === undefined) {
-            this.dataService.createMonthly({ id: "this.device.uuid", name: "this.device.model", score: this.daily.score })
+            this.dataService.createDaily({ id: "this.device.uuid", name: "this.device.model", score: this.daily.score })
           }
         })
       }

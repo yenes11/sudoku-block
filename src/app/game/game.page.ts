@@ -174,12 +174,8 @@ export class GamePage implements AfterViewInit {
 
   }
   async ngOnInit() {
-    setTimeout(async () => {
-      await this.getSavedData();
-      this.detector.detectChanges();
-    }, 300)
-
-    if (!this.isSaved) await this.setEnv();
+    
+    await this.getSavedData();
     this.detector.detectChanges();
     this.firstEmpty = isEqual(this.firstObject, this.emptyObject);
     this.secondEmpty = isEqual(this.secondObject, this.emptyObject);
@@ -237,40 +233,44 @@ export class GamePage implements AfterViewInit {
         this.lastSandId = this.userInfo.lastSandId;
         this.lastReferenceBlock = this.userInfo.lastReferenceBlock;
       }
+      else {
+          this.setEnv()
+          this.detector.detectChanges();
+      }
     })
   }
 
-  setSavedData = async () => {
-    var isSaved = this.userInfo['isSaved'];
-    this.isSaved = isSaved;
-    if (isSaved) {
-      this.playGround = cloneDeep(this.userInfo.playground);
-      this.lastSnapShot = cloneDeep(this.userInfo.lastSnapShot);
+  // setSavedData = async () => {
+  //   var isSaved = this.userInfo['isSaved'];
+  //   this.isSaved = isSaved;
+  //   if (isSaved) {
+  //     this.playGround = cloneDeep(this.userInfo.playground);
+  //     this.lastSnapShot = cloneDeep(this.userInfo.lastSnapShot);
 
-      this.firstObject = this.userInfo.firstObject;
-      this.secondObject = this.userInfo.secondObject;
-      this.thirdObject = this.userInfo.thirdObject;
+  //     this.firstObject = this.userInfo.firstObject;
+  //     this.secondObject = this.userInfo.secondObject;
+  //     this.thirdObject = this.userInfo.thirdObject;
 
-      this.firstBlock = this.firstObject.block;
-      this.secondBlock = this.secondObject.block;
-      this.thirdBlock = this.thirdObject.block;
+  //     this.firstBlock = this.firstObject.block;
+  //     this.secondBlock = this.secondObject.block;
+  //     this.thirdBlock = this.thirdObject.block;
 
-      this.nextFirst = this.userInfo.nextFirst;
-      this.nextSecond = this.userInfo.nextSecond;
-      this.nextThird = this.userInfo.nextThird;
+  //     this.nextFirst = this.userInfo.nextFirst;
+  //     this.nextSecond = this.userInfo.nextSecond;
+  //     this.nextThird = this.userInfo.nextThird;
 
-      this.nextFirstBlock = this.nextFirst.block;
-      this.nextSecondBlock = this.nextSecond.block;
-      this.nextThirdBlock = this.nextThird.block;
+  //     this.nextFirstBlock = this.nextFirst.block;
+  //     this.nextSecondBlock = this.nextSecond.block;
+  //     this.nextThirdBlock = this.nextThird.block;
 
-      this.deleteCount = this.userInfo.delete;
-      this.addCount = this.userInfo.add;
-      this.undoCount = this.userInfo.undo;
+  //     this.deleteCount = this.userInfo.delete;
+  //     this.addCount = this.userInfo.add;
+  //     this.undoCount = this.userInfo.undo;
 
-      this.moves = this.userInfo.moves;
-      this.score = this.userInfo.score;
-    }
-  };
+  //     this.moves = this.userInfo.moves;
+  //     this.score = this.userInfo.score;
+  //   }
+  // };
 
   writeSecretFile = async (info) => {
     await Filesystem.writeFile({
@@ -786,6 +786,24 @@ export class GamePage implements AfterViewInit {
     })
   }
 
+  async playPoints() {
+    const div = document.querySelector('.points') as HTMLElement;
+    div.style.display = 'flex';
+    const animation = this.animationCtrl.create()
+          .addElement(document.querySelector('.points'))
+          .fill('none')
+          .duration(1000)
+          .keyframes([
+            { offset: 0, transform: 'translateY(0px)', opacity: 1 },
+            { offset: 0.5, transform: 'translateY(-30px)', opacity: 1 },
+            { offset: 1, transform: 'translateY(-300px)', opacity: 0 }
+          ])
+          // .fromTo('transform', 'translateY(0px)', 'translateY(-300px)')
+          // .fromTo('opacity', '1', '0');
+          await animation.play();
+    div.style.display = 'none';
+  }
+
   playAnimations(row, column, square) {
     var rows = [];
     row.forEach((r) => {
@@ -1061,7 +1079,7 @@ export class GamePage implements AfterViewInit {
   }
 
   isGameOver() {
-
+    debugger
     var gameOver = false;
     var isSet = true;
 
@@ -1078,12 +1096,12 @@ export class GamePage implements AfterViewInit {
       var rowLen = obj.length;
       var colLen = obj[0].length;
       for (var i = 0; i < 9; i++) {
-        if (rowLen + i > 8) continue;
+        if (rowLen + i > 9) continue;
         if (colLen == 0) break;
 
         for (var j = 0; j < 9; j++) {
           isSet = true;
-          if (colLen + j > 8) continue;
+          if (colLen + j > 9) continue;
           var plusRow = 0;
           for (var row = i; row < i + rowLen; row++) {
             var plusCol = 0;
@@ -1172,7 +1190,7 @@ export class GamePage implements AfterViewInit {
     //     if (isSet) return false;
     //   }
     // }
-
+    debugger
     return true;
   }
 

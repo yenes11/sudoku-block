@@ -13,6 +13,8 @@ import { Device } from '@ionic-native/device/ngx';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { Drivers } from '@ionic/storage';
 import * as CordovaSQLiteDriver from 'localforage-cordovasqlitedriver';
+import { NativeAudio } from '@awesome-cordova-plugins/native-audio/ngx';
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -25,8 +27,9 @@ import * as CordovaSQLiteDriver from 'localforage-cordovasqlitedriver';
     IonicStorageModule.forRoot({
       name: 'userInfo',
       driverOrder: [CordovaSQLiteDriver._driver, Drivers.IndexedDB, Drivers.LocalStorage]
-    })],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, Device],
+    }),
+    ],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, Device, NativeAudio],
   bootstrap: [AppComponent],
 })
 export class AppModule {

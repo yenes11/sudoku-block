@@ -6,6 +6,7 @@ import { Device } from '@ionic-native/device/ngx';
 import { StorageService } from 'src/app/storage.service';
 import { UserInfo } from 'src/app/userinfo';
 
+
 @Component({
   selector: 'app-new-game',
   templateUrl: './new-game.component.html',
@@ -47,9 +48,9 @@ export class NewGameComponent implements OnInit {
     })
     // await this.writeSecretFile();
     this.modalCtrl.dismiss();
-    await this.presentLoading();
+    // await this.presentLoading();
+    // window.location.reload();
     await this.router.navigate(['game']);
-    window.location.reload();
   }
 
   writeSecretFile = async () => {

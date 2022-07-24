@@ -4,14 +4,14 @@
     <app-icon type="back" class="back" (click)="close()"></app-icon>
   <div class="header">
     <br />
-    SETTINGS
+    {{  languageTexts["settings"] }}
     <div class="profile flex-center">
       <!-- <app-icon style="margin-bottom: -0.7vh" type="profile"></app-icon> -->
       <img class="profile-icon" src="/assets/images/profile.png" alt="profile">
     </div>
     <div class="profile-name" (click)="profileNameModal()">
       <app-icon type="edit-profile"></app-icon>
-      Profile Name
+      {{  languageTexts["profileName"] }}
     </div>
   </div>
   <div class="body">
@@ -21,7 +21,7 @@
         <img class="badge-icon" src="/assets/images/sound.png" alt="sound">
       </div>
       <div class="badge">
-        SOUNDS
+        {{  languageTexts["sounds"] }}
         <ion-toggle mode="ios"></ion-toggle>
       </div>
     </div>
@@ -32,7 +32,7 @@
         <img class="badge-icon" src="/assets/images/vibration.png" alt="vibration">
       </div>
       <div class="badge">
-        VIBRATIONS
+        {{  languageTexts["vibrations"] }}
         <ion-toggle mode="ios"></ion-toggle>
       </div>
     </div>
@@ -43,7 +43,7 @@
         <img class="badge-icon" src="/assets/images/themes.png" alt="themes">
       </div>
       <div class="badge">
-        THEMES
+        {{  languageTexts["theme"] }}
       </div>
     </div>
 
@@ -52,7 +52,7 @@
         <!-- <app-icon class="mt" type="ranking"></app-icon> -->
         <img class="badge-icon" src="/assets/images/rankings.png" alt="rankings">
       </div>
-      <div class="badge">RANKINGS</div>
+      <div class="badge">{{  languageTexts["rankings"] }}</div>
     </div>
 
     <div class="badge-row">
@@ -60,7 +60,7 @@
         <!-- <app-icon class="mt" type="logic"></app-icon> -->
         <img class="badge-icon" src="/assets/images/app-logic.png" alt="app logic">
       </div>
-      <div class="badge">APP LOGIC</div>
+      <div class="badge">{{  languageTexts["appLogic"] }}</div>
     </div>
 
     <div class="badge-row">
@@ -68,7 +68,7 @@
         <!-- <app-icon class="mt" type="privacy"></app-icon> -->
         <img class="badge-icon" src="/assets/images/privacy.png" alt="privacy">
       </div>
-      <div class="badge">PRIVACY POLICY</div>
+      <div class="badge">{{  languageTexts["privacy"] }}</div>
     </div>
 
     <div class="badge-row">
@@ -76,15 +76,15 @@
         <!-- <app-icon class="mt" type="terms"></app-icon> -->
         <img class="badge-icon" src="/assets/images/terms.png" alt="termms of use">
       </div>
-      <div class="badge">TERMS OF USE</div>
+      <div class="badge">{{  languageTexts["terms"] }}</div>
     </div>
 
-    <div class="badge-row">
+    <div class="badge-row" (click)="presentSelect()">
       <div class="icon flex-center">
         <!-- <app-icon class="mt" type="terms"></app-icon> -->
         <img class="badge-icon" src="/assets/images/language.png" alt="language">
       </div>
-      <div class="badge">LANGUAGE</div>
+      <div class="badge">{{  languageTexts["language"] }}</div>
     </div>
 
     <app-icon style="margin-top: 3vh" type="premium"></app-icon>
@@ -94,20 +94,30 @@
         <!-- <app-icon class="mt" type="ads"></app-icon> -->
         <img class="badge-icon" src="/assets/images/removeads.png" alt="remove ads">
       </div>
-      <div class="badge">REMOVE ADS</div>
+      <div class="badge">{{  languageTexts["removeAds"] }}</div>
     </div>
 
-    <div class="badge-row">
+    <div class="badge-row" (click)="cl()">
       <div class="icon flex-center">
         <!-- <app-icon class="mt" type="restore"></app-icon> -->
         <img class="badge-icon" src="/assets/images/restore.png" alt="restore purschases">
       </div>
-      <div class="badge">RESTORE PURSCHASES</div>
+      <div class="badge">{{  languageTexts["restore"] }}</div>
     </div>
 
     <app-icon style="margin-top: 4vh" type="tanos-logo"></app-icon>
   </div>
 
 </div>
+
+  <ion-select id="customActionSheetSelect" interface="action-sheet" (ionChange)="changeLanguage()" mode="ios" placeholder="Select One" style="display: none;">
+    <ion-select-option value="english">English</ion-select-option>
+    <ion-select-option value="turkish">Türkçe</ion-select-option>
+    <ion-select-option value="french">Français</ion-select-option>
+    <ion-select-option value="german">Deutsche</ion-select-option>
+    <ion-select-option value="italian">Italiano</ion-select-option>
+    <ion-select-option value="russian">русский</ion-select-option>
+    <ion-select-option value="spanish">Español</ion-select-option>
+  </ion-select>
 
 </ion-content>

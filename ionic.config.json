@@ -1,9 +1,7 @@
 {
   "name": "sudoku_block",
   "integrations": {
-    "capacitor": {
-      "enabled": false
-    },
+    "capacitor": {},
     "cordova": {}
   },
   "type": "angular"

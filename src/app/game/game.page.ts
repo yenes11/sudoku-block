@@ -14,6 +14,9 @@ import * as isEqual from 'lodash/isEqual';
 import { Animation, AnimationController, ToastController, AlertController } from '@ionic/angular';
 import { StorageService } from '../storage.service';
 import { NewGameModule } from '../components/new-game/new-game.module';
+import { NativeAudio } from '@awesome-cordova-plugins/native-audio/ngx';
+import { Howl, Howler } from 'howler';
+import { IonRefresher } from '@ionic/angular';
 
 @Component({
   selector: 'app-game',
@@ -115,17 +118,29 @@ export class GamePage implements AfterViewInit {
   playSize;
   sandSize;
 
+  isLeftZone = false;
+
   constructor(private modalCtrl: ModalController, private router: Router,
     private gestureCtrl: GestureController, private detector: ChangeDetectorRef, private device: Device,
     private animationCtrl: AnimationController, private toastController: ToastController, private alertController: AlertController,
-    private storageService: StorageService) { }
+    private storageService: StorageService, private nativeAudio: NativeAudio) {
+
+     }
 
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.updateGestures()
       this.playSize = document.querySelector('.blue-play').clientWidth;
       this.sandSize = document.querySelector('.square-full').clientWidth;
-    }, 1);
+    }, 500);
+  }
+
+  playClick() {
+    // this.nativeAudio.play('click');
+    var sound = new Howl({
+      src: ['assets/sounds/click.wav']
+    });
+    sound.play();
   }
 
   async presentToast(message) {
@@ -234,7 +249,7 @@ export class GamePage implements AfterViewInit {
         this.lastReferenceBlock = this.userInfo.lastReferenceBlock;
       }
       else {
-          this.setEnv()
+          this.setEnv();
           this.detector.detectChanges();
       }
     })
@@ -342,23 +357,9 @@ export class GamePage implements AfterViewInit {
               }
             }, 70);
           },
-          onMove: (ev) => {            
+          onMove: (ev) => {           
             var pieceColumn;
             var pieceRow;
-            setTimeout(() => {
-              const close = document.elementFromPoint(ev.currentX, ev.currentY - 70);
-              if (close && ['square-full', 'square-empty-sand'].indexOf(close.className) > -1) {
-                let id = close.id.split('x');
-                this.pieceRow = parseInt(id[0]);
-                this.pieceColumn = parseInt(id[1]);
-                if (typeof this.pieceColumn === 'undefined' || typeof this.pieceRow === 'undefined') {
-                  debugger;
-                  return;
-                }
-                // console.log(id);
-                
-              }
-            }, 70);
 
             div.nativeElement.style.transform = `translate(${ev.deltaX}px, ${ev.deltaY - 70}px)`;
             div.nativeElement.style.zIndex = 10;
@@ -369,21 +370,13 @@ export class GamePage implements AfterViewInit {
             if(this.sandId == "drag-3") element = document.querySelector("div[name='third']")
 
             const info = element.getBoundingClientRect();
-
             var positionX = info.left + (info.width / 2);
             var positionY = info.top + (info.height / 2);
-
-            // console.log(info.width);
-            // console.log(info.height);
             
-            // console.log(this.checkDropZoneHover(positionX, positionY));
-            
-
-            //var allGood = this.checkDropZoneHover(ev.currentX, ev.currentY - 70);
-            var allGood = this.checkDropZoneHover(positionX, positionY);
-            // console.log(allGood);         
+            var allGood = this.checkDropZoneHover(positionX, positionY);    
 
             if (allGood) {
+              this.isLeftZone = true;
               if (this.zoneId != this.zoneIdCheck) {
                 this.zoneIdCtrl = !this.zoneIdCtrl;
                 this.pieceColumn = pieceColumn;
@@ -408,10 +401,11 @@ export class GamePage implements AfterViewInit {
 
             }
             else {
-              //fix it
-              this.zoneIdCheck = '';
-              this.playGround = cloneDeep(this.hoverSnapShot);
-                this.detector.detectChanges();
+              if(this.isLeftZone) {
+                this.isLeftZone = !this.isLeftZone;
+                this.zoneIdCheck = '';
+                this.playGround = cloneDeep(this.hoverSnapShot); // optimize
+              }
             }
             this.detector.detectChanges();
           },
@@ -805,6 +799,13 @@ export class GamePage implements AfterViewInit {
   }
 
   playAnimations(row, column, square) {
+    if(row.length > 0 || column.length > 0 || square.length > 0) {
+      const scene = document.querySelector('.grid') as HTMLElement;
+      scene.style.pointerEvents = 'none';
+      setTimeout(() => {
+        scene.style.pointerEvents = 'all';
+      }, 500)
+    }
     var rows = [];
     row.forEach((r) => {
       for (var i = 0; i < 9; i++) {
@@ -1059,9 +1060,16 @@ export class GamePage implements AfterViewInit {
     const modal = await this.modalCtrl.create({
       component: NewGameModule.component,
       cssClass: 'new-game-modal-css',
-      mode: 'ios'
+      mode: 'ios',
+      
     })
+
     await modal.present();
+    const data = await modal.onDidDismiss();
+    if(data) {
+      debugger
+      await this.getSavedData();
+    }
   }
 
 
@@ -1079,7 +1087,6 @@ export class GamePage implements AfterViewInit {
   }
 
   isGameOver() {
-    debugger
     var gameOver = false;
     var isSet = true;
 
@@ -1190,7 +1197,6 @@ export class GamePage implements AfterViewInit {
     //     if (isSet) return false;
     //   }
     // }
-    debugger
     return true;
   }
 
@@ -1206,5 +1212,6 @@ export class GamePage implements AfterViewInit {
     var date = new Date();
     return date.getMonth();
   }
+
 
 }

@@ -16,6 +16,7 @@ var month = currentdate.getMonth();
 
 
 export const UserInfo = {
+  language: "english",
   weekly: {
     week: result,
     score: 0

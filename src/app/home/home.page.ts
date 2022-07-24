@@ -11,6 +11,7 @@ import { ComponentRef } from '@angular/core';
 import { StorageService } from '../storage.service';
 import { UserInfo } from '../userinfo';
 import { NewGameModule } from '../components/new-game/new-game.module';
+import { languages } from '../language';
 
 var randomName = 'Name-' + Math.floor(Math.random() * 1000000);
 
@@ -34,14 +35,16 @@ export class HomePage {
   monthly;
   daily;
 
+  selectedLanguage;
+  languages = languages;
+  languageTexts = "";
+
+
   constructor(private modalCtrl: ModalController, private dataService: DataService,
     private router: Router, private device: Device, private detector: ChangeDetectorRef,
     private storageService: StorageService
   ) {
-
-
-    this.loadData();
-
+    
   }
 
 
@@ -57,6 +60,8 @@ export class HomePage {
         this.bestScore = this.userInfo['overall'];
         this.isSaved = this.userInfo['isSaved'];
         this.weekly = this.userInfo['weekly'];
+        this.selectedLanguage = this.userInfo['language'];
+        this.languageTexts = this.languages[this.selectedLanguage];
         // this.monthly = this.userInfo['monthly'];
         this.daily = this.userInfo['today'];
         this.detector.detectChanges();
@@ -80,7 +85,7 @@ export class HomePage {
   }
 
   ngOnInit() {
-
+    this.loadData();
   }
 
   async newGameModal() {

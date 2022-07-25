@@ -42,7 +42,7 @@ export class NewGameComponent implements OnInit {
       var data = res;
       data = {
         ...data,
-        ...this.userData
+        isSaved: false
       }
       this.storageService.setData(data);
     })
@@ -50,7 +50,10 @@ export class NewGameComponent implements OnInit {
     this.modalCtrl.dismiss();
     // await this.presentLoading();
     // window.location.reload();
-    await this.router.navigate(['game']);
+    
+    setTimeout(() => {
+      this.router.navigate(['game']);
+    }, 100)
   }
 
   writeSecretFile = async () => {

@@ -95,6 +95,7 @@ export class HomePage {
       mode: 'ios'
     })
     await modal.present();
+    await modal.onDidDismiss();
   }
 
   async settingsModal() {
@@ -103,6 +104,12 @@ export class HomePage {
       cssClass: 'settings-modal-css'
     })
     await modal.present();
+    const data = await modal.onWillDismiss();
+    this.storageService.getData().subscribe(res => {
+      this.selectedLanguage = res.language;
+      this.languageTexts = languages[this.selectedLanguage];
+      this.detector.detectChanges();
+    })
   }
 
   routeGame() {

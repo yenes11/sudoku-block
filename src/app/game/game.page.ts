@@ -16,7 +16,7 @@ import { StorageService } from '../storage.service';
 import { NewGameModule } from '../components/new-game/new-game.module';
 import { NativeAudio } from '@awesome-cordova-plugins/native-audio/ngx';
 import { Howl, Howler } from 'howler';
-import { IonRefresher } from '@ionic/angular';
+import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-game',
@@ -33,6 +33,10 @@ export class GamePage implements AfterViewInit {
   pattern = patterns;
   executePatterns = executePatterns;
   willBreakPatterns = willBreakPatterns;
+  combo = 0;
+  comboText = "";
+  plusPoint;
+  plusPointText = "";
   moves = 3;
   undoCount = 1;
   addCount = 3;
@@ -62,7 +66,7 @@ export class GamePage implements AfterViewInit {
   nextSecondBlock: Array<Array<number>>;
   nextThirdBlock: Array<Array<number>>;
 
-  lastSnapShot = [
+  emptyGround = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -74,36 +78,17 @@ export class GamePage implements AfterViewInit {
     [0, 0, 0, 0, 0, 0, 0, 0, 0]
   ];
 
-  hoverSnapShot = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0]
-  ];
+  lastSnapShot = cloneDeep(this.emptyGround);
 
-  playGround =
-    [
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0]
-    ];
+  hoverSnapShot = cloneDeep(this.emptyGround);
+
+  playGround = cloneDeep(this.emptyGround);
 
   pieceRow: number;
   pieceColumn: number;
   targetId: string;
-  score: number | any[] = 0;
-  lastScore: number | any[] = 0;
+  score = 0;
+  lastScore = 0;
   sandId: string;
   lastSandId: string;
   zoneId: string;
@@ -123,7 +108,7 @@ export class GamePage implements AfterViewInit {
   constructor(private modalCtrl: ModalController, private router: Router,
     private gestureCtrl: GestureController, private detector: ChangeDetectorRef, private device: Device,
     private animationCtrl: AnimationController, private toastController: ToastController, private alertController: AlertController,
-    private storageService: StorageService, private nativeAudio: NativeAudio) {
+    private storageService: StorageService, private loadingController: LoadingController) {
 
      }
 
@@ -183,11 +168,6 @@ export class GamePage implements AfterViewInit {
     squareA.play();
   }
 
-
-  cl() {
-    console.log(this.userInfo);
-
-  }
   async ngOnInit() {
     
     await this.getSavedData();
@@ -254,48 +234,6 @@ export class GamePage implements AfterViewInit {
       }
     })
   }
-
-  // setSavedData = async () => {
-  //   var isSaved = this.userInfo['isSaved'];
-  //   this.isSaved = isSaved;
-  //   if (isSaved) {
-  //     this.playGround = cloneDeep(this.userInfo.playground);
-  //     this.lastSnapShot = cloneDeep(this.userInfo.lastSnapShot);
-
-  //     this.firstObject = this.userInfo.firstObject;
-  //     this.secondObject = this.userInfo.secondObject;
-  //     this.thirdObject = this.userInfo.thirdObject;
-
-  //     this.firstBlock = this.firstObject.block;
-  //     this.secondBlock = this.secondObject.block;
-  //     this.thirdBlock = this.thirdObject.block;
-
-  //     this.nextFirst = this.userInfo.nextFirst;
-  //     this.nextSecond = this.userInfo.nextSecond;
-  //     this.nextThird = this.userInfo.nextThird;
-
-  //     this.nextFirstBlock = this.nextFirst.block;
-  //     this.nextSecondBlock = this.nextSecond.block;
-  //     this.nextThirdBlock = this.nextThird.block;
-
-  //     this.deleteCount = this.userInfo.delete;
-  //     this.addCount = this.userInfo.add;
-  //     this.undoCount = this.userInfo.undo;
-
-  //     this.moves = this.userInfo.moves;
-  //     this.score = this.userInfo.score;
-  //   }
-  // };
-
-  writeSecretFile = async (info) => {
-    await Filesystem.writeFile({
-      path: 'secret/user.txt',
-      data: JSON.stringify(info),
-      directory: Directory.Data,
-      encoding: Encoding.UTF8,
-    });
-  };
-
 
   @ViewChildren('item', { read: ElementRef }) items: QueryList<ElementRef>;
   gestureArray: Gesture[] = [];
@@ -410,16 +348,6 @@ export class GamePage implements AfterViewInit {
             this.detector.detectChanges();
           },
           onEnd: ev => {
-            const close = document.elementFromPoint(ev.currentX, ev.currentY - 70);
-            if (close && ['square-full', 'square-empty-sand'].indexOf(close.className) > -1) {
-              let id = close.id.split('x');
-              this.pieceRow = parseInt(id[0]);
-              this.pieceColumn = parseInt(id[1]);
-              if (typeof this.pieceColumn === 'undefined' || typeof this.pieceRow === 'undefined') {
-                return;
-              }
-            }
-
             const breakable = this.willBreakPatterns(this.playGround);
             this.playGround = cloneDeep(this.hoverSnapShot);
 
@@ -439,6 +367,7 @@ export class GamePage implements AfterViewInit {
 
             if (allGood) {
               this.handleDrop(div);
+              
               div.nativeElement.style.transform = `translate(0px, 0px)`;
             }
             else {
@@ -618,6 +547,7 @@ export class GamePage implements AfterViewInit {
     this.getSnapshot();
     this.lastScore = this.score;
     this.lastSandId = this.sandId;
+    var dropIndex = [];
 
     rw = 0;
     for (let i = row; i < row + plusRow; i++) {
@@ -628,19 +558,30 @@ export class GamePage implements AfterViewInit {
           continue;
         }
         this.playGround[i][j] = referenceBox[rw][cl];
+        dropIndex.push([i, j]);
         cl++;
       }
       rw++;
     }
 
     this.moves--;
-    var patternOutput = this.pattern(this.playGround, this.score);
+    var patternOutput = this.pattern(this.playGround);
     setTimeout(() => {
       this.playAnimations(patternOutput[0], patternOutput[1], patternOutput[2]);
     }, 1)
 
     setTimeout(() => {
-      this.score = executePatterns(this.score, this.playGround, patternOutput);
+      var output = executePatterns(this.score, this.playGround, patternOutput, dropIndex, this.combo);
+      this.score = output[0];
+      this.combo = output[1];
+      this.comboText = output[2];
+      this.plusPoint = this.score - this.lastScore;
+      this.plusPointText = "+" + this.plusPoint;
+
+      if(this.plusPoint > 0) {
+        this.playPoints();
+      }
+
       if (this.score > this.overallScore) this.overallScore = this.score;
       if (this.score > this.todayScore) this.todayScore = this.score;
       if (this.score > this.weeklyScore) this.weeklyScore = this.score;
@@ -654,21 +595,18 @@ export class GamePage implements AfterViewInit {
         this.lastReferenceBlock = cloneDeep(this.secondObject);
         this.secondObject = this.emptyObject;
         this.secondBlock = this.secondObject.block;
-        // this.secondEmpty = isEqual(this.secondObject, this.emptyObject);
       }
 
       else if (this.sandId == 'drag-3') {
         this.lastReferenceBlock = cloneDeep(this.thirdObject);
         this.thirdObject = this.emptyObject;
         this.thirdBlock = this.thirdObject.block;
-        // this.thirdEmpty = isEqual(this.thirdObject, this.emptyObject);
       }
 
       else if (this.sandId == 'drag-1') {
         this.lastReferenceBlock = cloneDeep(this.firstObject);
         this.firstObject = this.emptyObject;
         this.firstBlock = this.firstObject.block;
-        // this.firstEmpty = isEqual(this.firstObject, this.emptyObject);
       }
     }
     else {
@@ -717,12 +655,14 @@ export class GamePage implements AfterViewInit {
               month: this.getCurrentMonth(),
               score: this.monthlyScore
             },
-            overall: this.overallScore
+            overall: this.overallScore,
+            combo: this.combo
           }
           this.storageService.setData(this.userInfo);
         }, 501)
       }
     }, 550)
+
   }
 
   handleBreakable(row, column, square) {
@@ -781,9 +721,11 @@ export class GamePage implements AfterViewInit {
   }
 
   async playPoints() {
-    const div = document.querySelector('.points') as HTMLElement;
-    div.style.display = 'flex';
-    const animation = this.animationCtrl.create()
+    const divPoint = document.querySelector('.points') as HTMLElement;
+    const divCombo = document.querySelector('.combo') as HTMLElement;
+    divPoint.style.display = 'flex';
+    divCombo.style.display = 'flex';
+    const animationPoint = this.animationCtrl.create()
           .addElement(document.querySelector('.points'))
           .fill('none')
           .duration(1000)
@@ -792,10 +734,19 @@ export class GamePage implements AfterViewInit {
             { offset: 0.5, transform: 'translateY(-30px)', opacity: 1 },
             { offset: 1, transform: 'translateY(-300px)', opacity: 0 }
           ])
-          // .fromTo('transform', 'translateY(0px)', 'translateY(-300px)')
-          // .fromTo('opacity', '1', '0');
-          await animation.play();
-    div.style.display = 'none';
+    const animationCombo = this.animationCtrl.create()
+    .addElement(document.querySelector('.combo'))
+    .fill('none')
+    .duration(1000)
+    .keyframes([
+      { offset: 0, transform: 'translateY(0px)', opacity: 1 },
+      { offset: 0.5, transform: 'translateY(-30px)', opacity: 1 },
+      { offset: 1, transform: 'translateY(-300px)', opacity: 0 }
+    ])
+    animationCombo.play();
+    await animationPoint.play();
+    divPoint.style.display = 'none';
+    divCombo.style.display = 'none';
   }
 
   playAnimations(row, column, square) {
@@ -808,6 +759,7 @@ export class GamePage implements AfterViewInit {
     }
     var rows = [];
     row.forEach((r) => {
+      debugger
       for (var i = 0; i < 9; i++) {
         var name = `${r}x${i}-inside`; //  r + 'x' + i;
         const square = this.animationCtrl.create()
@@ -824,6 +776,7 @@ export class GamePage implements AfterViewInit {
     });
 
     column.forEach((c) => {
+      debugger
       for (var i = 0; i < 9; i++) {
         var name = `${i}x${c}-inside`; // i + 'x' + c ;
         const square = this.animationCtrl.create()
@@ -840,6 +793,7 @@ export class GamePage implements AfterViewInit {
     });
 
     square.forEach(s => {
+      debugger
       console.log(row, column, square)
       for (let i = s[0]; i < s[0] + 3; i++) {
         for (let j = s[1]; j < s[1] + 3; j++) {
@@ -1006,20 +960,24 @@ export class GamePage implements AfterViewInit {
       this.addCount--;
     }
     // this.score = this.pattern(this.playGround, this.score);
-    var patternOutput = this.pattern(this.playGround, this.score);
+    var patternOutput = this.pattern(this.playGround);
     setTimeout(() => {
       this.playAnimations(patternOutput[0], patternOutput[1], patternOutput[2]);
     }, 1)
 
     if (patternOutput[0].length == 0 && patternOutput[1].length == 0 && patternOutput[2].length == 0) {
       setTimeout(() => {
-        this.score = executePatterns(this.score, this.playGround, patternOutput);
+        var output = executePatterns(this.score, this.playGround, patternOutput, [], this.combo);
+        this.score = output[0];
+        this.combo = output[1];
         this.detector.detectChanges();
       }, 1)
     }
     else {
       setTimeout(() => {
-        this.score = executePatterns(this.score, this.playGround, patternOutput);
+        var output = executePatterns(this.score, this.playGround, patternOutput, [], this.combo);
+        this.score = output[0];
+        this.combo = output[1];
         this.detector.detectChanges();
       }, 501)
     }
@@ -1063,13 +1021,25 @@ export class GamePage implements AfterViewInit {
       mode: 'ios',
       
     })
-
     await modal.present();
+    await modal.onWillDismiss();
+    this.presentLoading();
     const data = await modal.onDidDismiss();
-    if(data) {
-      debugger
-      await this.getSavedData();
-    }
+    this.storageService.getData().subscribe(res => {
+      if(!res.isSaved) {
+        this.playGround = cloneDeep(this.emptyGround);
+        this.hoverSnapShot = cloneDeep(this.emptyGround);
+        this.lastSnapShot = cloneDeep(this.emptyGround);
+        this.addCount = 3;
+        this.deleteCount = 3;
+        this.undoCount = 1;
+        this.score = 0;
+        this.moves = 3;
+        this.combo = 0;
+        this.setEnv();
+        this.detector.detectChanges();
+      }
+    })
   }
 
 
@@ -1214,4 +1184,13 @@ export class GamePage implements AfterViewInit {
   }
 
 
+  async presentLoading() {
+    const loading = await this.loadingController.create({
+      mode: 'ios',
+      spinner: 'circular',
+      message: 'Hazırlanıyor',
+      duration: 100
+    });
+    await loading.present();
+  }
 }

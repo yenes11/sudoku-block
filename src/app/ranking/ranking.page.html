@@ -1,61 +1,72 @@
 <ion-content [scrollEvents]="true">
   <app-icon type="back" class="back" (click)="routeHome()"></app-icon>
-
+  
   <div class="container">
     <!-- <app-icon type="bestof"></app-icon> -->
     <img src="/assets/images/bestof.png" alt="best of logo" class="logo">
-
+    
     <div class="buttons">
-      <app-button (click)="listWeekly()" color="blue" size="medium" text="WEEKLY"></app-button>
-      <app-button (click)="listDaily()"  color="white" size="medium" text="LAST 24h"></app-button>
-    </div>
-
-    <div *ngIf="rankings == 'weekly'" class="ranks">
-      <div *ngFor="let item of weekly; index as i;" class="row">
-        <div class="number center">
-          {{ i + 1 }}.
-        </div>
-        <div class="name">
-          <div>{{ item.name }}</div>
-          <div>{{ item.score}}</div>
-        </div>
+      <!-- <app-button (click)="listWeekly()" color="blue" size="medium" text="WEEKLY"></app-button>
+        <app-button (click)="listDaily()"  color="white" size="medium" text="LAST 24h"></app-button> -->
+        <ion-segment (ionChange)="segmentChanged($event)" mode="ios" [value]="segmentValue">
+          <ion-segment-button value="weekly">
+            <ion-label>WEEKLY</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="daily">
+            <ion-label>LAST 24H</ion-label>
+          </ion-segment-button>
+        </ion-segment>
       </div>
-    </div>
-
-    <div *ngIf="rankings == 'daily'" class="ranks">
-      <div *ngFor="let item of daily; index as i;" class="row">
-        <div class="number center">
-          {{ i + 1 }}.
-        </div>
-        <div class="name">
-          <div>{{ item.name }}</div>
-          <div>{{ item.score}}</div>
+      
+      <div *ngIf="rankings == 'weekly'" class="ranks">
+        <div *ngFor="let item of weekly; index as i;" class="row">
+          <div [ngClass]="i == 0 ? 'number center first' : i == 1 ? 'number center second': i == 2 ? 'number center third' : 'number center'">
+            {{ i + 1 }}.
+          </div>
+          <div [ngClass]="i == 0 ? 'name first' : i == 1 ? 'name second': i == 2 ? 'name third' : 'name'">
+            <div>{{ item.name }}</div>
+            <div>{{ item.score}}</div>
+          </div>
         </div>
       </div>
+      
+      <div *ngIf="rankings == 'daily'" class="ranks">
+        <div *ngFor="let item of daily; index as i;" class="row">
+          <div [ngClass]="i == 0 ? 'number center first' : i == 1 ? 'number center second': i == 2 ? 'number center third' : 'number center'">
+            {{ i + 1 }}.
+          </div>
+          <div [ngClass]="i == 0 ? 'name first' : i == 1 ? 'name second': i == 2 ? 'name third' : 'name'">
+            <div>{{ item.name }}</div>
+            <div>{{ item.score}}</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- <app-icon type="dots" style="margin-top: 15px;"></app-icon> -->
+      <img src="/assets/images/dots.png" alt="dots" class="dots">
+      
+      <div *ngIf="rankings == 'weekly'" class="row">
+        <div class="number center red">
+          {{ myWeeklyPlace }}
+        </div>
+        <div class="name red">
+          <div>{{ myName }}</div>
+          <div>{{ myWeeklyScore }}</div>
+        </div>
+      </div>
+      
+      <div *ngIf="rankings == 'daily'" class="row">
+        <div class="number center red">
+          {{ myDailyPlace }}
+        </div>
+        <div class="name red">
+          <div>{{ myName }}</div>
+          <div>{{ myDailyScore }}</div>
+        </div>
+      </div>
+      
     </div>
-
-    <!-- <app-icon type="dots" style="margin-top: 15px;"></app-icon> -->
-    <img src="/assets/images/dots.png" alt="dots" class="dots">
-
-    <div *ngIf="rankings == 'weekly'" class="row">
-      <div class="number center red">
-        {{ myWeeklyPlace }}
-      </div>
-      <div class="name red">
-        <div>{{ myName }}</div>
-        <div>{{ myWeeklyScore }}</div>
-      </div>
-    </div>
-
-    <div *ngIf="rankings == 'daily'" class="row">
-      <div class="number center red">
-        {{ myDailyPlace }}
-      </div>
-      <div class="name red">
-        <div>{{ myName }}</div>
-        <div>{{ myDailyScore }}</div>
-      </div>
-    </div>
-
-  </div>
-</ion-content>
+  </ion-content>
+  
+  
+  

@@ -3,7 +3,7 @@
 <div class="grid">
 
   <div class="buttons">
-    <img src="/assets/images/plus.png" (click)="newGameModal()" alt="plus" />
+    <img src="/assets/images/plus.png" (click)="playPoints()" alt="plus" />
     <img src="/assets/images/settings.png" alt="settings" (click)="settingsModal()"/>
   </div>
 
@@ -25,15 +25,11 @@
     <div class="play-row" *ngFor="let sArray of playGround; index as i">
        <div #dropzone *ngFor="let x of sArray; index as j" [attr.id]="i+'x'+j" [ngClass]="(i % 6 < 3 && j % 6 < 3) || (i % 6 >= 3 && j % 6 >= 3) ? 'blue-play blck': 'blck'">
            <div (click)="deleteOrInsert($event)" [attr.name]="i+'x'+j+'-inside'" [ngClass]="x == 1 ? 'square-empty-play bg-full' : x == 2 ? 'square-empty-play bg-hover' : 'square-empty-play'"></div>
-           <!-- <div *ngIf="i % 6 >= 3 && j % 6 < 3"  (click)="deleteOrInsert($event)" [attr.name]="i+'x'+j+'-inside'" [ngClass]="x == 1 ? 'square-empty-play bg-full' : x == 2 ? 'square-empty-play bg-hover' : 'square-empty-play'"></div>
-
-           <div *ngIf="i % 6 >= 3 && j % 6 >= 3" (click)="deleteOrInsert($event)" [attr.name]="i+'x'+j+'-inside'" [ngClass]="x == 1 ? 'square-empty-play bg-full' : x == 2 ? 'square-empty-play bg-hover' : 'square-empty-play'"></div>
-           <div *ngIf="i % 6 < 3 && j % 6 >= 3"  (click)="deleteOrInsert($event)" [attr.name]="i+'x'+j+'-inside'" [ngClass]="x == 1 ? 'square-empty-play bg-full' : x == 2 ? 'square-empty-play bg-hover' : 'square-empty-play'"></div> -->
        </div>
      </div>
   </div>
 
-  <ion-popover mode="ios" trigger="trigger-button" size="auto">
+  <ion-popover mode="ios" trigger="trigger-button">
     <ng-template>
       <ion-content>
         <div class="popup">
@@ -102,8 +98,14 @@
 
     </div>
 
+    <div class="combo">
+      {{ comboText }}
+      <!-- 3x Combo -->
+    </div>
+
     <div class="points">
-      +105
+      {{ plusPointText }}
+      <!-- +185 -->
     </div>
 
   </div>

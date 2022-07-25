@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
 import { Router } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-ranking',
@@ -16,8 +17,27 @@ export class RankingPage implements OnInit {
   myWeeklyPlace;
   myDailyPlace;
   myName;
+  segmentValue = "weekly";
 
-  constructor(private dataService: DataService, private router: Router) {
+  constructor(private dataService: DataService, private router: Router, private detector: ChangeDetectorRef) {
+    
+  }
+
+  segmentChanged(ev){
+    this.segmentValue = ev.target.value;
+    if(this.segmentValue == "weekly") {
+      this.rankings = 'weekly';
+    }
+    else {
+      this.rankings = 'daily';
+    }
+    this.detector.detectChanges();
+  }
+
+  routeHome() {
+    this.router.navigate(['home']);
+  }
+  ngOnInit() {
     this.dataService.getWeekly().subscribe(res => {
       var weekly = res;
       weekly.sort((a,b) => b.score - a.score);
@@ -37,21 +57,7 @@ export class RankingPage implements OnInit {
       if (this.myDailyPlace > 99) this.myDailyPlace = '+99';
       var me = daily[this.myDailyPlace - 1];
       this.myDailyScore = me.score;
-    })
-  }
-
-  listDaily() {
-    this.rankings = 'daily';
-  }
-
-  listWeekly() {
-    this.rankings = 'weekly';
-  }
-
-  routeHome() {
-    this.router.navigate(['home']);
-  }
-  ngOnInit() {
+    })  
   }
 
 }

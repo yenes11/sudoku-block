@@ -31,10 +31,11 @@ ion-content {
 }
 
 .buttons {
-  margin-top: 4vh;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
   display: flex;
   padding: 0 11vw 0 11vw;
-  justify-content: space-between;
+  justify-content: center;
   width: 100%;
   // margin-top: 20px;
   // border: 1px solid;
@@ -61,7 +62,12 @@ ion-content {
   justify-content: space-between;
   align-items: center;
   padding: 13px;
+  font-size: 20px;
 }
+
+.first { background-color: #6F9DD7; color: white;}
+.second { background-color: #94BBED; color: white;}
+.third { background-color: #A3C5F1; color: white;}
 
 .center {
   display: flex;
@@ -83,24 +89,45 @@ ion-content {
 }
 
 .red {
-  background-color: #f9605f8a;
+  background-color: #E17D7C;
   border-width: 0px 1px 1px 0px;
   border-style: solid;
   border-color: #000000;
+  color: white;
 }
+
+ion-segment {
+  border-radius: 50vh;
+  height: 50px;
+  width: 400px;
+  --background: rgba(255, 255, 255, 0.5);
+  box-shadow: inset 0 3px 10px 0 rgba(0, 0, 0, 0.286);
+}
+
+ion-segment-button {
+  --indicator-color: #94BBED;
+  --border-radius: 50vh;
+  --indicator-box-shadow: inset 0.5px 5px 3px rgba(0, 0, 0, 0.25), inset -0.5px 0px 3px rgba(0, 0, 0, 0.25);
+}
+
 
 @media screen and (max-height: 1055px) {
   .number { width: 50px; height: 50px;}
   .name { height: 50px;}
+  
 }
 
 @media screen and (max-height: 930px) {
   .buttons {padding: 0 8vw 0 8vw;}
-  .logo { height: 90px;}
+  .logo { height: 70px;}
   .number { width: 40px; height: 40px; border-radius: 8px;}
   .name { height: 40px; border-radius: 8px;}
   .container {
     background-size: 125%;
+  }
+  ion-segment{
+    height: 40px;
+    width: 230px;
   }
 }
 
@@ -117,4 +144,5 @@ ion-content {
   .buttons {margin-top: 5px;}
   .logo { height: 60px;}
   .dots { height: 20px;}
+  
 }

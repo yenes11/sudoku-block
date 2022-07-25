@@ -1,4 +1,4 @@
-export const patterns = (arr: Array<Array<number>>, score) => {
+export const patterns = (arr: Array<Array<number>>) => {
   var squares = [];
   var columns = [];
   var rows = [];
@@ -46,42 +46,22 @@ export const patterns = (arr: Array<Array<number>>, score) => {
     }
   }
 
-//---------------------------------------- 0 -------------------------------------------//
-
-  //execute squares
-  // squares.forEach(l => {
-  //   score++;
-  //   for (let i = l[0]; i < l[0] + 3; i++) {
-  //     for (let j = l[1]; j < l[1] + 3; j++) {
-  //       arr[i][j] = 0;
-  //     }
-  //   }
-  // })
-
-  //execute columns
-  // columns.forEach(i => {
-  //   score++;
-  //   for (let j = 0; j < 9; j++) {
-  //     arr[j][i] = 0;
-  //   }
-  // })
-
-  //execute rows
-  // rows.forEach(i => {
-  //   score++;
-  //   arr[i] = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-  // })
-
   return [rows, columns, squares];
 }
 
-export const executePatterns = (score, playGround, props) => {
+export const executePatterns = (score, playGround, props, indexes, combo) => {
   var squares = props[2];
   var columns = props[1];
   var rows = props[0];
+  var counter = 0;
+  var plusBlocks = 0;
+  var didBreak = false;
+  var bonus = 1 + combo;
 
   squares.forEach(l => {
-    score++;
+    didBreak = true;
+    bonus++;
+    counter++;
     for (let i = l[0]; i < l[0] + 3; i++) {
       for (let j = l[1]; j < l[1] + 3; j++) {
         playGround[i][j] = 0;
@@ -91,7 +71,9 @@ export const executePatterns = (score, playGround, props) => {
 
   //execute columns
   columns.forEach(i => {
-    score++;
+    didBreak = true;
+    bonus++;
+    counter++;
     for (let j = 0; j < 9; j++) {
       playGround[j][i] = 0;
     }
@@ -99,11 +81,26 @@ export const executePatterns = (score, playGround, props) => {
 
   //execute rows
   rows.forEach(i => {
-    score++;
+    didBreak = true;
+    bonus++;
+    counter++;
     playGround[i] = [0, 0, 0, 0, 0, 0, 0, 0, 0];
   })
 
-  return score;
+  if(didBreak) {
+    combo++;
+    if(indexes != []) {
+      indexes.forEach((cor) => {
+        if(playGround[cor[0]][cor[1]] == 1) plusBlocks++;
+      })
+    }
+  }
+  else combo = 0;
+
+  score += 9 * counter * bonus + plusBlocks;
+  var text = bonus - 1 == combo ? "Bonus" : "Combo";
+
+  return [score, combo, `${bonus}x ${text}`];
 }
 
 export const willBreakPatterns = (arr: Array<Array<number>>) => {

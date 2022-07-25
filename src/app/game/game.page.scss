@@ -109,11 +109,19 @@ ion-content {
   align-items: center;
 }
 
+ion-popover {
+  --width: 320px;
+  --height: 130px
+}
 
+ion-popover ion-content {
+  display: flex;
+  justify-content: center;
+}
 
 .popup {
-  width: 200px;
-  height: 100px;
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -295,7 +303,7 @@ img {
 }
 
 
-.points {
+.points, .combo {
   border-radius: 50vh;
   padding: 10px;
   letter-spacing: 0.1rem;
@@ -303,10 +311,9 @@ img {
   margin: auto;
   left: 0;
   right: 0;
-  top: 0;
-  bottom: 0;
-  width: 12vw;
-  height: 5vh;
+  top: 500px;
+  width: 100px;
+  height: 60px;
   font-size: x-large;
   background-color: #FFFFFF;
   display: none;
@@ -315,6 +322,10 @@ img {
   box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.6);
 }
 
+.combo {
+  top: 400px;
+  width: 150px;
+}
 
 
 @media (max-width: 819px) { // (min-width: 767px) and
@@ -343,6 +354,23 @@ img {
   .game { height: 390px; width: 390px; }
   .block-container { width: 390px; }
   .square-empty-sand, .square-full { width: 17px; height: 17px;}
+  ion-popover {
+    --width: 200px;
+    --height: 100px
+  }
+  .combo {
+    width: 120px;
+    height: 50px;
+    font-size: large;
+    top: 230px;
+  }
+  .points { 
+    font-size: large;
+    width: 80px;
+    height: 50px;
+    top: 300px;
+  }
+
 }
 
 @media screen and (max-width: 420px) {
@@ -375,5 +403,5 @@ img {
 }
 
 @media screen and (max-height: 775px) {
-
 }
+

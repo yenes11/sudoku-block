@@ -1,6 +1,13 @@
 export const languages = {
     "english": {
+        newGame: "NEW GAME",
+        startNewGame: "START NEW GAME",
+        newGameMessage: "If you start a new game, the current game will be lost",
+        continue: "CONTINUE GAME",
+        cancel: "CANCEL",
         weekly: "WEEKLY",
+        daily: "DAILY",
+        overall: "OVERALL",
         score: "SCORE",
         worldRankings: "WORLD RANKINGS",
         bestScore: "BEST SCORE",
@@ -24,7 +31,14 @@ export const languages = {
         appText: "We are proud to present you with this enjoyable game. This game is a 9x9 field containing 81 cubes obtained by re-arranging the 3x3 matrix unit blocks consisting of 9 cubes as 3x3. You can place each component that we offer you in any suitable place in this field. If you place 9 cubes in the whole crosswise or longitudinally or in any unit matrix, the relevant field will explode and you will gain scores. The more you explode, the more scores you get. We wish you a good time."
     },
     "turkish": {
+        newGame: "YENİ OYUN",
+        startNewGame: "YENİ OYUNA BAŞLA",
+        newGameMessage: "Yeni bir oyuna başlarsanız, mevcut oyun kaybolur",
+        continue: "OYUNA DEVAM ET",
+        cancel: "İPTAL",
         weekly: "HAFTALIK",
+        daily: "GÜNLÜK",
+        overall: "TÜM ZAMANLAR",
         score: "PUAN",
         worldRankings: "DÜNYA SIRALAMALARI",
         bestScore: "EN İYİ PUAN",
@@ -48,7 +62,14 @@ export const languages = {
         appText: "Sizlere bu keyifli oyunu sunmaktan gurur duyarız. Bu oyun 9 küpten oluşmuş 3x3’lük matrix birim blokların tekrar 3x3’lük dizilimi ile elde edilmiş 81 küp içeren 9x9’luk bir alandır. Sizlere sunduğumuz her bir bileşeni bu alanda uygun olan istediğiniz yere yerleştirebilirsiniz. Tüm alanda enine, boyuna ve herhangi bir birim matris te 9 adet küpü yerleştirirseniz, ilgili alan patlar ve size puan kazandırır. Ne kadar çok patlatırsanız o kadar çok puan kazanırsınız. İyi eğlenceler dileriz."
     },
     "spanish": {
+        newGame: "NUEVO JUEGO",
+        startNewGame: "EMPIEZA UN JUEGO NUEVO",
+        newGameMessage: "Si inicia un nuevo juego, el juego actual se perderá",
+        continue: "CONTINUA EL JUEGO",
+        cancel: "CANCELAR",
         weekly: "SEMANALMENTE",
+        daily: "DIARIAMENTE",
+        overall: "GENERAL",
         score: "PUNTAJE",
         worldRankings: "CLASIFICACIONES MUNDIALES",
         bestScore: "MEJOR PUNTUACIÓN",
@@ -72,7 +93,14 @@ export const languages = {
         appText: "Estamos orgullosos de presentarles este divertido juego. Este juego es un campo de 9x9 que contiene 81 cubos obtenidos al reorganizar los bloques de unidades de matriz de 3x3 que consisten en 9 cubos como 3x3. Puede colocar cada componente que le ofrecemos en cualquier lugar adecuado en este campo. Si coloca 9 cubos en el todo de forma transversal o longitudinal o en cualquier matriz unitaria, el campo correspondiente explotará y obtendrá puntajes. Cuanto más explotas, más puntuaciones obtienes. Le deseamos un buen momento."
     },
     "french": {
+        newGame: "NOUVEAU JEU",
+        startNewGame: "COMMENCER UNE NOUVELLE PARTIE",
+        newGameMessage: "Si vous démarrez une nouvelle partie, la partie en cours sera perdue",
+        continue: "CONTINUER LE JEU",
+        cancel: "ANNULER",
         weekly: "HEBDOMADAIRE",
+        daily: "DU QUOTIDIEN",
+        overall: "GLOBALEMENT",
         score: "SCORE",
         worldRankings: "CLASSEMENTS MONDIAUX",
         bestScore: "MEILLEUR SCORE",
@@ -96,7 +124,14 @@ export const languages = {
         appText: "Nous sommes fiers de vous présenter ce jeu amusant. Ce jeu est un champ 9x9 contenant 81 cubes obtenus en réarrangeant les blocs unitaires matriciels 3x3 composés de 9 cubes en 3x3. Vous pouvez placer chaque composant que nous vous proposons à n'importe quel endroit approprié dans ce champ. Si vous placez 9 cubes dans l'ensemble transversalement ou longitudinalement ou dans n'importe quelle matrice unitaire, le champ concerné explosera et vous gagnerez des scores. Plus vous explosez, plus vous obtenez de points. Nous vous souhaitons un bon moment."
     },
     "german": {
+        newGame: "NEUES SPIEL",
+        startNewGame: "NEUES SPIEL STARTEN",
+        newGameMessage: "Wenn Sie ein neues Spiel starten, geht das aktuelle Spiel verloren",
+        continue: "WEITERSPIELEN",
+        cancel: "ABBRECHEN",
         weekly: "WÖCHENTLICH",
+        daily: "TÄGLICH",
+        overall: "GESAMT",
         score: "PUNKTZAHL",
         worldRankings: "WELTRANGLISTEN",
         bestScore: "BESTES ERGEBNIS",
@@ -120,7 +155,14 @@ export const languages = {
         appText: "Wir sind stolz darauf, Ihnen dieses unterhaltsame Spiel zu präsentieren. Dieses Spiel ist ein 9x9-Feld mit 81 Würfeln, das durch Neuanordnung der 3x3-Matrix-Einheitsblöcke, die aus 9 Würfeln bestehen, als 3x3 erhalten wird. Sie können jede Komponente, die wir Ihnen anbieten, an jedem geeigneten Ort in diesem Bereich platzieren. Wenn Sie 9 Würfel im Ganzen quer oder längs oder in einer beliebigen Einheitsmatrix platzieren, explodiert das entsprechende Feld und Sie erhalten Punkte. Je mehr Sie explodieren, desto mehr Punkte erhalten Sie. Wir wünschen Ihnen eine gute Zeit."
     },
     "italian": {
+        newGame: "NUOVO GIOCO",
+        startNewGame: "INIZIA NUOVA PARTITA",
+        newGameMessage: "Se inizi una nuova partita, quella corrente andrà persa",
+        continue: "CONTINUA IL GIOCO",
+        cancel: "ANNULLA",
         weekly: "SETTIMANALMENTE",
+        daily: "QUOTIDIANO",
+        overall: "COMPLESSIVAMENTE",
         score: "PUNTO",
         worldRankings: "CLASSIFICHE MONDIALI",
         bestScore: "MIGLIOR PUNTEGGIO",
@@ -144,7 +186,14 @@ export const languages = {
         appText: "Siamo orgogliosi di presentarvi questo divertente gioco. Questo gioco è un campo 9x9 contenente 81 cubi ottenuti riorganizzando i blocchi unità matrice 3x3 costituiti da 9 cubi come 3x3. Puoi posizionare ogni componente che ti offriamo in qualsiasi posto adatto in questo campo. Se metti 9 cubi nell'intero trasversalmente o longitudinalmente o in qualsiasi matrice di unità, il campo relativo esploderà e guadagnerai punteggi. Più esplodi, più punteggi ottieni. Ti auguriamo buon divertimento."
     },
     "russian": {
+        newGame: "НОВАЯ ИГРА",
+        startNewGame: "НАЧАТЬ НОВУЮ ИГРУ",
+        newGameMessage: "Если вы начнете новую игру, текущая игра будет потеряна.",
+        continue: "ПРОДОЛЖИТЬ ИГРУ",
+        cancel: "ОТМЕНИТЬ",
         weekly: "ЕЖЕНЕДЕЛЬНО",
+        daily: "ПОВСЕДНЕВНАЯ",
+        overall: "ОБЩИЙ",
         score: "СЧЕТ",
         worldRankings: "МИРОВОЙ РЕЙТИНГ",
         bestScore: "ЛУЧШИЙ РЕЗУЛЬТАТ",

@@ -5,6 +5,7 @@ import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 import { Device } from '@ionic-native/device/ngx';
 import { StorageService } from 'src/app/storage.service';
 import { UserInfo } from 'src/app/userinfo';
+import { languages } from 'src/app/language';
 
 
 @Component({
@@ -14,6 +15,8 @@ import { UserInfo } from 'src/app/userinfo';
 })
 export class NewGameComponent implements OnInit {
   userData = UserInfo;
+  selectedLanguage = "english";
+  languageTexts = "";
 
 
   constructor(private modalCtrl: ModalController, private router: Router, private device: Device,
@@ -46,24 +49,16 @@ export class NewGameComponent implements OnInit {
       }
       this.storageService.setData(data);
     })
-    // await this.writeSecretFile();
-    this.modalCtrl.dismiss();
-    // await this.presentLoading();
-    // window.location.reload();
-    
+    this.modalCtrl.dismiss();    
     setTimeout(() => {
       this.router.navigate(['game']);
     }, 100)
   }
 
-  writeSecretFile = async () => {
-    await Filesystem.writeFile({
-      path: 'user/info.txt',
-      data: JSON.stringify(this.userData),
-      directory: Directory.Data,
-      encoding: Encoding.UTF8,
-    });
-  };
-
-  ngOnInit() {}
+  ngOnInit() {
+    this.storageService.getData().subscribe(res => {
+      this.selectedLanguage = res.language;
+      this.languageTexts = languages[this.selectedLanguage];
+    })
+  }
 }

@@ -5,35 +5,38 @@
     <div class="scores flex-center">
       SCORES
       <div class="badge flex-center">
-        <div>DAILY</div>
-        <div>203921</div>
+        <div>{{ languageTexts['daily'] }}</div>
+        <div>{{ daily }}</div>
       </div>
 
       <div class="badge flex-center">
-        <div>WEEKLY</div>
-        <div>203921</div>
+        <div>{{ languageTexts['weekly'] }}</div>
+        <div>{{ weekly }}</div>
       </div>
 
       <div class="badge flex-center">
-        <div>OVERALL</div>
-        <div>203921</div>
+        <div>{{ languageTexts['overall'] }}</div>
+        <div>{{ overall }}</div>
       </div>
-      <div class="box">
-        <div>SCORE</div>
-        <div style="color: #4f6f98">22222</div>
+      <div class="box-wrapper">
+        <div class="box">
+          <span>{{ languageTexts['score'] }}</span>
+          <div style="color: #4f6f98">22222</div>
+        </div>
       </div>
 
-      <app-icon style="margin-top: 20px" type="victory"></app-icon>
+      <img src="/assets/images/ladder.png" alt="ladder" class="ladder">
 
       <app-button
         color="white"
         size="large"
-        text="WORLD RANKINGS"
+        [text]="languageTexts['worldRankings']"
         (click)="routeRanking()"
       ></app-button>
-      <app-button color="blue" size="large" text="NEW GAME"></app-button>
+      <app-button (click)="routeNewGame()" color="blue" size="large" [text]="languageTexts['newGame']"></app-button>
 
-      <app-icon type="tanos-logo" style="margin-top: 2vh"></app-icon>
+      <!-- <app-icon type="tanos-logo" style="margin-top: 2vh"></app-icon> -->
+      <img src="/assets/images/logo.png" alt="tanos logo" class="logo">
     </div>
   </div>
 </ion-content>

@@ -3,7 +3,7 @@
 <div class="grid">
 
   <div class="buttons">
-    <img src="/assets/images/plus.png" (click)="playPoints()" alt="plus" />
+    <img src="/assets/images/plus.png" (click)="newGameModal()" alt="plus" />
     <img src="/assets/images/settings.png" alt="settings" (click)="settingsModal()"/>
   </div>
 
@@ -13,7 +13,7 @@
       <div class="today-score">
       TODAY <br> {{ todayScore }}
       </div>
-      <div class="overall-score">
+      <div class="overall-score" #sample>
         OVERALL
         <div class="flex-left">
         <app-icon class="row" type="trophy"></app-icon> &nbsp; {{ overallScore }} </div>
@@ -24,12 +24,12 @@
   <div class="game">
     <div class="play-row" *ngFor="let sArray of playGround; index as i">
        <div #dropzone *ngFor="let x of sArray; index as j" [attr.id]="i+'x'+j" [ngClass]="(i % 6 < 3 && j % 6 < 3) || (i % 6 >= 3 && j % 6 >= 3) ? 'blue-play blck': 'blck'">
-           <div (click)="deleteOrInsert($event)" [attr.name]="i+'x'+j+'-inside'" [ngClass]="x == 1 ? 'square-empty-play bg-full' : x == 2 ? 'square-empty-play bg-hover' : 'square-empty-play'"></div>
+           <div #animate (click)="deleteOrInsert($event)" [attr.id]="i+'x'+j+'-inside'" [ngClass]="x == 1 ? 'square-empty-play bg-full' : x == 2 ? 'square-empty-play bg-hover' : 'square-empty-play'"></div>
        </div>
      </div>
   </div>
 
-  <ion-popover mode="ios" trigger="trigger-button">
+  <ion-popover mode="ios" trigger="trigger-button" id="popup">
     <ng-template>
       <ion-content>
         <div class="popup">

@@ -52,7 +52,7 @@ export class NewGameComponent implements OnInit {
     this.modalCtrl.dismiss();    
     setTimeout(() => {
       this.router.navigate(['game']);
-    }, 100)
+    }, 300)
   }
 
   ngOnInit() {

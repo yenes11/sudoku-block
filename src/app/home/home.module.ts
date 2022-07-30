@@ -4,7 +4,7 @@ import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { HomePage } from './home.page';
 import { ThemeComponent } from '../components/theme/theme.component';
-import { ModalComponent } from '../components/modal/modal.component';
+
 import { PopupComponent } from '../components/popup/popup.component';
 import { IconModule } from '../components/icon/icon.module';
 import { ButtonModule } from '../components/button/button.module';
@@ -36,6 +36,6 @@ import { getFirestore } from 'firebase/firestore';
     provideFirebaseApp(() => initializeApp(environment.firebase))
    //
   ],
-  declarations: [HomePage, ModalComponent, PopupComponent, ThemeComponent]
+  declarations: [HomePage, PopupComponent, ThemeComponent]
 })
 export class HomePageModule { }

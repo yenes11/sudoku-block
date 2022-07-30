@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
 import { Router } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
+import { languages } from '../language';
+import { StorageService } from '../storage.service';
 
 @Component({
   selector: 'app-ranking',
@@ -18,8 +20,10 @@ export class RankingPage implements OnInit {
   myDailyPlace;
   myName;
   segmentValue = "weekly";
+  selectedLanguage = "english";
+  languageTexts = "";
 
-  constructor(private dataService: DataService, private router: Router, private detector: ChangeDetectorRef) {
+  constructor(private dataService: DataService, private router: Router, private detector: ChangeDetectorRef, private storageService: StorageService) {
     
   }
 
@@ -38,6 +42,11 @@ export class RankingPage implements OnInit {
     this.router.navigate(['home']);
   }
   ngOnInit() {
+    this.storageService.getData().subscribe(res => {
+      this.selectedLanguage = res.language;
+      this.languageTexts = languages[this.selectedLanguage];
+    })
+
     this.dataService.getWeekly().subscribe(res => {
       var weekly = res;
       weekly.sort((a,b) => b.score - a.score);

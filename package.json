@@ -38,6 +38,8 @@
     "howler": "^2.2.3",
     "localforage-cordovasqlitedriver": "^1.8.0",
     "lodash.clonedeep": "^4.5.0",
+    "lottie-web": "^5.9.6",
+    "ngx-lottie": "^8.2.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.2.0",
     "zone.js": "~0.11.4"

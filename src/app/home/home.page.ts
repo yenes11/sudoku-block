@@ -128,4 +128,6 @@ export class HomePage {
     var date = new Date();
     return date.getMonth();
   }
+
+  
 }

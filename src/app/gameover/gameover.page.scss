@@ -11,6 +11,7 @@ ion-content {
   position: absolute;
   top: 5vw;
   left: 5vw;
+  width: 20px;
 }
 
 
@@ -120,6 +121,10 @@ app-button {
   .badge { height: 25px;}
   .box-wrapper { margin-top: 25px;}
   .logo { margin-top: 35px;}
+}
+
+@media screen and (max-width: 480px) {
+  .back { width: 13px;}
 }
 
 // @media screen and (max-height: 850px) {

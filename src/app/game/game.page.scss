@@ -153,6 +153,7 @@ ion-popover ion-content {
 .flex-left {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
 }
 
 .play-row:nth-child(1) .blck {
@@ -213,6 +214,17 @@ ion-popover ion-content {
   background: #6f9dd7;
 }
 
+.lottie {
+  position: absolute;
+  top: 0;
+  width: 75vw;
+  height: 75vw;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* .square {
   height: 50px;
   width: 50px;
@@ -241,6 +253,10 @@ ion-popover ion-content {
   align-items: center;
 }
 
+.trophy-gray {
+  height: 1rem;
+  width: 1rem;
+}
 
 .no-opacity {
   opacity: 0;

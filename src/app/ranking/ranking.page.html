@@ -1,19 +1,16 @@
 <ion-content [scrollEvents]="true">
-  <app-icon type="back" class="back" (click)="routeHome()"></app-icon>
+  <img class="back" (click)="routeHome()" src="assets/images/back.png" alt="close">
   
   <div class="container">
-    <!-- <app-icon type="bestof"></app-icon> -->
     <img src="/assets/images/bestof.png" alt="best of logo" class="logo">
     
     <div class="buttons">
-      <!-- <app-button (click)="listWeekly()" color="blue" size="medium" text="WEEKLY"></app-button>
-        <app-button (click)="listDaily()"  color="white" size="medium" text="LAST 24h"></app-button> -->
         <ion-segment (ionChange)="segmentChanged($event)" mode="ios" [value]="segmentValue">
           <ion-segment-button value="weekly">
-            <ion-label>WEEKLY</ion-label>
+            <ion-label>{{ languageTexts['weekly'] }}</ion-label>
           </ion-segment-button>
           <ion-segment-button value="daily">
-            <ion-label>LAST 24H</ion-label>
+            <ion-label>{{ languageTexts['last24h'] }}</ion-label>
           </ion-segment-button>
         </ion-segment>
       </div>
@@ -42,7 +39,6 @@
         </div>
       </div>
       
-      <!-- <app-icon type="dots" style="margin-top: 15px;"></app-icon> -->
       <img src="/assets/images/dots.png" alt="dots" class="dots">
       
       <div *ngIf="rankings == 'weekly'" class="row">

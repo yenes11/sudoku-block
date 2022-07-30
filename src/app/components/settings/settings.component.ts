@@ -5,6 +5,7 @@ import { ProfileNameComponent } from '../profile-name/profile-name.component';
 import { languages } from 'src/app/language';
 import { IonSelect } from '@ionic/angular';
 import { StorageService } from 'src/app/storage.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-settings',
@@ -17,7 +18,7 @@ export class SettingsComponent implements OnInit {
   languageTexts = "";
   
 
-  constructor(private modalCtrl: ModalController, private storageService: StorageService) {
+  constructor(private modalCtrl: ModalController, private storageService: StorageService, private router: Router) {
    }
 
   async close() {
@@ -73,4 +74,13 @@ export class SettingsComponent implements OnInit {
     await modal.present();
   }
 
+  routeRankings() {
+    this.router.navigate(['ranking']);
+    this.modalCtrl.dismiss(); 
+  }
+
+  routeLogic() {
+    this.router.navigate(['logic']);
+    this.modalCtrl.dismiss(); 
+  }
 }

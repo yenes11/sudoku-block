@@ -27,10 +27,11 @@ input {
   padding: 10px;
 }
 
-app-icon{
+.close {
   position: absolute;
   right: 25px;
   top: 25px;
+  width: 20px;
 }
 
 app-button {
@@ -47,4 +48,8 @@ app-button {
     width: 350px;
     font-size: 20px;
   }
+}
+
+@media screen and (max-width: 480px) {
+  .close { width: 13px;}
 }

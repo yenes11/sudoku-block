@@ -18,6 +18,7 @@
   position: absolute;
   top: 15px;
   right: 15px;
+  width: 20px;
 }
 
 .column {
@@ -37,4 +38,5 @@ img {
 
 @media screen and (min-width: 500px) {
   img{ width: 55px;}
+  .close { width: 13px;}
 }

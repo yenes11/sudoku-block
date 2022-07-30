@@ -59,7 +59,13 @@ export class GameoverPage implements OnInit {
   }
 
   routeNewGame() {
-    this.router.navigate(['game']);
+    setTimeout(() => {
+      this.router.navigate(['game']);
+    }, 400);
+    
   }
 
+  routeHome() {
+    this.router.navigate(['home']);
+  }
 }

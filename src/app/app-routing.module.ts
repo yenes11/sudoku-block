@@ -22,7 +22,11 @@ const routes: Routes = [
   {
     path: 'ranking',
     loadChildren: () => import('./ranking/ranking.module').then( m => m.RankingPageModule)
+  },  {
+    path: 'logic',
+    loadChildren: () => import('./logic/logic.module').then( m => m.LogicPageModule)
   },
+
 ];
 
 @NgModule({

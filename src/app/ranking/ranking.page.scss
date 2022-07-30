@@ -10,6 +10,7 @@ ion-content {
   position: absolute;
   top: 20px;
   left: 20px;
+  width: 20px;
 }
 
 .logo{
@@ -144,5 +145,8 @@ ion-segment-button {
   .buttons {margin-top: 5px;}
   .logo { height: 60px;}
   .dots { height: 20px;}
-  
+}
+
+@media screen and (max-width: 480px) {
+  .back { width: 13px;}
 }

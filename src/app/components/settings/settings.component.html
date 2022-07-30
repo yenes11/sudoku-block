@@ -1,23 +1,21 @@
 <ion-content [scrollEvents]="true">
 
   <div class="container">
-    <app-icon type="back" class="back" (click)="close()"></app-icon>
+    <img class="back" (click)="close()" src="assets/images/back.png" alt="close">
   <div class="header">
     <br />
     {{  languageTexts["settings"] }}
     <div class="profile flex-center">
-      <!-- <app-icon style="margin-bottom: -0.7vh" type="profile"></app-icon> -->
       <img class="profile-icon" src="/assets/images/profile.png" alt="profile">
     </div>
     <div class="profile-name" (click)="profileNameModal()">
-      <app-icon type="edit-profile"></app-icon>
+      <img class="edit-icon" src="/assets/images/edit.png" alt="edit profile">
       {{  languageTexts["profileName"] }}
     </div>
   </div>
   <div class="body">
     <div class="badge-row">
       <div class="icon flex-center">
-        <!-- <app-icon class="mt" type="sound"></app-icon> -->
         <img class="badge-icon" src="/assets/images/sound.png" alt="sound">
       </div>
       <div class="badge">
@@ -28,7 +26,6 @@
 
     <div class="badge-row">
       <div class="icon flex-center">
-        <!-- <app-icon class="mt" type="vibration"></app-icon> -->
         <img class="badge-icon" src="/assets/images/vibration.png" alt="vibration">
       </div>
       <div class="badge">
@@ -39,7 +36,6 @@
 
     <div class="badge-row" (click)="themeModal()">
       <div class="icon flex-center">
-        <!-- <app-icon class="mt" type="themes"></app-icon> -->
         <img class="badge-icon" src="/assets/images/themes.png" alt="themes">
       </div>
       <div class="badge">
@@ -47,17 +43,15 @@
       </div>
     </div>
 
-    <div class="badge-row">
+    <div class="badge-row" (click)="routeRankings()">
       <div class="icon flex-center">
-        <!-- <app-icon class="mt" type="ranking"></app-icon> -->
         <img class="badge-icon" src="/assets/images/rankings.png" alt="rankings">
       </div>
       <div class="badge">{{  languageTexts["rankings"] }}</div>
     </div>
 
-    <div class="badge-row">
+    <div class="badge-row" (click)="routeLogic()">
       <div class="icon flex-center">
-        <!-- <app-icon class="mt" type="logic"></app-icon> -->
         <img class="badge-icon" src="/assets/images/app-logic.png" alt="app logic">
       </div>
       <div class="badge">{{  languageTexts["appLogic"] }}</div>
@@ -65,7 +59,6 @@
 
     <div class="badge-row">
       <div class="icon flex-center">
-        <!-- <app-icon class="mt" type="privacy"></app-icon> -->
         <img class="badge-icon" src="/assets/images/privacy.png" alt="privacy">
       </div>
       <div class="badge">{{  languageTexts["privacy"] }}</div>
@@ -73,7 +66,6 @@
 
     <div class="badge-row">
       <div class="icon flex-center">
-        <!-- <app-icon class="mt" type="terms"></app-icon> -->
         <img class="badge-icon" src="/assets/images/terms.png" alt="termms of use">
       </div>
       <div class="badge">{{  languageTexts["terms"] }}</div>
@@ -81,17 +73,15 @@
 
     <div class="badge-row" (click)="presentSelect()">
       <div class="icon flex-center">
-        <!-- <app-icon class="mt" type="terms"></app-icon> -->
         <img class="badge-icon" src="/assets/images/language.png" alt="language">
       </div>
       <div class="badge">{{  languageTexts["language"] }}</div>
     </div>
 
-    <app-icon style="margin-top: 3vh" type="premium"></app-icon>
+    <img class="premium-icon" src="/assets/images/premium.png" alt="premium">
 
     <div class="badge-row">
       <div class="icon flex-center">
-        <!-- <app-icon class="mt" type="ads"></app-icon> -->
         <img class="badge-icon" src="/assets/images/removeads.png" alt="remove ads">
       </div>
       <div class="badge">{{  languageTexts["removeAds"] }}</div>
@@ -99,13 +89,13 @@
 
     <div class="badge-row" (click)="cl()">
       <div class="icon flex-center">
-        <!-- <app-icon class="mt" type="restore"></app-icon> -->
         <img class="badge-icon" src="/assets/images/restore.png" alt="restore purschases">
       </div>
       <div class="badge">{{  languageTexts["restore"] }}</div>
     </div>
 
-    <app-icon style="margin-top: 4vh" type="tanos-logo"></app-icon>
+    <img class="tanos-icon" src="/assets/images/logo.png" alt="tanos logo">
+
   </div>
 
 </div>

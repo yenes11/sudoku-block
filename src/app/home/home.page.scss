@@ -52,16 +52,18 @@ ion-content {
   align-items: center;
   justify-content: center;
   color: black;
+  // font-size: 10px;
 }
 
 .box-under {
+  box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.101);
   background: linear-gradient(#ededed, #ededed50);
   width: 100px;
   height: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 18px;
+  border-radius: 20px;
 }
 
 .footer {
@@ -114,10 +116,7 @@ app-button {
   .settings-button {
     width: 50px;
   }
-
   .tanos {
     height: 40px;
   }
-
 }
-

@@ -3,20 +3,21 @@
 <div class="grid">
 
   <div class="buttons">
-    <img src="/assets/images/plus.png" (click)="newGameModal()" alt="plus" />
-    <img src="/assets/images/settings.png" alt="settings" (click)="settingsModal()"/>
+    <img src="/assets/images/plus.png" (click)="newGameModal()" alt="plus" style="z-index: 99;" />
+    <img src="/assets/images/settings.png" alt="settingsModal()" (click)="settingsModal()" style="z-index: 99;"/>
   </div>
 
   <div class="scoreboard">
     <div class="current-score">{{ score }}</div>
 
       <div class="today-score">
-      TODAY <br> {{ todayScore }}
+      {{ languageTexts['today'] }} <br> {{ todayScore }}
       </div>
       <div class="overall-score" #sample>
-        OVERALL
+        {{ languageTexts['overall'] }}
         <div class="flex-left">
-        <app-icon class="row" type="trophy"></app-icon> &nbsp; {{ overallScore }} </div>
+        <img class="trophy-gray" src="/assets/images/trophy-gray.png" alt="gray trophy">  
+        &nbsp; {{ overallScore }} </div>
       </div>
 
   </div>
@@ -39,9 +40,9 @@
             <img src="/assets/images/undo.png" (click)="undo()"  alt="undo">
             <img src="/assets/images/plus.png" (click)="toggleInsert()" alt="add">
             <img src="/assets/images/delete.png" (click)="toggleDelete()"  alt="delete">
-            <span>UNDO</span>
-            <span>ADD</span>
-            <span>DELETE</span>
+            <span>{{ languageTexts['undo'] }}</span>
+            <span>{{ languageTexts['add'] }}</span>
+            <span>{{ languageTexts['delete'] }}</span>
         </div>
       </ion-content>
     </ng-template>
@@ -108,6 +109,7 @@
       <!-- +185 -->
     </div>
 
+    <!-- <ng-lottie class="lottie" [options]="lottieOptions" (animationCreated)="created($event)"></ng-lottie> -->
   </div>
 
 </ion-content>

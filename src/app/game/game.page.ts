@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, NgZone, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { blocks } from '../blocks';
 import { patterns, executePatterns, willBreakPatterns } from '../patterns';
 import { SettingsModule } from '../components/settings/settings.module';
@@ -17,6 +17,9 @@ import { NewGameModule } from '../components/new-game/new-game.module';
 import { NativeAudio } from '@awesome-cordova-plugins/native-audio/ngx';
 import { Howl, Howler } from 'howler';
 import { LoadingController } from '@ionic/angular';
+import { AnimationOptions } from 'ngx-lottie';
+import { AnimationItem } from 'lottie-web';
+import { languages } from '../language';
 
 @Component({
   selector: 'app-game',
@@ -24,6 +27,8 @@ import { LoadingController } from '@ionic/angular';
   styleUrls: ['./game.page.scss'],
 })
 export class GamePage implements AfterViewInit {
+  selectedLanguage = "english";
+  languageTexts = "";
   blocks = blocks;
   userInfo;
   isDelete = false;
@@ -34,6 +39,7 @@ export class GamePage implements AfterViewInit {
   executePatterns = executePatterns;
   willBreakPatterns = willBreakPatterns;
   combo = 0;
+  lastCombo = 0;
   comboText = "";
   plusPoint;
   plusPointText = "";
@@ -102,13 +108,16 @@ export class GamePage implements AfterViewInit {
   
   playSize;
   sandSize;
+
+  
+
   
   isLeftZone = false;
   
   constructor(private modalCtrl: ModalController, private router: Router,
     private gestureCtrl: GestureController, private detector: ChangeDetectorRef, private device: Device,
     private animationCtrl: AnimationController, private toastController: ToastController, private alertController: AlertController,
-    private storageService: StorageService, private loadingController: LoadingController) {
+    private storageService: StorageService, private loadingController: LoadingController, private ngZone: NgZone) {
       
     }
     
@@ -158,7 +167,7 @@ export class GamePage implements AfterViewInit {
     }
     
     async ngOnInit() {
-      
+      debugger
       await this.getSavedData();
       this.detector.detectChanges();
       this.firstEmpty = isEqual(this.firstObject, this.emptyObject);
@@ -170,8 +179,11 @@ export class GamePage implements AfterViewInit {
     
     async getSavedData() {
       this.storageService.getData().subscribe(res => {
-        
+        debugger
         this.userInfo = res;
+
+        this.selectedLanguage = this.userInfo.language;
+        this.languageTexts = languages[this.selectedLanguage];
         
         var today = this.userInfo.today;
         if (today.date != (new Date()).toLocaleDateString('en-GB')) this.todayScore = 0;
@@ -573,6 +585,7 @@ export class GamePage implements AfterViewInit {
           this.getSnapshot();
           this.lastScore = this.score;
           this.lastSandId = this.sandId;
+          this.lastCombo = this.combo;
           var dropIndex = [];
           
           rw = 0;
@@ -600,9 +613,6 @@ export class GamePage implements AfterViewInit {
           setTimeout(() => {
             allSquares.forEach(s => s.play())
           }, 0);
-          setTimeout(() => {
-            allSquares.forEach(s => s.destroy())
-          }, 500);
           
           setTimeout(() => {
             var output = executePatterns(this.score, this.playGround, patternOutput, dropIndex, this.combo);
@@ -611,17 +621,28 @@ export class GamePage implements AfterViewInit {
             this.comboText = output[2];
             this.plusPoint = this.score - this.lastScore;
             this.plusPointText = "+" + this.plusPoint;
-          
+            
             if(this.plusPoint > 0) {
               this.playPoints();
             }
-          
-            if (this.score > this.overallScore) this.overallScore = this.score;
-            if (this.score > this.todayScore) this.todayScore = this.score;
-            if (this.score > this.weeklyScore) this.weeklyScore = this.score;
-            if (this.score > this.monthlyScore) this.monthlyScore = this.score;
+            if (this.score > this.overallScore) {
+              this.overallScore = this.score;
+              if (!this.didLottiePlayed) this.playLottie();
+            } 
+            if (this.score > this.todayScore){
+              this.todayScore = this.score;
+              if (!this.didLottiePlayed) this.playLottie();
+            }
+            if (this.score > this.weeklyScore){
+              this.weeklyScore = this.score;
+              if (!this.didLottiePlayed) this.playLottie();
+            } 
             this.detector.detectChanges();
           }, 500)
+          setTimeout(() => {
+            allSquares.forEach(s => s.destroy())
+            this.detector.detectChanges();
+          }, 500);
           
           
           let newBlock = this.getRandom();
@@ -701,12 +722,12 @@ export class GamePage implements AfterViewInit {
           
         }
         
-        handleBreakable(row, column, square) {
+        handleBreakable(row, column, square) {          
           row.forEach((r) => {
             for (var i = 0; i < 9; i++) {
               var name = `${r}x${i}-inside`; //  r + 'x' + i;
               const square = this.animationCtrl.create()
-              .addElement(document.querySelector(`[name='${name}']`))
+              .addElement(document.getElementById(name))
               .fill('none')
               .duration(1000)
               .iterations(Infinity)
@@ -723,7 +744,7 @@ export class GamePage implements AfterViewInit {
             for (var i = 0; i < 9; i++) {
               var name = `${i}x${c}-inside`; // i + 'x' + c;
               const square = this.animationCtrl.create()
-              .addElement(document.querySelector(`[name='${name}']`))
+              .addElement(document.getElementById(name))
               .fill('none')
               .duration(1000)
               .iterations(Infinity)
@@ -741,7 +762,7 @@ export class GamePage implements AfterViewInit {
               for (let j = s[1]; j < s[1] + 3; j++) {
                 var name = `${i}x${j}-inside`
                 const square = this.animationCtrl.create()
-                .addElement(document.querySelector(`[name='${name}']`))
+                .addElement(document.getElementById(name))
                 .fill('none')
                 .duration(1000)
                 .iterations(Infinity)
@@ -1083,6 +1104,11 @@ export class GamePage implements AfterViewInit {
         mode: 'ios'
       })
       await modal.present();
+      await modal.onWillDismiss();
+      this.storageService.getData().subscribe(res => {
+        this.selectedLanguage = res.language;
+        this.languageTexts = languages[this.selectedLanguage];
+      })
     }
     
     async newGameModal() {
@@ -1165,79 +1191,7 @@ export class GamePage implements AfterViewInit {
           }
         }
       }
-      
-      // for (var i = 0; i < 9; i++) {
-      //   if (rowLen + i > 8) continue;
-      //   if (colLen == 0) break;
-      
-      //   for (var j = 0; j < 9; j++) {
-      //     isSet = true;
-      //     if (colLen + j > 8) continue;
-      //     var plusRow = 0;
-      //     for (var row = i; row < i + rowLen; row++) {
-      //       // if (!isSet) break;
-      //       var plusCol = 0;
-      //       for (var col = j; col < j + colLen; col++) {
-      //         if (this.playGround[row][col] == 1 && this.firstBlock[plusRow][plusCol] == 1) {
-      //           isSet = false;
-      //         }
-      //         plusCol++;
-      //       }
-      //       plusRow++;
-      //     }
-      //     if (isSet) return false;
-      //   }
-      // }
-      
-      // isSet = true;
-      // rowLen = this.secondBlock.length;
-      // colLen = this.secondBlock[0].length;
-      // // debugger
-      // for (var i = 0; i < 9; i++) {
-      //   if (rowLen + i > 8) continue;
-      //   if (colLen == 0) break;
-      
-      //   for (var j = 0; j < 9; j++) {
-      //     isSet = true;
-      //     if (colLen + j > 8) continue;
-      //     var plusRow = 0;
-      //     for (var row = i; row < i + rowLen; row++) {
-      //       var plusCol = 0;
-      //       for (var col = j; col < j + colLen; col++) {
-      //         if (this.playGround[row][col] == 1 && this.secondBlock[plusRow][plusCol] == 1) {
-      //           isSet = false;
-      //         }
-      //         plusCol++;
-      //       }
-      //       plusRow++;
-      //     }
-      //     if (isSet) return false;
-      //   }
-      // }
-      
-      // rowLen = this.thirdBlock.length;
-      // colLen = this.thirdBlock[0].length;
-      // for (var i = 0; i < 9; i++) {
-      //   if (rowLen + i > 8) continue;
-      //   if (colLen == 0) break;
-      //   for (var j = 0; j < 9; j++) {
-      //     isSet = true;
-      //     if (colLen + j > 8) continue;
-      //     var plusRow = 0;
-      //     for (var row = i; row < i + rowLen; row++) {
-      //       // if (!isSet) break;
-      //       var plusCol = 0;
-      //       for (var col = j; col < j + colLen; col++) {
-      //         if (this.playGround[row][col] == 1 && this.thirdBlock[plusRow][plusCol] == 1) {
-      //           isSet = false;
-      //         }
-      //         plusCol++;
-      //       }
-      //       plusRow++;
-      //     }
-      //     if (isSet) return false;
-      //   }
-      // }
+
       return true;
     }
     
@@ -1254,7 +1208,6 @@ export class GamePage implements AfterViewInit {
       return date.getMonth();
     }
     
-    
     async presentLoading() {
       const loading = await this.loadingController.create({
         mode: 'ios',
@@ -1265,6 +1218,26 @@ export class GamePage implements AfterViewInit {
       await loading.present();
     }
 
+    private animation: AnimationItem;
+    didLottiePlayed = false;
+    created(animation: AnimationItem) {
+      this.animation = animation;
+    }
+
+    lottieOptions: AnimationOptions = {
+      path: 'assets/lottie/confetti_orj.json',
+      autoplay: false,
+      loop: false
+    }
+
+    playLottie() {
+      this.didLottiePlayed = true;
+      this.ngZone.runOutsideAngular(() => this.animation.play());
+    }
+
+    stopLottie() {
+      this.ngZone.runOutsideAngular(() => this.animation.stop());
+    }
     
   }
   

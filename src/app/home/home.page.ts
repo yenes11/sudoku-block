@@ -113,7 +113,9 @@ export class HomePage {
   }
 
   routeGame() {
-    this.router.navigate(['game']);
+    this.router.navigateByUrl('game',{
+      replaceUrl : true,
+      });
   }
 
   getCurrentWeek() {
@@ -129,5 +131,4 @@ export class HomePage {
     return date.getMonth();
   }
 
-  
 }

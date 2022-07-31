@@ -59,9 +59,10 @@ export class GameoverPage implements OnInit {
   }
 
   routeNewGame() {
-    setTimeout(() => {
-      this.router.navigate(['game']);
-    }, 400);
+    this.router.navigateByUrl('game',{
+      replaceUrl: true,
+      state: {' preserveFragment': false}
+      });
     
   }
 

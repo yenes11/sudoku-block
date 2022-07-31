@@ -119,9 +119,12 @@ ion-toggle {
   --background-checked: #95b9e4;
   --handle-background: black;
   --handle-background-checked: black;
-  --handle-height: 2.2vh;
-  --handle-width: 2.2vh;
-  --handle-spacing: 0.5vh;
+  --handle-height: 2.0vh;
+  --handle-width: 2.0vh;
+  --handle-spacing: 0.7vh;
+  --border-radius: 50vh;
+  box-shadow: inset 6px 6px 6px rgba(0, 0, 0, 0.25);
+  border-radius: 50vh;
 
 }
 

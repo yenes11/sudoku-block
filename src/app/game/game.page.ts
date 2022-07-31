@@ -125,7 +125,6 @@ export class GamePage implements AfterViewInit {
       setTimeout(() => {
         this.updateGestures()
         this.createAnimations()
-        console.log(this.animationList);
         
         this.playSize = document.querySelector('.blue-play').clientWidth;
         this.sandSize = document.querySelector('.square-full').clientWidth;
@@ -162,24 +161,23 @@ export class GamePage implements AfterViewInit {
       await alert.present();
       setTimeout(async () => {
         await alert.dismiss();
-        this.router.navigate(['gameover']);
+        this.router.navigateByUrl('gameover',{
+          replaceUrl: true,
+          });
       }, 2000)
     }
     
     async ngOnInit() {
-      debugger
       await this.getSavedData();
       this.detector.detectChanges();
       this.firstEmpty = isEqual(this.firstObject, this.emptyObject);
       this.secondEmpty = isEqual(this.secondObject, this.emptyObject);
-      this.thirdEmpty = isEqual(this.thirdObject, this.emptyObject);
+      this.thirdEmpty = isEqual(this.thirdObject, this.emptyObject);      
     }
-    
     
     
     async getSavedData() {
       this.storageService.getData().subscribe(res => {
-        debugger
         this.userInfo = res;
 
         this.selectedLanguage = this.userInfo.language;
@@ -199,9 +197,10 @@ export class GamePage implements AfterViewInit {
         
         this.overallScore = this.userInfo.overall;
         
-        var isSaved = this.userInfo['isSaved'];
-        this.isSaved = isSaved;
-        if (isSaved) {
+        // var isSaved = this.userInfo['isSaved'];
+        // this.isSaved = isSaved;
+        this.isSaved = this.userInfo['isSaved'];
+        if (this.isSaved) {
           this.playGround = cloneDeep(this.userInfo.playground);
           this.lastSnapShot = cloneDeep(this.userInfo.lastSnapshot);
           this.firstObject = this.userInfo.firstObject;
@@ -228,6 +227,7 @@ export class GamePage implements AfterViewInit {
           this.score = this.userInfo.score;
           this.lastSandId = this.userInfo.lastSandId;
           this.lastReferenceBlock = this.userInfo.lastReferenceBlock;
+          this.didLottiePlayed = this.userInfo.lottie;
         }
         else {
           this.setEnv();
@@ -307,9 +307,7 @@ export class GamePage implements AfterViewInit {
                 var el = grandChildren[0].getBoundingClientRect();
                 
                 var y = el.top + (el.height / 2);
-                var y = el.left;
-                console.log(y);
-                
+                var y = el.left;                
                 
                 grandChildren.forEach(box => {     
                   
@@ -356,15 +354,11 @@ export class GamePage implements AfterViewInit {
                   this.zoneIdCtrl = !this.zoneIdCtrl;
                   this.pieceColumn = pieceColumn;
                   this.pieceRow = pieceRow;
-                  // console.log("zone" + this.zoneId);
                   
                   this.playGround = cloneDeep(this.hoverSnapShot);
                   this.detector.detectChanges();
                   setTimeout(() => {
                     this.params = this.handleHover(div);
-                    // console.log(div);
-                    
-                    // console.log(this.params);
                     
                     const breakable = this.willBreakPatterns(this.playGround);
                     setTimeout(() => {
@@ -1112,6 +1106,12 @@ export class GamePage implements AfterViewInit {
     }
     
     async newGameModal() {
+      this.storageService.getData().subscribe(res => {
+        this.storageService.setData({
+          ...res,
+          isSaved: true
+        })
+      })
       const modal = await this.modalCtrl.create({
         component: NewGameModule.component,
         cssClass: 'new-game-modal-css',
@@ -1120,7 +1120,7 @@ export class GamePage implements AfterViewInit {
       })
       await modal.present();
       await modal.onWillDismiss();
-      this.presentLoading();
+      // this.presentLoading();
       const data = await modal.onDidDismiss();
       this.storageService.getData().subscribe(res => {
         if(!res.isSaved) {
@@ -1233,6 +1233,11 @@ export class GamePage implements AfterViewInit {
     playLottie() {
       this.didLottiePlayed = true;
       this.ngZone.runOutsideAngular(() => this.animation.play());
+      this.userInfo = {
+        ...this.userInfo,
+        lottie: this.didLottiePlayed
+      }
+      this.storageService.setData(this.userInfo)
     }
 
     stopLottie() {

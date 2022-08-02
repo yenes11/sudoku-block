@@ -36,6 +36,7 @@ export const UserInfo = {
   add: 3,
   undo: 1,
   moves: 3,
+  sounds: true,
   firstObject: blocks[randomOne],
   secondObject: blocks[randomTwo],
   thirdObject: blocks[randomThree],

@@ -20,7 +20,7 @@
       </div>
       <div class="badge">
         {{  languageTexts["sounds"] }}
-        <ion-toggle mode="ios"></ion-toggle>
+        <ion-toggle id="sounds" mode="ios" (ionChange)="toggleSounds($event)" [checked]="sounds"></ion-toggle>
       </div>
     </div>
 
@@ -87,7 +87,7 @@
       <div class="badge">{{  languageTexts["removeAds"] }}</div>
     </div>
 
-    <div class="badge-row" (click)="cl()">
+    <div class="badge-row">
       <div class="icon flex-center">
         <img class="badge-icon" src="/assets/images/restore.png" alt="restore purschases">
       </div>

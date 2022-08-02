@@ -32,11 +32,19 @@ ion-content {
   color: #454750;
   display: grid;
   grid-template-areas:
+    'trophy trophy'
     'current-score current-score'
     'today-score overall-score';
   width: 780px;
   padding: 0 60px 0 60px;
   justify-self: center;
+  margin-top: -35px;
+}
+
+.trophy {
+  grid-area: trophy;
+  justify-self: center;
+  opacity: 0;
 }
 
 .current-score {
@@ -223,6 +231,7 @@ ion-popover ion-content {
   right: 0;
   margin-left: auto;
   margin-right: auto;
+  display: none;
 }
 
 /* .square {
@@ -283,7 +292,7 @@ ion-popover ion-content {
   justify-items: center;
   align-items: center;
   justify-self: center;
-  margin-top: 30px;
+  // margin-top: 30px;
   row-gap: 20px;
 }
 
@@ -391,7 +400,7 @@ img {
 
 @media screen and (max-width: 420px) {
   .buttons { height: 90px; width: 360px; padding: 20px 15px 0 15px; }
-  .scoreboard { height: 65px; width: 360px; margin-top: 0; padding: 0 15px 0 15px;}
+  .scoreboard { height: 100px; width: 360px; margin-top: -25px; padding: 0 15px 0 15px;}
   .game { height: 360px; width: 360px; }
   .block-container { height: 170px; }
  }
@@ -413,7 +422,7 @@ img {
 
 @media screen and (max-height: 739px) {
   .buttons { height: 60px; padding-top: 10px; }
-  .scoreboard { margin-top: -20px;}
+  .scoreboard { margin-top: -40px;}
 
   .block-container { row-gap: 10px; margin-top: 0;}
 }

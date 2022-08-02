@@ -82,7 +82,13 @@
   }
 }
 
-
+@media screen and (max-height: 670px) {
+  .new-game-modal-css {
+    --height: 30vh;
+    --width: 45vh;
+    --border-radius: 25px;
+  }
+}
 
 ion-popover {
   --background: #FFFFFF;

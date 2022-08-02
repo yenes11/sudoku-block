@@ -20,6 +20,7 @@ import { LoadingController } from '@ionic/angular';
 import { AnimationOptions } from 'ngx-lottie';
 import { AnimationItem } from 'lottie-web';
 import { languages } from '../language';
+import { isNewGame, makeFalse } from '../components/new-game/new-game.component';
 
 @Component({
   selector: 'app-game',
@@ -31,6 +32,7 @@ export class GamePage implements AfterViewInit {
   languageTexts = "";
   blocks = blocks;
   userInfo;
+  sounds = true;
   isDelete = false;
   isInsert = false;
   isNext = false;
@@ -109,7 +111,17 @@ export class GamePage implements AfterViewInit {
   playSize;
   sandSize;
 
-  
+  soundList = {
+    "one": "/assets/sounds/1.wav",
+    "two": "/assets/sounds/2.wav",
+    "three": "/assets/sounds/3.wav",
+    "four": "/assets/sounds/4.wav",
+    "five": "/assets/sounds/5.wav",
+    "six": "/assets/sounds/6.wav",
+    "seven": "/assets/sounds/7.wav",
+    "eight": "/assets/sounds/8.wav",
+    "nine": "/assets/sounds/9.wav",
+  }
 
   
   isLeftZone = false;
@@ -131,10 +143,9 @@ export class GamePage implements AfterViewInit {
       }, 500);
     }
     
-    playClick() {
-      // this.nativeAudio.play('click');
+    playSound(num) {
       var sound = new Howl({
-        src: ['assets/sounds/click.wav']
+        src: [this.soundList[num]]
       });
       sound.play();
     }
@@ -172,7 +183,7 @@ export class GamePage implements AfterViewInit {
       this.detector.detectChanges();
       this.firstEmpty = isEqual(this.firstObject, this.emptyObject);
       this.secondEmpty = isEqual(this.secondObject, this.emptyObject);
-      this.thirdEmpty = isEqual(this.thirdObject, this.emptyObject);      
+      this.thirdEmpty = isEqual(this.thirdObject, this.emptyObject);     
     }
     
     
@@ -194,6 +205,8 @@ export class GamePage implements AfterViewInit {
         var monthly = this.userInfo.monthly;
         if (this.getCurrentMonth != monthly.month) this.monthlyScore = 0;
         else this.monthlyScore = monthly.score;
+
+        this.sounds = this.userInfo['sounds'];
         
         this.overallScore = this.userInfo.overall;
         
@@ -227,6 +240,7 @@ export class GamePage implements AfterViewInit {
           this.score = this.userInfo.score;
           this.lastSandId = this.userInfo.lastSandId;
           this.lastReferenceBlock = this.userInfo.lastReferenceBlock;
+          
           this.didLottiePlayed = this.userInfo.lottie;
         }
         else {
@@ -540,6 +554,7 @@ export class GamePage implements AfterViewInit {
       }
       
       handleDrop(div) {
+        console.log(this.didLottiePlayed);
         var referenceId = div.nativeElement.id;
         var referenceBox = referenceId == 'drag-1' ? this.firstBlock : referenceId == 'drag-2' ? this.secondBlock : this.thirdBlock;
         var plusRow = referenceBox.length;
@@ -548,11 +563,11 @@ export class GamePage implements AfterViewInit {
         var row = parseInt(rowColumn[0]);
         var column = parseInt(rowColumn[1]);
         
-        
         if (column + plusColumn - 1 >= 9 ||
           row + plusRow - 1 >= 9 ||
           column < 0 ||
           row < 0) {
+            if(this.sounds) this.playSound("three");
             return;
           }
           
@@ -568,6 +583,7 @@ export class GamePage implements AfterViewInit {
                 setTimeout(() => {
                   div.nativeElement.style.transition = '0s';
                 }, 100);
+                if(this.sounds) this.playSound("three");
                 return;
               }
               cl++;
@@ -596,7 +612,7 @@ export class GamePage implements AfterViewInit {
             }
             rw++;
           }
-          
+          if(this.sounds) this.playSound("two");
           this.moves--;
           var patternOutput = this.pattern(this.playGround);
         //  debugger
@@ -617,6 +633,11 @@ export class GamePage implements AfterViewInit {
             this.plusPointText = "+" + this.plusPoint;
             
             if(this.plusPoint > 0) {
+              if(this.sounds) {
+                if(this.combo == 1) this.playSound("four");
+                else if (this.combo == 2) this.playSound("five")
+                else this.playSound("six");
+              }
               this.playPoints();
             }
             if (this.score > this.overallScore) {
@@ -921,6 +942,7 @@ export class GamePage implements AfterViewInit {
  }
     
     undo() {
+      if(this.sounds) this.playSound("eight");
       if (this.undoCount > 0) {
         if (isEqual(this.firstObject, this.emptyObject) || isEqual(this.secondObject, this.emptyObject) || isEqual(this.thirdObject, this.emptyObject)) {
           const allZero = arr => arr.every(v => v === 0);
@@ -969,22 +991,36 @@ export class GamePage implements AfterViewInit {
     }
     
     rotateOne() {
+      if(this.sounds) this.playSound("eight");
+
       let rotate = this.firstObject.rotate;
       this.firstObject = this.blocks.filter(obj => obj.id == rotate)[0];
       this.firstBlock = this.firstObject.block;
+      this.detector.detectChanges();
     }
     rotateTwo() {
+      if(this.sounds) this.playSound("eight");
+
       let rotate = this.secondObject.rotate;
       this.secondObject = this.blocks.filter(obj => obj.id == rotate)[0];
       this.secondBlock = this.secondObject.block;
+      this.detector.detectChanges();
     }
     rotateThree() {
+      if(this.sounds) this.playSound("eight");
+
       let rotate = this.thirdObject.rotate;
       this.thirdObject = this.blocks.filter(obj => obj.id == rotate)[0];
       this.thirdBlock = this.thirdObject.block;
+      this.detector.detectChanges();
+    }
+
+    jokerPopover() {
+      if(this.sounds) this.playSound("eight");
     }
     
     toggleDelete() {
+      if(this.sounds) this.playSound("eight");
       this.isInsert = false;
       if (this.deleteCount > 0) {
         this.isDelete = true;
@@ -996,6 +1032,7 @@ export class GamePage implements AfterViewInit {
     }
     
     toggleInsert() {
+      if(this.sounds) this.playSound("eight");
       this.isDelete = false;
       if (this.addCount > 0) {
         this.isInsert = true;
@@ -1004,6 +1041,35 @@ export class GamePage implements AfterViewInit {
         this.presentToast("Ekleme yapmak istediğiniz bloğa dokunun.")
       }
       else this.presentToast('Ekleme hakınız kalmadı.')
+    }
+
+    playDelete(id) {
+      const square = this.animationCtrl.create()
+        .addElement(document.getElementById(id))
+        .fill('none')
+        .duration(200)
+        .keyframes([
+          { offset: 0, transform: 'scale(1) rotate(0)', opacity: 1 },
+          { offset: 0.5, transform: 'scale(.5) rotate(180deg)', opacity: 0.5 },
+          { offset: 1, transform: 'scale(0) rotate(360deg)', opacity: 0 }
+        ]);
+        square.play();
+      return square;
+    }
+
+    playInsert(id) {
+
+      const square = this.animationCtrl.create()
+        .addElement(document.getElementById(id))
+        .fill('none')
+        .duration(200)  
+        .keyframes([
+          { offset: 0, backgroundColor: '#6F9DD7', transform: 'scale(0) rotate(0)', opacity: 0 },
+          { offset: 0.5,backgroundColor: '#6F9DD7', transform: 'scale(.5) rotate(180deg)', opacity: 0.5 },
+          { offset: 1,backgroundColor: '#6F9DD7', transform: 'scale(1) rotate(360deg)', opacity: 1 }
+        ]);
+        square.play();
+      return square;
     }
     
     deleteOrInsert(ev) {
@@ -1016,7 +1082,17 @@ export class GamePage implements AfterViewInit {
           return;
         }
         else {
-          this.playGround[row][column] = 0;
+          var s;
+          setTimeout(() => {
+            s = this.playDelete(ev.target.id);
+          }, 0)
+          setTimeout(() => {
+            this.playGround[row][column] = 0;
+          }, 200)
+          setTimeout(() => {
+            s.destroy();
+          }, 200)
+          
           this.isDelete = !this.isDelete;
           this.deleteCount--;
         }
@@ -1030,52 +1106,86 @@ export class GamePage implements AfterViewInit {
           return;
         } 
         else {
-          this.playGround[row][column] = 1;
+          var s;
+          setTimeout(() => {
+            s = this.playInsert(ev.target.id);
+          }, 0)
+          setTimeout(() => {
+            this.playGround[row][column] = 1;
+          }, 200)
+          setTimeout(() => {
+            s.destroy();
+          }, 200)
           this.isInsert = !this.isInsert;
           this.addCount--;
         }
       }
 
-      var patternOutput = this.pattern(this.playGround);
-      var allSquares;
-
       setTimeout(() => {
-        allSquares = this.playAnimations(patternOutput[0], patternOutput[1], patternOutput[2]);
-      }, 0)
-
-      setTimeout(() => {
-        allSquares.forEach(s => s.play());
-      }, 0);
-
-      setTimeout(() => {
-        allSquares.forEach(s => s.destroy());
-      }, 500);
-      
-      if (patternOutput[0].length == 0 && patternOutput[1].length == 0 && patternOutput[2].length == 0) {
+        var patternOutput = this.pattern(this.playGround);
+        var allSquares;
+  
         setTimeout(() => {
-          var output = executePatterns(this.score, this.playGround, patternOutput, [], this.combo);
-          this.score = output[0];
-          this.combo = output[1];
-          this.detector.detectChanges();
-        }, 1)
-      }
-      else {
+          allSquares = this.playAnimations(patternOutput[0], patternOutput[1], patternOutput[2]);
+        }, 0)
+  
         setTimeout(() => {
-          var output = executePatterns(this.score, this.playGround, patternOutput, [], this.combo);
-          this.score = output[0];
-          this.combo = output[1];
-          this.detector.detectChanges();
-        }, 501)
-      }
-      
-      this.userInfo = {
-        ...this.userInfo,
-        add: this.addCount,
-        delete: this.deleteCount,
-        playground: this.playGround,
-        lastSnapshot: this.lastSnapShot
-      }
-      this.storageService.setData(this.userInfo);
+          allSquares.forEach(s => s.play());
+        }, 0);
+  
+        setTimeout(() => {
+          allSquares.forEach(s => s.destroy());
+        }, 500);
+        
+        if (patternOutput[0].length == 0 && patternOutput[1].length == 0 && patternOutput[2].length == 0) {
+          setTimeout(() => {
+            // var output = executePatterns(this.score, this.playGround, patternOutput, [], this.combo);
+            this.detector.detectChanges();
+          }, 1)
+        }
+        else {
+          setTimeout(() => {
+            var output = executePatterns(this.score, this.playGround, patternOutput, [], this.combo);
+            this.score = output[0];
+            this.combo = output[1];
+            this.comboText = output[2];
+            this.plusPoint = this.score - this.lastScore;
+            this.plusPointText = "+" + this.plusPoint;
+            
+            if(this.plusPoint > 0) {
+              if(this.sounds) {
+                if(this.combo == 1) this.playSound("four");
+                else if (this.combo == 2) this.playSound("five")
+                else this.playSound("six");
+              }
+              this.playPoints();
+            }
+            if (this.score > this.overallScore) {
+              this.overallScore = this.score;
+              if (!this.didLottiePlayed) this.playLottie();
+            } 
+            if (this.score > this.todayScore){
+              this.todayScore = this.score;
+              if (!this.didLottiePlayed) this.playLottie();
+            }
+            if (this.score > this.weeklyScore){
+              this.weeklyScore = this.score;
+              if (!this.didLottiePlayed) this.playLottie();
+            } 
+            this.detector.detectChanges();
+          }, 501)
+        }
+      }, 200)
+      setTimeout(() => {
+        this.userInfo = {
+          ...this.userInfo,
+          add: this.addCount,
+          delete: this.deleteCount,
+          playground: this.playGround,
+          lastSnapshot: this.lastSnapShot
+        }
+        this.storageService.setData(this.userInfo);
+      }, 500)
     }
     
     showNext() {
@@ -1092,6 +1202,9 @@ export class GamePage implements AfterViewInit {
     }
     
     async settingsModal() {
+      if(this.sounds) {
+        this.playSound("one")
+      }
       const modal = await this.modalCtrl.create({
         component: SettingsModule.component,
         cssClass: 'settings-modal-css',
@@ -1102,28 +1215,24 @@ export class GamePage implements AfterViewInit {
       this.storageService.getData().subscribe(res => {
         this.selectedLanguage = res.language;
         this.languageTexts = languages[this.selectedLanguage];
+        this.sounds = res.sounds;
       })
     }
     
     async newGameModal() {
-      this.storageService.getData().subscribe(res => {
-        this.storageService.setData({
-          ...res,
-          isSaved: true
-        })
-      })
+      if(this.sounds) {
+        this.playSound("one")
+      }
       const modal = await this.modalCtrl.create({
         component: NewGameModule.component,
         cssClass: 'new-game-modal-css',
         mode: 'ios',
-        
       })
       await modal.present();
       await modal.onWillDismiss();
-      // this.presentLoading();
-      const data = await modal.onDidDismiss();
-      this.storageService.getData().subscribe(res => {
-        if(!res.isSaved) {
+      
+      if(isNewGame) {
+        makeFalse();         
           this.playGround = cloneDeep(this.emptyGround);
           this.hoverSnapShot = cloneDeep(this.emptyGround);
           this.lastSnapShot = cloneDeep(this.emptyGround);
@@ -1133,12 +1242,11 @@ export class GamePage implements AfterViewInit {
           this.score = 0;
           this.moves = 3;
           this.combo = 0;
+          this.didLottiePlayed = false;
           this.setEnv();
           this.detector.detectChanges();
-        }
-      })
+      }
     }
-    
     
     routeGameOver() {
       this.router.navigate(['gameover']);
@@ -1232,12 +1340,19 @@ export class GamePage implements AfterViewInit {
 
     playLottie() {
       this.didLottiePlayed = true;
+      const lottie = document.querySelector('.lottie') as HTMLElement;
+      lottie.style.display = 'block';
       this.ngZone.runOutsideAngular(() => this.animation.play());
       this.userInfo = {
         ...this.userInfo,
         lottie: this.didLottiePlayed
       }
       this.storageService.setData(this.userInfo)
+      const trophy = document.querySelector('.trophy') as HTMLImageElement;
+      setTimeout(() => {
+        lottie.style.display = 'none';
+      }, 5000)
+      trophy.style.opacity = '1';
     }
 
     stopLottie() {

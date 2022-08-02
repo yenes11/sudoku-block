@@ -12,6 +12,7 @@ import { StorageService } from '../storage.service';
 import { UserInfo } from '../userinfo';
 import { NewGameModule } from '../components/new-game/new-game.module';
 import { languages } from '../language';
+import { Howl, Howler } from 'howler';
 
 var randomName = 'Name-' + Math.floor(Math.random() * 1000000);
 
@@ -35,16 +36,29 @@ export class HomePage {
   monthly;
   daily;
 
+  sounds = true;
+
   selectedLanguage;
   languages = languages;
   languageTexts = "";
 
+  soundList = {
+    "one": "/assets/sounds/1.wav",
+    "two": "/assets/sounds/2.wav",
+    "three": "/assets/sounds/3.wav",
+    "four": "/assets/sounds/4.wav",
+    "five": "/assets/sounds/5.wav",
+    "six": "/assets/sounds/6.wav",
+    "seven": "/assets/sounds/7.wav",
+    "eight": "/assets/sounds/8.wav",
+    "nine": "/assets/sounds/9.wav",
+  }
 
   constructor(private modalCtrl: ModalController, private dataService: DataService,
     private router: Router, private device: Device, private detector: ChangeDetectorRef,
     private storageService: StorageService
   ) {
-    
+    this.loadData();
   }
 
 
@@ -53,10 +67,10 @@ export class HomePage {
       if (res == null) {
         this.storageService.setData(this.userData);
         this.loadData();
+        this.detector.detectChanges();
       }
       else {
         this.userInfo = res;
-        console.log(this.userInfo);
         this.bestScore = this.userInfo['overall'];
         this.isSaved = this.userInfo['isSaved'];
         this.weekly = this.userInfo['weekly'];
@@ -64,6 +78,7 @@ export class HomePage {
         this.languageTexts = this.languages[this.selectedLanguage];
         // this.monthly = this.userInfo['monthly'];
         this.daily = this.userInfo['today'];
+        this.sounds = this.userInfo['sounds'];
         this.detector.detectChanges();
         if(this.daily.date != (new Date()).toLocaleDateString('en-GB')) this.daily = { date: (new Date()).toLocaleDateString('en-GB'), score: 0 };
         if(this.weekly.week != this.getCurrentWeek()) this.weekly = { week: this.getCurrentWeek(), score: 0 };
@@ -85,10 +100,11 @@ export class HomePage {
   }
 
   ngOnInit() {
-    this.loadData();
+    
   }
 
   async newGameModal() {
+    if(this.sounds) this.playSound("one");
     const modal = await this.modalCtrl.create({
       component: NewGameModule.component,
       cssClass: 'new-game-modal-css',
@@ -99,6 +115,7 @@ export class HomePage {
   }
 
   async settingsModal() {
+    if(this.sounds) this.playSound("one");
     const modal = await this.modalCtrl.create({
       component: SettingsModule.component,
       cssClass: 'settings-modal-css'
@@ -108,11 +125,13 @@ export class HomePage {
     this.storageService.getData().subscribe(res => {
       this.selectedLanguage = res.language;
       this.languageTexts = languages[this.selectedLanguage];
+      this.sounds = res.sounds;
       this.detector.detectChanges();
     })
   }
 
   routeGame() {
+    if(this.sounds) this.playSound("one");
     this.router.navigateByUrl('game',{
       replaceUrl : true,
       });
@@ -129,6 +148,13 @@ export class HomePage {
   getCurrentMonth() {
     var date = new Date();
     return date.getMonth();
+  }
+
+  playSound(num) {
+    var sound = new Howl({
+      src: [this.soundList[num]]
+    });
+    sound.play();
   }
 
 }

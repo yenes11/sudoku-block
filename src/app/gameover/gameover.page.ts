@@ -6,6 +6,7 @@ import { StorageService } from '../storage.service';
 import { Device } from '@ionic-native/device/ngx';
 import { ChangeDetectorRef } from '@angular/core';
 import { languages } from '../language';
+import { Howl, Howler } from 'howler';
 
 @Component({
   selector: 'app-gameover',
@@ -19,6 +20,18 @@ export class GameoverPage implements OnInit {
   overall = 0;
   selectedLanguage = "english";
   languageTexts = "";
+  sounds = true;
+  soundList = {
+    "one": "/assets/sounds/1.wav",
+    "two": "/assets/sounds/2.wav",
+    "three": "/assets/sounds/3.wav",
+    "four": "/assets/sounds/4.wav",
+    "five": "/assets/sounds/5.wav",
+    "six": "/assets/sounds/6.wav",
+    "seven": "/assets/sounds/7.wav",
+    "eight": "/assets/sounds/8.wav",
+    "nine": "/assets/sounds/9.wav",
+  }
 
   constructor(private router: Router, private platform: Platform, private dataService: DataService, private storageService: StorageService, private device: Device, private detector: ChangeDetectorRef) {
     this.platform.backButton.subscribeWithPriority(10, () => {
@@ -34,6 +47,7 @@ export class GameoverPage implements OnInit {
       this.overall = res.overall;
       this.detector.detectChanges();
       this.selectedLanguage = res.language;
+      this.sounds = res.sounds;
       this.languageTexts = languages[this.selectedLanguage];
       
       var name = res.name;
@@ -55,10 +69,12 @@ export class GameoverPage implements OnInit {
   }
 
   routeRanking() {
+    if(this.sounds) this.playSound("one");
     this.router.navigate(['ranking']);
   }
 
   routeNewGame() {
+    if(this.sounds) this.playSound("one");
     this.router.navigateByUrl('game',{
       replaceUrl: true,
       state: {' preserveFragment': false}
@@ -67,6 +83,14 @@ export class GameoverPage implements OnInit {
   }
 
   routeHome() {
+    if(this.sounds) this.playSound("one");
     this.router.navigate(['home']);
+  }
+
+  playSound(num) {
+    var sound = new Howl({
+      src: [this.soundList[num]]
+    });
+    sound.play();
   }
 }

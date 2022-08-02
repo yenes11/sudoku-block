@@ -4,10 +4,12 @@
 
   <div class="buttons">
     <img src="/assets/images/plus.png" (click)="newGameModal()" alt="plus" style="z-index: 99;" />
-    <img src="/assets/images/settings.png" alt="settingsModal()" (click)="settingsModal()" style="z-index: 99;"/>
+    <img src="/assets/images/settings.png" alt="settings" (click)="settingsModal()" style="z-index: 99;"/>
   </div>
 
   <div class="scoreboard">
+    <img src="/assets/images/trophy.png" alt="golden trophy" class="trophy"/>
+
     <div class="current-score">{{ score }}</div>
 
       <div class="today-score">
@@ -53,7 +55,7 @@
           <img id="one" [ngClass]="isEven(firstObject, emptyObject) ? 'no-display' : ''" (click)="rotateOne()" src="/assets/images/left-rotate.png" alt="left-rotate">
           <img id="two" [ngClass]="isEven(secondObject, emptyObject) ? 'no-display' : ''" (click)="rotateTwo()" src="/assets/images/left-rotate.png" alt="left-rotate">
           <img id="three" [ngClass]="isEven(thirdObject, emptyObject) ? 'no-display' : ''" (click)="rotateThree()" src="/assets/images/left-rotate.png" alt="left-rotate">
-          <img id="trigger-button" src="/assets/images/joker.png" alt="joker">
+          <img id="trigger-button" src="/assets/images/joker.png" alt="joker" (click)="jokerPopover()">
 
           <div #item id="drag-1">
             <div class="sand-row" *ngFor="let sArray of firstBlock; index as i">
